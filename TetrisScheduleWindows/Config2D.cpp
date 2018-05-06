@@ -27,27 +27,43 @@ void Config2D::nullPosition(unsigned int position)
 		config[position] = 0;
 }
 
-unsigned int Config2D::valueAt(unsigned int position)
+const unsigned int Config2D::valueAt(unsigned int position) const
 {
-	return 0;
+	return config[position];
 }
 
-unsigned int Config2D::setValue(unsigned int value, unsigned int position)
+void Config2D::setValue(unsigned int value, unsigned int position)
 {
-	return 0;
+	config[position]=value;
 }
 
-int Config2D::size()
+int  Config2D::size() const
 {
-	return 0;
+	return config.size();
 }
 
-string Config2D::toString()
-{
-	return string();
-}
+//string Config2D::toString()
+//{
+//	string 
+//}
 
 bool operator==(const Config2D & left, const Config2D & right)
 {
+	if (left.size() != right.size())
+		return false;
+	for (unsigned int i = 0; i < left.size(); i++)
+	{
+		if (left.valueAt(i) != right.valueAt(i)) return false;
+	}
+	return true;
+}
+
+bool operator<(const Config2D & left, const Config2D & right)
+{
+	for (unsigned int i = 0; i < left.size(); i++)
+	{
+		if (left.valueAt(i) > right.valueAt(i)) return false;
+		else if (left.valueAt(i) < right.valueAt(i)) return true;
+	}
 	return false;
 }

@@ -14,12 +14,12 @@ public:
 	//Config2D(const vector<unsigned int>&);
 	~Config2D();
 	void nullPosition(unsigned int position);
-	unsigned int valueAt(unsigned int position);
-	unsigned int setValue(unsigned int value, unsigned int position);
-	int size();
+	const unsigned int valueAt(unsigned int position) const;
+	void setValue(unsigned int value, unsigned int position);
+	 int size() const;
 	friend bool operator==(const Config2D& left, const Config2D& right);
-	//hashcode?
-	string toString();
+	friend bool operator<(const Config2D& left, const Config2D& right);
+	
 private:
 	Config2D();
 };
