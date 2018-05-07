@@ -3,7 +3,8 @@
 #include <string>
 using namespace std;
 
-
+//This realisation of config is not quite informative. It is possible to make configuration in more dynamic way: 
+//Each object is described as struct of 2 ints: xCoord,yCoord for left top angle of object, and 3 bools: rotation(from 0 to 3), mirrored 
 class Config2D
 {
 private: vector<unsigned int> config;

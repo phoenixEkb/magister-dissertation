@@ -152,20 +152,24 @@
     <ClInclude Include="Configuration.h" />
     <ClInclude Include="Problem.h" />
     <ClInclude Include="Problem2D.h" />
+    <ClInclude Include="Solver.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
+    <ClInclude Include="TetraminoGroup.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Config2D.cpp" />
     <ClCompile Include="Configuration.cpp" />
     <ClCompile Include="Problem.cpp" />
     <ClCompile Include="Problem2D.cpp" />
+    <ClCompile Include="Solver.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="TetraminoGroup.cpp" />
     <ClCompile Include="TetrisScheduleWindows.cpp" />
   </ItemGroup>
   <ItemGroup>
