@@ -1,8 +1,8 @@
-#include "TetraminoGroup.h"
+#include "PolyominoGroup.h"
 
 template <int pointsAmount, int restrictionsAmount, int tGridWidth, int tGridHeight, int tWidth, int tHeight>
-TetraminoGroup<pointsAmount, restrictionsAmount, tGridWidth, tGridHeight, tWidth, tHeight>
-::TetraminoGroup(const qvm::mat<int, 2, pointsAmount>& points)
+PolyominoGroup<pointsAmount, restrictionsAmount, tGridWidth, tGridHeight, tWidth, tHeight>
+::PolyominoGroup(const qvm::mat<int, 2, pointsAmount>& points)
 {
 	this->points = points;//?Not sure;
 	this->groupWidth = 0;
@@ -12,14 +12,14 @@ TetraminoGroup<pointsAmount, restrictionsAmount, tGridWidth, tGridHeight, tWidth
 	
 	for (int i = 0; i < pointsAmount; i++)
 	{
-		groupWidth = max(groupWidth, this->points.a[0][i]);
-		groupHeight =max(groupHeight, this->points.a[1][i]);
+		xMax = max(groupWidth, this->points.a[0][i]);
+		yMax =max(groupHeight, this->points.a[1][i]);
 
 	}
 }
 
 template<int pointsAmount, int restrictionsAmount, int tGridWidth, int tGridHeight, int tWidth, int tHeight>
-unsigned int TetraminoGroup<pointsAmount, restrictionsAmount, tGridWidth, tGridHeight, tWidth, tHeight>
+unsigned int PolyominoGroup<pointsAmount, restrictionsAmount, tGridWidth, tGridHeight, tWidth, tHeight>
 ::getPlacementsAmount(const qvm::mat<int, 2, pointsAmount>& restrictions, int gridWidth, int gridHeight)
 {
 	 
@@ -32,26 +32,26 @@ unsigned int TetraminoGroup<pointsAmount, restrictionsAmount, tGridWidth, tGridH
 }
 
 template<int pointsAmount, int restrictionsAmount, int tGridWidth, int tGridHeight, int tWidth, int tHeight>
-qvm::mat<int, tGridWidth, tGridHeight> TetraminoGroup<pointsAmount, restrictionsAmount, tGridWidth, tGridHeight, tWidth, tHeight>
+qvm::mat<int, tGridWidth, tGridHeight> PolyominoGroup<pointsAmount, restrictionsAmount, tGridWidth, tGridHeight, tWidth, tHeight>
 ::getMatrix(int number)
 {
 	return qvm::mat<int, width, height>();
 }
 
 template<int pointsAmount, int restrictionsAmount, int tGridWidth, int tGridHeight, int tWidth, int tHeight>
-TetraminoGroup<pointsAmount, restrictionsAmount, tGridWidth, tGridHeight, tWidth, tHeight>
-::~TetraminoGroup()
+PolyominoGroup<pointsAmount, restrictionsAmount, tGridWidth, tGridHeight, tWidth, tHeight>
+::~PolyominoGroup()
 {
 }
 
 template<int pointsAmount, int restrictionsAmount, int tGridWidth, int tGridHeight, int tWidth, int tHeight>
-TetraminoGroup<pointsAmount, restrictionsAmount, tGridWidth, tGridHeight, tWidth, tHeight>
-::TetraminoGroup()
+PolyominoGroup<pointsAmount, restrictionsAmount, tGridWidth, tGridHeight, tWidth, tHeight>
+::PolyominoGroup()
 {
 }
 
 template<int pointsAmount, int restrictionsAmount, int tGridWidth, int tGridHeight, int tWidth, int tHeight>
-qvm::mat<int, tGridWidth, tGridHeight> TetraminoGroup<pointsAmount, restrictionsAmount, tGridWidth, tGridHeight, tWidth, tHeight>
+qvm::mat<int, tGridWidth, tGridHeight> PolyominoGroup<pointsAmount, restrictionsAmount, tGridWidth, tGridHeight, tWidth, tHeight>
 ::getMatrix(int xCoord, int yCoord, int rotation, bool mirrored)
 {
 	return qvm::mat<int, width, height>();
