@@ -1,15 +1,21 @@
 #include "Config2D.h"
 
 
+vector<unsigned int> Config2D::getRestrictions() const
+{
+	vector<unsigned int> cpyRestrictions(maxValues);
+	return cpyRestrictions;
+}
+
 Config2D::Config2D()
 {
 	
 }
 
-Config2D::Config2D(unsigned int elementsAmount,vector<unsigned int>& restrictions)
+Config2D::Config2D(unsigned int elementsAmount, vector<unsigned int>& maxValues)
 {
 	config = vector<unsigned int>(elementsAmount);
-	this->restrictions = restrictions;
+	this->maxValues = maxValues;
 }
 
 //Config2D::Config2D(const vector<unsigned int>&)
@@ -32,9 +38,14 @@ const unsigned int Config2D::valueAt(unsigned int position) const
 	return config[position];
 }
 
-void Config2D::setValue(unsigned int value, unsigned int position)
+bool Config2D::setValue(unsigned int value, unsigned int position)
 {
-	config[position]=value;
+	if (maxValues[position]<value)
+	{
+		config[position] = value;
+		return true;
+	}
+	return false;//TODO: Throw exception?
 }
 
 int  Config2D::size() const
