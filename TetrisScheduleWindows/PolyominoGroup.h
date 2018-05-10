@@ -7,18 +7,23 @@ namespace bg = boost::geometry;
 typedef bg::model::point<int, 2, boost::geometry::cs::cartesian> Point2D;
 typedef bg::model::multi_point<Point2D> MultiPoint2D;
 typedef boost::numeric::ublas::matrix<int> matrix;
+typedef boost::numeric::ublas::matrix<int> zeroMatrix;
+
 class PolyominoGroup
 {
-	int groupWidth, groupHeight, gridWidth, gridHeight, placementsAmount;
-	MultiPoint2D points;
+	int groupWidth, groupHeight, gridWidth, gridHeight;
+	MultiPoint2D points, restrictions;
 	std::vector<matrix> placementsMatrixes;
+	matrix restrictMatrix;
 public:
-	PolyominoGroup(MultiPoint2D points);
-	unsigned int getPlacementsAmount(const MultiPoint2D& restrictions, int gridWidth, int gridHeight);
-	matrix getMatrix(int number);
+	PolyominoGroup(const MultiPoint2D& points, const MultiPoint2D& restrictions, int gridWidth, int gridHeight);
+	unsigned int getPlacementsAmount();
+	matrix getMatrix(unsigned int number);
 	~PolyominoGroup();
 private:
-	matrix getMatrix(int xCoord, int yCoord, int rotation, bool mirrored);//TODO make in future, if current approach fails.
+	matrix generateMatrix(int xCoord, int yCoord, int rotation, bool mirrored);
+	void createMatrixByMultipoint(const MultiPoint2D & figure, matrix & m, unsigned int width, unsigned int height);
 	PolyominoGroup();
+	bool isMatrixCorrect(const matrix& m);
 };
 

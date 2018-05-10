@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -149,8 +149,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Config2D.h" />
-    <ClInclude Include="Configuration.h" />
-    <ClInclude Include="Problem.h" />
     <ClInclude Include="Problem2D.h" />
     <ClInclude Include="Solver.h" />
     <ClInclude Include="stdafx.h" />
@@ -159,8 +157,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Config2D.cpp" />
-    <ClCompile Include="Configuration.cpp" />
-    <ClCompile Include="Problem.cpp" />
     <ClCompile Include="Problem2D.cpp" />
     <ClCompile Include="Solver.cpp" />
     <ClCompile Include="stdafx.cpp">
