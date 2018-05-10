@@ -36,7 +36,7 @@
     <ClInclude Include="Solver.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="TetraminoGroup.h">
+    <ClInclude Include="PolyominoGroup.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -62,7 +62,7 @@
     <ClCompile Include="Solver.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="TetraminoGroup.cpp">
+    <ClCompile Include="PolyominoGroup.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
