@@ -21,22 +21,19 @@
     <ClInclude Include="targetver.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Problem.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Configuration.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Config2D.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Problem2D.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Solver.h">
+    <ClInclude Include="PolyominoGroup.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="PolyominoGroup.h">
+    <ClInclude Include="GASolver.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ISolver.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -47,22 +44,19 @@
     <ClCompile Include="TetrisScheduleWindows.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Problem.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Configuration.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Config2D.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Problem2D.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Solver.cpp">
+    <ClCompile Include="PolyominoGroup.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="PolyominoGroup.cpp">
+    <ClCompile Include="GASolver.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ISolver.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

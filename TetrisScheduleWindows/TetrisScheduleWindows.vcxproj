@@ -149,16 +149,18 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Config2D.h" />
+    <ClInclude Include="GASolver.h" />
     <ClInclude Include="Problem2D.h" />
-    <ClInclude Include="Solver.h" />
+    <ClInclude Include="ISolver.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="PolyominoGroup.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Config2D.cpp" />
+    <ClCompile Include="GASolver.cpp" />
     <ClCompile Include="Problem2D.cpp" />
-    <ClCompile Include="Solver.cpp" />
+    <ClCompile Include="ISolver.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
