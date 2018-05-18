@@ -1,3 +1,6 @@
+#include <fstream>
+#include<iostream>
+
 #include "GASolver.h"
 
 //We create genetical algorithm with fixed way of genetics and mutation, based on previous realisation by me.
@@ -6,12 +9,30 @@ GASolver::GASolver()
 	
 }
 
-GASolver::GASolver(std::string figuresFile, std::string restrictionsFile, int confAm, double mutationPercentage)
+GASolver::GASolver(std::string figuresFile, std::string restrictionsFile, int confAm, double mutationPercentage, int bestConfigsAmount)
 {
+	std::ifstream restrFile(restrictionsFile, std::ifstream::in);
+	restrFile >> gridWidth>>gridHeight;
+	std::string line = "";
+	std::getline(restrFile, line);
+	MultiPoint2D restrPoints;
+	bg::read_wkt(line, restrPoints);
+
+	std::ifstream inFile(figuresFile, std::ifstream::in);
+	while (inFile.eof())
+	{
+		std::getline(inFile, line);
+		MultiPoint2D p;
+		bg::read_wkt(line, p);
+		PolyominoGroup group(p,restrPoints,gridWidth,gridHeight);
+		figures.push_back(group);
+	}
+
+	this->bestConfigsAmount = bestConfigsAmount;//10 by default
+	this->mutationPercentage = mutationPercentage;
+	this->configsInPoolAmount = confAm;
+	startCycling();
 }
-
-
-
 
 GASolver::~GASolver()
 {
@@ -19,6 +40,7 @@ GASolver::~GASolver()
 
 void GASolver::MakeIteration()
 {
+
 }
 
 void GASolver::RestartAlgorithm(double flushPercent)
@@ -47,6 +69,7 @@ double GASolver::GetAbsoluteAverageKnapsackCost()
 
 void GASolver::startCycling()
 {
+
 }
 
 void GASolver::emptyBestConfigs(std::vector<Config2D>& targetConfig)
