@@ -31,11 +31,12 @@ unsigned int PolyominoGroup::getPlacementsAmount()
 		{
 			for (int j = 0; j <gridHeight-groupHeight ; ++j)//TODO: check condition on j and i
 			{
-				for (int rot = 0; rot < 4; rot++)
+				for (int rot = rotation::right; rot < 360; rot+=90)//That's dirty
 				{
 					for (bool mir : { false, true })
 					{
-						matrix t = generateMatrix(i, j, rot, mir);
+						state s{i, j, static_cast<rotation>(rot), mir};
+						matrix t = generateMatrix(s);
 						if (isMatrixCorrect(t))
 							placementsMatrixes.push_back(t);
 					}
@@ -63,29 +64,51 @@ PolyominoGroup::PolyominoGroup()
 //returns false if matrix has crosses w/ restrictions matrix;
 bool PolyominoGroup::isMatrixCorrect(const matrix & m)
 {
-	return false;
+	for (auto i = 0; i < gridWidth; i++)
+	{
+		for (auto j = 0; j < gridHeight; j++)
+		{
+			if (m(i, j)&restrictMatrix(i, j) == 1) return false;
+		}
+	}
+	return true;
 }
 
-matrix PolyominoGroup::generateMatrix(int xCoord, int yCoord, int rotation, bool mirrored)//todo: rewrite rotation w/ angle, rewrite as void function;
+matrix PolyominoGroup::generateMatrix(state s)//todo: rewrite rotation w/ angle, rewrite as void function;
 {
-	if (xCoord<0||xCoord>=gridWidth-groupWidth||yCoord<0||yCoord>=gridHeight-groupHeight||rotation < 0 || rotation >=4 );
+	if (s.xCoord<0||s.xCoord>=gridWidth-groupWidth
+		||s.yCoord<0||s.yCoord>=gridHeight-groupHeight
+		||s.rot < 0 || s.rot >=4 )//TODO: rewrite coordinates condition for rotated fugure
+	{
+		std::cout << "error matrix" << std::endl;
+	}
+	else
 	{
 		//first we generate figure, then create matrix;
 		MultiPoint2D t(points);
-		if (mirrored)
+		if (s.mirrored)
 		{
-
+			trans::scale_transformer<int,2,2> xMirror(-1, 1);
+			bg::transform(t, xMirror);
 		}
-		if (rotation != 0)
+		if (s.rot!= rotation::right)
 		{
-
+			trans::rotate_transformer<bg::degree, int, 2, 2> rotate(s.rot);//TODO:check if works correctly
+			bg::transform(t, rotate);
 		}
-		if (xCoord != 0 || yCoord != 0)
+		if (s.xCoord != 0 || s.yCoord != 0)
 		{
-
+			trans::translate_transformer<int, 2, 2> move(s.xCoord, s.yCoord);
+			bg::transform(t, move);
 		}
+		matrix m = zeroMatrix(gridWidth, gridHeight);
+		for (auto &p: points)
+		{
+			m(p.get<0>(), p.get<1>())= 1;
+		}
+		return m;
 	}
-	std::cout << "error matrix" << std::endl;
+	
 }
 
 void PolyominoGroup::createMatrixByMultipoint(const MultiPoint2D& figure, matrix &m, unsigned int width, unsigned int height)
