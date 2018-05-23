@@ -2,15 +2,12 @@
 #include <vector>
 #include <string>
 
-
 using namespace std;
 
 class Config2D
 {
 private: vector<unsigned int> config;
 		 vector<unsigned int> maxValues;
-		 bit
-	
 public:
 	Config2D(unsigned int elementsAmount, vector<unsigned int>& maxValues);
 	//Config2D(const vector<unsigned int>&);
