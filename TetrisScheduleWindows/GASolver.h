@@ -22,7 +22,7 @@ private:
 	std::vector<Config2D> configsPool;
 	std::vector<Config2D>  currentBestConfigs;//however, this pool is resetted over and over again. We should create a permanent pool for practical use. Possibliy
 	std::vector<Config2D>  bestConfigsAllTime;
-	double maximalKnapsackCost;
+	const unsigned int leastEmptyCellsPossible=0;//AKA maximalKnapsackCost 
 
 	//private Crossover activeCrossover;
 	//private Mutation activeMutation;
