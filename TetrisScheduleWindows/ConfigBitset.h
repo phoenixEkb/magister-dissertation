@@ -7,14 +7,19 @@ using namespace std;
 class ConfigBitset
 {
 	int elementsAmount;
-	boost::dynamic_bitset<> config;	
-	boost::dynamic_bitset<> availablePositions;
+	boost::dynamic_bitset<> currentConfiguration;	
+	boost::dynamic_bitset<> availablePolyominoesPositions;
+	//Saves information about possible states in binary form.
+	//If position is enabled, it is possible to switch values in currentConfigurations
+	//TODO: Separate this structure into individual object. 
 public:
 	~ConfigBitset();
 	ConfigBitset(vector<PolyominoGroup> polyominoes, uint32_t gridWidth, uint32_t gridHeight);
-	//ConfigBitset(vector<int> &initConfig);//probably isn't requierd
-	//ConfigBitset(ConfigBitset &conf); copy constructor, not sure if required
-	//taken from old GA
+
+	//ConfigBitset(vector<int> &initConfig);//
+	//ConfigBitset(ConfigBitset &conf); //copy constructor
+	//Two constructors above are taken from old GA and were never used
+	
 	//What if methods doesnt't work if element is passive?
 	void setValueToActive(int position);
 	void setValueToPassive(int position);
@@ -22,7 +27,7 @@ public:
 	bool isValueActive(int position);
 	bool valueAt(int position) const;
 	int size() const;
-	//methods for sorting purposes
+	//methods for sorting purposes, required for std::sort
 	friend bool operator==(const ConfigBitset& left, const ConfigBitset& right);
 	friend bool operator<(const ConfigBitset& left, const ConfigBitset& right);
 	

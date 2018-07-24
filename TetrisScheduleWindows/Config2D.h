@@ -4,6 +4,9 @@
 
 using namespace std;
 
+
+//This configuration class saves information about current configuration in linear vector.
+//Not included in program.
 class Config2D
 {
 private: vector<unsigned int> config;

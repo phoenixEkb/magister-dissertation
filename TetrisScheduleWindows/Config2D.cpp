@@ -18,15 +18,11 @@ Config2D::Config2D(unsigned int elementsAmount, vector<unsigned int>& maxValues)
 	this->maxValues = maxValues;
 }
 
-//Config2D::Config2D(const vector<unsigned int>&)
-//{
-//	this->config
-//}
-
 Config2D::~Config2D()
 {
 }
-//nulled element == no element in config.
+
+//Removes element from configuration
 void Config2D::nullPosition(unsigned int position)
 {
 	if (position < config.size())

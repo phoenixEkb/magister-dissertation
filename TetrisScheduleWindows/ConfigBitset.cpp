@@ -2,6 +2,20 @@
 
 
 
+bool ConfigBitset::isElementActive(int number)
+{
+	if (number<0||number >elementsAmount)
+		return false;//TODO exceptions
+	return currentConfiguration[number];
+}
+
+void ConfigBitset::switchElementState(int number)
+{
+	if (number<0 || number >elementsAmount)
+		return;//TODO exceptions
+
+}
+
 ConfigBitset::ConfigBitset()
 {
 }
@@ -32,62 +46,62 @@ ConfigBitset::ConfigBitset(vector<PolyominoGroup> polyominoes, uint32_t gridWidt
 {
 	auto gridMaxDim = max(gridWidth, gridHeight);
 	auto gridMaxDimDigitsAmount = fastBinaryDigitsCount(gridMaxDim);
-	int rotationsBitsAmount = 2, reflectionsBitsAmount = 1, includeBitsAmount,
+	int rotationsBitsAmount = 2, reflectionsBitsAmount = 1, includeBitsAmount=1,
 		bitsForOneConfig= includeBitsAmount+ 2*gridMaxDimDigitsAmount + rotationsBitsAmount + reflectionsBitsAmount;
 
-	config = boost::dynamic_bitset<>(polyominoes.size()*bitsForOneConfig);
-	availablePositions = boost::dynamic_bitset<>(polyominoes.size()*bitsForOneConfig);
-	availablePositions.flip();
+	currentConfiguration = boost::dynamic_bitset<>(polyominoes.size()*bitsForOneConfig);
+	availablePolyominoesPositions = boost::dynamic_bitset<>(polyominoes.size()*bitsForOneConfig);
+	availablePolyominoesPositions.flip();
 	
 	for (auto i=0;i<polyominoes.size();++i)
 	{
-		polyminoStates states=polyominoes[i].getAvailableStates(gridWidth, gridHeight);
+		polyminoState states=polyominoes[i].getAvailableStates(gridWidth, gridHeight);
 		if (states.maxDimension < gridMaxDim)
 			for (auto j = fastBinaryDigitsCount(states.maxDimension); j < gridMaxDimDigitsAmount; ++j)
 			{
-				this->availablePositions[i*bitsForOneConfig+ 1 + j] = false;
-				this->availablePositions[i*bitsForOneConfig+ 1 + gridMaxDimDigitsAmount+ j] = false;
+				this->availablePolyominoesPositions[i*bitsForOneConfig+ 1 + j] = false;
+				this->availablePolyominoesPositions[i*bitsForOneConfig+ 1 + gridMaxDimDigitsAmount+ j] = false;
 			}
 		if (states.possibleRotationsNumber == 1)
 		{
-			this->availablePositions[i*bitsForOneConfig + 1 + 2 * gridMaxDimDigitsAmount + 1] = false;
-			this->availablePositions[i*bitsForOneConfig + 1 + 2 * gridMaxDimDigitsAmount + 2] = false;
+			this->availablePolyominoesPositions[i*bitsForOneConfig + 1 + 2 * gridMaxDimDigitsAmount + 1] = false;
+			this->availablePolyominoesPositions[i*bitsForOneConfig + 1 + 2 * gridMaxDimDigitsAmount + 2] = false;
 		}
 		else if (states.possibleRotationsNumber==2)
-			this->availablePositions[i*bitsForOneConfig + 1 + 2 * gridMaxDimDigitsAmount + 2] = false;
+			this->availablePolyominoesPositions[i*bitsForOneConfig + 1 + 2 * gridMaxDimDigitsAmount + 2] = false;
 		if(!states.mirrorable)
-			this->availablePositions[i*bitsForOneConfig + 1 + 2 * gridMaxDimDigitsAmount + 2+1] = false;
+			this->availablePolyominoesPositions[i*bitsForOneConfig + 1 + 2 * gridMaxDimDigitsAmount + 2+1] = false;
 	}//maybe that kind of pre-gen would be better with smallmethods a-la changeParam(param, item).
 }
 
 void ConfigBitset::setValueToActive(int position)
 {
-	config[position] = true;
+	currentConfiguration[position] = true;
 }
 
 void ConfigBitset::setValueToPassive(int position)
 {
-	config[position] = false;
+	currentConfiguration[position] = false;
 }
 
 void ConfigBitset::swapValue(int position)
 {
-	config[position].flip();
+	currentConfiguration[position].flip();
 }
 
 bool ConfigBitset::isValueActive(int position)
 {
-	return config[position];
+	return currentConfiguration[position];
 }
 
 bool ConfigBitset::valueAt(int position) const
 {
-	return config[position];
+	return currentConfiguration[position];
 }
 
 int ConfigBitset::size() const
 {
-	return config.size();
+	return currentConfiguration.size();
 }
 
 bool operator==(const ConfigBitset & left, const ConfigBitset & right)
