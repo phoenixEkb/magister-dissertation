@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "ConfigBitset.h"
 
 
@@ -44,7 +45,7 @@ int fastBinaryDigitsCount(uint32_t v)
 
 ConfigBitset::ConfigBitset(std::vector<PolyominoGroup> polyominoes, uint32_t gridWidth, uint32_t gridHeight)
 {
-	auto gridMaxDim = max(gridWidth, gridHeight);
+	auto gridMaxDim = std::max(gridWidth, gridHeight);
 	auto gridMaxDimDigitsAmount = fastBinaryDigitsCount(gridMaxDim);
 	int rotationsBitsAmount = 2, reflectionsBitsAmount = 1, includeBitsAmount=1,
 		bitsForOneConfig= includeBitsAmount+ 2*gridMaxDimDigitsAmount + rotationsBitsAmount + reflectionsBitsAmount;

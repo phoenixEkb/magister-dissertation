@@ -1,3 +1,5 @@
+#include "stdafx.h"
+
 #include "PolyominoGroup.h"
 #include <algorithm>
 namespace bg = boost::geometry;
@@ -68,7 +70,7 @@ bool PolyominoGroup::isMatrixCorrect(const matrix & m)
 	{
 		for (auto j = 0; j < gridHeight; j++)
 		{
-			if (m(i, j)&restrictMatrix(i, j) == 1) return false;
+			if ((m(i, j))&&(restrictMatrix(i, j)) == 1) return false;
 		}
 	}
 	return true;

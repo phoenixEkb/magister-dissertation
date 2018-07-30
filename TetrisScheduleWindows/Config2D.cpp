@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "Config2D.h"
 
 
@@ -58,7 +59,7 @@ bool operator==(const Config2D & left, const Config2D & right)
 {
 	if (left.size() != right.size())
 		return false;
-	for (unsigned int i = 0; i < left.size(); i++)
+	for ( int i = 0; i < left.size(); i++)
 	{
 		if (left.valueAt(i) != right.valueAt(i)) return false;
 	}

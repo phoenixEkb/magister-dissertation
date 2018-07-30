@@ -1,4 +1,6 @@
 #pragma once
+#include "stdafx.h"
+
 #include <vector>
 #include "boost\dynamic_bitset.hpp" 
 #include "PolyominoGroup.h"

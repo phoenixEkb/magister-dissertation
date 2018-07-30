@@ -1,4 +1,5 @@
 #include "ISolver.h"
+#include "stdafx.h"
 
 
 

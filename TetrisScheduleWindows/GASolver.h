@@ -49,6 +49,6 @@ private:
 	bool IsValid(ConfigBitset config);
 	double GetKnapsackCost(ConfigBitset sack);
 	ConfigBitset MakeValid(ConfigBitset sack);
-	vector<double> GetBestConfigsCosts();
+	std::vector<double> GetBestConfigsCosts();
 };
 

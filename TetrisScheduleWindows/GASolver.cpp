@@ -1,6 +1,6 @@
+#include "stdafx.h"
 #include <fstream>
 #include<iostream>
-
 #include "GASolver.h"
 
 //We create genetical algorithm with fixed way of genetics and mutation, based on previous realisation by me.
@@ -132,7 +132,7 @@ ConfigBitset GASolver::MakeValid(ConfigBitset sack)
 	return ConfigBitset();
 }
 
-vector<double> GASolver::GetBestConfigsCosts()
+std::vector<double> GASolver::GetBestConfigsCosts()
 {
-	return vector<double>();
+	return std::vector<double>();
 }
