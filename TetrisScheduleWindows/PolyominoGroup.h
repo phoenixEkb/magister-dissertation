@@ -8,7 +8,7 @@ typedef bg::model::point<int, 2, boost::geometry::cs::cartesian> Point2D;
 typedef bg::model::multi_point<Point2D> MultiPoint2D;
 typedef boost::numeric::ublas::matrix<int> matrix;
 typedef boost::numeric::ublas::matrix<int> zeroMatrix;
-using namespace std;
+//using namespace std;
 enum rotation {
 	right = 0,
 	top = 90,
@@ -44,7 +44,7 @@ public:
 	unsigned int getPlacementsAmount();
 	matrix getMatrix(unsigned int number);
 	~PolyominoGroup();
-	polyminoState getAvailableStates(int gridWidth, int gridHeight);//TODO: Maybe move ConfigBitset::availablePolyominoesPositions here.
+	polyminoState getAvailableStates(int gridWidth, int gridHeight);//TODO: Maybe move ConfigBitset::possiblePolyominoesPositions here.
 private:
 	matrix generateMatrix(state s);
 	void createMatrixByMultipoint(const MultiPoint2D & figure, matrix & m, unsigned int width, unsigned int height);

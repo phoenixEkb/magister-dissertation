@@ -39,6 +39,9 @@
     <ClInclude Include="ConfigBitset.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="TetrisScheduleWindows.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">

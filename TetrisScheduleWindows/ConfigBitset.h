@@ -2,19 +2,18 @@
 #include <vector>
 #include "boost\dynamic_bitset.hpp" 
 #include "PolyominoGroup.h"
-using namespace std;
 
 class ConfigBitset
 {
 	int elementsAmount;
 	boost::dynamic_bitset<> currentConfiguration;	
-	boost::dynamic_bitset<> availablePolyominoesPositions;
+	static boost::dynamic_bitset<> possiblePolyominoesPositions;
 	//Saves information about possible states in binary form.
 	//If position is enabled, it is possible to switch values in currentConfigurations
 	//TODO: Separate this structure into individual object. 
 public:
 	~ConfigBitset();
-	ConfigBitset(vector<PolyominoGroup> polyominoes, uint32_t gridWidth, uint32_t gridHeight);
+	ConfigBitset(std::vector<PolyominoGroup> polyominoes, uint32_t gridWidth, uint32_t gridHeight);
 
 	//ConfigBitset(vector<int> &initConfig);//
 	//ConfigBitset(ConfigBitset &conf); //copy constructor
@@ -33,7 +32,7 @@ public:
 	
 	bool isElementActive(int number);
 	void switchElementState(int number);
-private:
+//private:
 	ConfigBitset();
 };
 

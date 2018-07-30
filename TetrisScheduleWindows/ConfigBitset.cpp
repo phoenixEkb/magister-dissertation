@@ -42,7 +42,7 @@ int fastBinaryDigitsCount(uint32_t v)
 	return MultiplyDeBruijnBitPosition[(uint32_t)(v * 0x07C4ACDDU) >> 27];
 }
 
-ConfigBitset::ConfigBitset(vector<PolyominoGroup> polyominoes, uint32_t gridWidth, uint32_t gridHeight)
+ConfigBitset::ConfigBitset(std::vector<PolyominoGroup> polyominoes, uint32_t gridWidth, uint32_t gridHeight)
 {
 	auto gridMaxDim = max(gridWidth, gridHeight);
 	auto gridMaxDimDigitsAmount = fastBinaryDigitsCount(gridMaxDim);
@@ -50,8 +50,8 @@ ConfigBitset::ConfigBitset(vector<PolyominoGroup> polyominoes, uint32_t gridWidt
 		bitsForOneConfig= includeBitsAmount+ 2*gridMaxDimDigitsAmount + rotationsBitsAmount + reflectionsBitsAmount;
 
 	currentConfiguration = boost::dynamic_bitset<>(polyominoes.size()*bitsForOneConfig);
-	availablePolyominoesPositions = boost::dynamic_bitset<>(polyominoes.size()*bitsForOneConfig);
-	availablePolyominoesPositions.flip();
+	possiblePolyominoesPositions = boost::dynamic_bitset<>(polyominoes.size()*bitsForOneConfig);
+	possiblePolyominoesPositions.flip();
 	
 	for (auto i=0;i<polyominoes.size();++i)
 	{
@@ -59,18 +59,18 @@ ConfigBitset::ConfigBitset(vector<PolyominoGroup> polyominoes, uint32_t gridWidt
 		if (states.maxDimension < gridMaxDim)
 			for (auto j = fastBinaryDigitsCount(states.maxDimension); j < gridMaxDimDigitsAmount; ++j)
 			{
-				this->availablePolyominoesPositions[i*bitsForOneConfig+ 1 + j] = false;
-				this->availablePolyominoesPositions[i*bitsForOneConfig+ 1 + gridMaxDimDigitsAmount+ j] = false;
+				this->possiblePolyominoesPositions[i*bitsForOneConfig+ 1 + j] = false;
+				this->possiblePolyominoesPositions[i*bitsForOneConfig+ 1 + gridMaxDimDigitsAmount+ j] = false;
 			}
 		if (states.possibleRotationsNumber == 1)
 		{
-			this->availablePolyominoesPositions[i*bitsForOneConfig + 1 + 2 * gridMaxDimDigitsAmount + 1] = false;
-			this->availablePolyominoesPositions[i*bitsForOneConfig + 1 + 2 * gridMaxDimDigitsAmount + 2] = false;
+			this->possiblePolyominoesPositions[i*bitsForOneConfig + 1 + 2 * gridMaxDimDigitsAmount + 1] = false;
+			this->possiblePolyominoesPositions[i*bitsForOneConfig + 1 + 2 * gridMaxDimDigitsAmount + 2] = false;
 		}
 		else if (states.possibleRotationsNumber==2)
-			this->availablePolyominoesPositions[i*bitsForOneConfig + 1 + 2 * gridMaxDimDigitsAmount + 2] = false;
+			this->possiblePolyominoesPositions[i*bitsForOneConfig + 1 + 2 * gridMaxDimDigitsAmount + 2] = false;
 		if(!states.mirrorable)
-			this->availablePolyominoesPositions[i*bitsForOneConfig + 1 + 2 * gridMaxDimDigitsAmount + 2+1] = false;
+			this->possiblePolyominoesPositions[i*bitsForOneConfig + 1 + 2 * gridMaxDimDigitsAmount + 2+1] = false;
 	}//maybe that kind of pre-gen would be better with smallmethods a-la changeParam(param, item).
 }
 

@@ -1,9 +1,9 @@
 #include "Config2D.h"
 
 
-vector<unsigned int> Config2D::getFiguresStatesAmount() const
+std::vector<unsigned int> Config2D::getFiguresStatesAmount() const
 {
-	vector<unsigned int> cpyRestrictions(maxValues);
+	std::vector<unsigned int> cpyRestrictions(maxValues);
 	return cpyRestrictions;
 }
 
@@ -12,9 +12,9 @@ Config2D::Config2D()
 	
 }
 
-Config2D::Config2D(unsigned int elementsAmount, vector<unsigned int>& maxValues)
+Config2D::Config2D(unsigned int elementsAmount, std::vector<unsigned int>& maxValues)
 {
-	config = vector<unsigned int>(elementsAmount);
+	config = std::vector<unsigned int>(elementsAmount);
 	this->maxValues = maxValues;
 }
 

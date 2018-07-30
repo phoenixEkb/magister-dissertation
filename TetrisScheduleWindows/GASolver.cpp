@@ -9,7 +9,7 @@ GASolver::GASolver()
 	
 }
 
-GASolver::GASolver(std::string figuresFile, std::string restrictionsFile, int confAm, double mutationPercentage, int bestConfigsAmount)
+GASolver::GASolver(std::string figuresFile, std::string restrictionsFile, std::string resultFile, int confAm, double mutationPercentage, int bestConfigsAmount)
 {
 	std::ifstream restrFile(restrictionsFile, std::ifstream::in);
 	restrFile >> gridWidth>>gridHeight;
@@ -32,7 +32,7 @@ GASolver::GASolver(std::string figuresFile, std::string restrictionsFile, int co
 	this->mutationPercentage = mutationPercentage;
 	this->configsInPoolAmount = confAm;
 	
-	Config2D emptyConfig(static_cast<unsigned int>(figures.size()),&restrPoints);//TODO:rewrite. 
+	ConfigBitset emptyConfig(figures,gridWidth,gridHeight);//TODO:rewrite. 
 	//In Config2D realised conception of multiple int config, whenever in p-group config is assumed as structure of multiple fields. 
 	//Probably, it would be better to create bit array(bitmask or sth?) as universal interface for configs
 
@@ -94,42 +94,42 @@ void GASolver::startCycling()
 	}
 }
 
-void GASolver::emptyBestConfigs(std::vector<Config2D>& targetConfig)
+void GASolver::emptyBestConfigs(std::vector<ConfigBitset>& targetConfig)
 {
 }
 
-void GASolver::updateConfigs(std::vector<Config2D>& currentPool, double tuningCoeff)
+void GASolver::updateConfigs(std::vector<ConfigBitset>& currentPool, double tuningCoeff)
 {
 }
 
-Config2D GASolver::FirstApproachGenerate()
+ConfigBitset GASolver::FirstApproachGenerate()
 {
-	return Config2D();
+	return ConfigBitset();
 }
 
-Config2D GASolver::SinglePointCrossover(Config2D sack1, Config2D sack2, bool isLeft)
+ConfigBitset GASolver::SinglePointCrossover(ConfigBitset sack1, ConfigBitset sack2, bool isLeft)
 {
-	return Config2D();
+	return ConfigBitset();
 }
 
-Config2D GASolver::SinglePointMutation(Config2D sack, std::mt19937 rand)
+ConfigBitset GASolver::SinglePointMutation(ConfigBitset sack, std::mt19937 rand)
 {
-	return Config2D();
+	return ConfigBitset();
 }
 
-bool GASolver::IsValid(Config2D config)
+bool GASolver::IsValid(ConfigBitset config)
 {
 	return false;
 }
 
-double GASolver::GetKnapsackCost(Config2D sack)
+double GASolver::GetKnapsackCost(ConfigBitset sack)
 {
 	return 0.0;
 }
 
-Config2D GASolver::MakeValid(Config2D sack)
+ConfigBitset GASolver::MakeValid(ConfigBitset sack)
 {
-	return Config2D();
+	return ConfigBitset();
 }
 
 vector<double> GASolver::GetBestConfigsCosts()
