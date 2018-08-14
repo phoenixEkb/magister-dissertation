@@ -16,14 +16,14 @@ class PolyominoGroup
 	std::vector<matrix> placementsMatrixes;
 	matrix restrictMatrix;
 public:
-	PolyominoGroup(const MultiPoint2D& points, const MultiPoint2D& restrictions, int gridWidth, int gridHeight);
+	PolyominoGroup(const MultiPoint2D points, const MultiPoint2D restrictions, int gridWidth, int gridHeight);
 	unsigned int getPlacementsAmount();
 	matrix getMatrix(unsigned int number);
 	~PolyominoGroup();
 private:
 	matrix generateMatrix(int xCoord, int yCoord, int rotation, bool mirrored);
-	void createMatrixByMultipoint(const MultiPoint2D & figure, matrix & m, unsigned int width, unsigned int height);
+	void createMatrixByMultipoint(const MultiPoint2D figure, matrix m, unsigned int width, unsigned int height);
 	PolyominoGroup();
-	bool isMatrixCorrect(const matrix& m);
+	bool isMatrixCorrect(const matrix m);
 };
 

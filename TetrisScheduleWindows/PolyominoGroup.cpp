@@ -3,11 +3,14 @@
 namespace bg = boost::geometry;
 namespace trans = bg::strategy::transform;
 
-PolyominoGroup::PolyominoGroup(const MultiPoint2D& points, const MultiPoint2D& restrictions, int gridWidth, int gridHeight)
+
+//Problem 2, appears in these 3 functions
+
+PolyominoGroup::PolyominoGroup(const MultiPoint2D points, const MultiPoint2D restrictions, int gridWidth, int gridHeight)
 {
 	this->restrictions=restrictions;//?Not sure;
-	createMatrixByMultipoint(restrictions, restrictMatrix, gridWidth, groupHeight);
-	//calculating figure sizes and normalisation
+	//createMatrixByMultipoint(restrictions, restrictMatrix, gridWidth, groupHeight);  //Problem string
+	////calculating figure sizes and normalisation
 	int xMin = INT_MAX, yMin = INT_MAX, xMax=INT_MIN,yMax=INT_MIN;
 	for (int i = 0; i < bg::num_points(points); i++)
 	{
@@ -22,6 +25,7 @@ PolyominoGroup::PolyominoGroup(const MultiPoint2D& points, const MultiPoint2D& r
 	bg::transform(points, this->points, normTranslation);
 }
 
+//
 unsigned int PolyominoGroup::getPlacementsAmount()
 {
 	if (placementsMatrixes.empty())//
@@ -35,9 +39,9 @@ unsigned int PolyominoGroup::getPlacementsAmount()
 				{
 					for (bool mir : { false, true })
 					{
-						matrix t = generateMatrix(i, j, rot, mir);
-						if (isMatrixCorrect(t))
-							placementsMatrixes.push_back(t);
+					matrix t = generateMatrix(i, j, rot, mir);
+					//	if (isMatrixCorrect(t))//problem in this 2 strings
+					//placementsMatrixes.push_back(t);
 					}
 				}
 			}
@@ -47,10 +51,10 @@ unsigned int PolyominoGroup::getPlacementsAmount()
 	return 0;
 }
 
-matrix PolyominoGroup::getMatrix(unsigned int number)
-{
-	return placementsMatrixes[number];
-}
+//matrix PolyominoGroup::getMatrix(unsigned int number)
+//{
+//	return placementsMatrixes[number];
+//}
 
 PolyominoGroup::~PolyominoGroup()
 {
@@ -61,14 +65,14 @@ PolyominoGroup::PolyominoGroup()
 }
 
 //returns false if matrix has crosses w/ restrictions matrix;
-bool PolyominoGroup::isMatrixCorrect(const matrix & m)
+bool PolyominoGroup::isMatrixCorrect(const matrix  m)
 {
 	return false;
 }
 
 matrix PolyominoGroup::generateMatrix(int xCoord, int yCoord, int rotation, bool mirrored)//todo: rewrite rotation w/ angle, rewrite as void function;
 {
-	if (xCoord<0||xCoord>=gridWidth-groupWidth||yCoord<0||yCoord>=gridHeight-groupHeight||rotation < 0 || rotation >=4 );
+	if (xCoord<0||xCoord>=gridWidth-groupWidth||yCoord<0||yCoord>=gridHeight-groupHeight||rotation < 0 || rotation >=4 )
 	{
 		//first we generate figure, then create matrix;
 		MultiPoint2D t(points);
@@ -86,15 +90,19 @@ matrix PolyominoGroup::generateMatrix(int xCoord, int yCoord, int rotation, bool
 		}
 	}
 	std::cout << "error matrix" << std::endl;
+	return matrix();
 }
 
-void PolyominoGroup::createMatrixByMultipoint(const MultiPoint2D& figure, matrix &m, unsigned int width, unsigned int height)
-{
-	m = zeroMatrix(width, height);
-	for (auto p:figure)
-	{
-		m(p.get<0>(), p.get<1>()) = 1;
-	}
-}
+//Problem 1.
+
+//void PolyominoGroup::createMatrixByMultipoint(const MultiPoint2D figure, matrix m, unsigned int width, unsigned int height)
+//{
+//	m = zeroMatrix(width, height);//Problem string
+//	
+//	for (auto p:figure)
+//	{
+//		m(p.get<0>(), p.get<1>()) = 1;
+//	}
+//}
 
 
