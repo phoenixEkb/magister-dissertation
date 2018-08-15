@@ -25,7 +25,7 @@ GASolver::GASolver(std::string figuresFile, std::string restrictionsFile, int co
 		MultiPoint2D p;
 		bg::read_wkt(line, p);
 		PolyominoGroup group(p,restrPoints,gridWidth,gridHeight);
-		figures.push_back(group);
+	//	figures.push_back(group); Problem 4
 	}
 
 	this->bestConfigsAmount = bestConfigsAmount;//10 by default
