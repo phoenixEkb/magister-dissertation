@@ -9,6 +9,21 @@ typedef bg::model::multi_point<Point2D> MultiPoint2D;
 typedef boost::numeric::ublas::matrix<int> matrix;
 typedef boost::numeric::ublas::matrix<int> zeroMatrix;
 
+enum rotation {
+	right = 0,
+	top = 90,
+	left = 180,
+	bottom = 270
+};
+
+ struct state
+{
+	int xCoord = 0;
+	int yCoord = 0;
+	rotation rot=rotation::right;
+	bool mirrored = false;
+} ;
+
 class PolyominoGroup
 {
 	int groupWidth, groupHeight, gridWidth, gridHeight;
@@ -21,7 +36,7 @@ public:
 	matrix getMatrix(unsigned int number);
 	~PolyominoGroup();
 private:
-	matrix generateMatrix(int xCoord, int yCoord, int rotation, bool mirrored);
+	matrix generateMatrix(state s);
 	void createMatrixByMultipoint(const MultiPoint2D figure, matrix m, unsigned int width, unsigned int height);
 	PolyominoGroup();
 	bool isMatrixCorrect(const matrix m);
