@@ -31,18 +31,19 @@ unsigned int PolyominoGroup::getPlacementsAmount()
 	if (placementsMatrixes.empty())//
 	{
 		//generate matrixes, assuming we're using 3 types of basic transformations
-		for (int i = 0; i < gridWidth-groupWidth; ++i)
+		for (int i = 0; i < gridWidth - groupWidth; ++i)
 		{
-			for (int j = 0; j <gridHeight-groupHeight ; ++j)//TODO: check condition on j and i
+			for (int j = 0; j < gridHeight - groupHeight; ++j)//TODO: check condition on j and i
 			{
-				for (int rot = rotation::right; rot < 360; rot+=90)//That's dirty
+				for (int rot = rotation::right; rot < 360; rot += 90)//That's dirty
 				{
 					for (bool mir : { false, true })
 					{
-						state s{i, j, static_cast<rotation>(rot), mir};
-											matrix t = generateMatrix(s);
-//	if (isMatrixCorrect(t))//problem in this 2 strings
-					//placementsMatrixes.push_back(t);					}
+						state s = { i, j, static_cast<rotation>(rot), mir };
+						//matrix t = generateMatrix(s); problem: can't use this function
+						//	if (isMatrixCorrect(t))//problem in this 2 strings
+											//placementsMatrixes.push_back(t);					
+					}
 				}
 			}
 		}
@@ -67,16 +68,19 @@ PolyominoGroup::PolyominoGroup()
 //returns false if matrix has crosses w/ restrictions matrix;
 bool PolyominoGroup::isMatrixCorrect(const matrix  m)
 {
-	for (auto i = 0; i < gridWidth; i++)
+	for (int i = 0; i < gridWidth; i++)
 	{
-		for (auto j = 0; j < gridHeight; j++)
+		for (int j = 0; j < gridHeight; j++)
 		{
-			if (m(i, j)&restrictMatrix(i, j) == 1) return false;
+			if (m(i, j) && restrictMatrix(i, j) == 1) return false;
 		}
 	}
 	return true;
 }
 
+
+//Problem 3: usage of bg::transform stops building.
+//Problem 4: can't return matrix
 matrix PolyominoGroup::generateMatrix(state s)//todo: rewrite rotation w/ angle, rewrite as void function;
 {
 	if (s.xCoord<0||s.xCoord>=gridWidth-groupWidth
@@ -92,24 +96,24 @@ matrix PolyominoGroup::generateMatrix(state s)//todo: rewrite rotation w/ angle,
 		if (s.mirrored)
 		{
 			trans::scale_transformer<int,2,2> xMirror(-1, 1);
-			bg::transform(t, xMirror);
+			//bg::transform(t, xMirror);Problem 3
 		}
 		if (s.rot!= rotation::right)
 		{
 			trans::rotate_transformer<bg::degree, int, 2, 2> rotate(s.rot);//TODO:check if works correctly
-			bg::transform(t, rotate);
+			//bg::transform(t, rotate);Problem 3
 		}
 		if (s.xCoord != 0 || s.yCoord != 0)
 		{
 			trans::translate_transformer<int, 2, 2> move(s.xCoord, s.yCoord);
-			bg::transform(t, move);
+			//bg::transform(t, move);Problem 3
 		}
 		matrix m = zeroMatrix(gridWidth, gridHeight);
 		for (auto &p: points)
 		{
 			m(p.get<0>(), p.get<1>())= 1;
 		}
-		return m;
+		//return m;//Problem 4
 	}
 	
 	return matrix();

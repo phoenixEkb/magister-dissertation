@@ -16,13 +16,13 @@ enum rotation {
 	bottom = 270
 };
 
- struct state
+ typedef struct 
 {
 	int xCoord = 0;
 	int yCoord = 0;
 	rotation rot=rotation::right;
 	bool mirrored = false;
-} ;
+} state;
 
 class PolyominoGroup
 {
