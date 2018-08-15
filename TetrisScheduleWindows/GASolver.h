@@ -9,6 +9,25 @@
 class GASolver :
 	public ISolver
 {
+private:
+	vector<PolyominoGroup> figures;
+	int gridWidth, gridHeigth;
+	//private static int itemsAmount, dimensions;
+	//private static double[, ] itemsSet;//amount of items*their dimensions
+	//private static double[] restrictions;
+	//private double[] itemsCosts;
+
+	int configsInPoolAmount;
+	int bestConfigsAmount;
+	std::vector<Config2D> configsPool;
+	std::vector<Config2D>  currentBestConfigs;//however, this pool is resetted over and over again. We should create a permanent pool for practical use. Possibliy
+	std::vector<Config2D>  bestConfigsAllTime;
+	double maximalKnapsackCost;
+
+	//private Crossover activeCrossover;
+	//private Mutation activeMutation;
+	std::mt19937 rand;
+	 double mutationPercentage;
 public:
 	GASolver();
 	GASolver(std::string figuresFile, std::string restrictionsFile,int confAm, /*Crossover myCrs, Mutation myMt,*/ double mutationPercentage);
