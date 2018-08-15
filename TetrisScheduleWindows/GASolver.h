@@ -11,7 +11,7 @@ class GASolver :
 {
 private:
 	vector<PolyominoGroup> figures;
-	int gridWidth, gridHeigth;
+	int gridWidth, gridHeight;
 	//private static int itemsAmount, dimensions;
 	//private static double[, ] itemsSet;//amount of items*their dimensions
 	//private static double[] restrictions;
@@ -30,7 +30,7 @@ private:
 	 double mutationPercentage;
 public:
 	GASolver();
-	GASolver(std::string figuresFile, std::string restrictionsFile,int confAm, /*Crossover myCrs, Mutation myMt,*/ double mutationPercentage);
+	GASolver(std::string figuresFile, std::string restrictionsFile,int confAm, /*Crossover myCrs, Mutation myMt,*/ double mutationPercentage, int bestConfigsAmount);
 	~GASolver();
 	void MakeIteration();
 	void RestartAlgorithm(double flushPercent);
