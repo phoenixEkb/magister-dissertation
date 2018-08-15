@@ -21,6 +21,6 @@ public:
 	friend bool operator==(const Config2D& left, const Config2D& right);
 	friend bool operator<(const Config2D& left, const Config2D& right);
 	vector<unsigned int> getRestrictions() const;
-private:
+
 	Config2D();
 };
