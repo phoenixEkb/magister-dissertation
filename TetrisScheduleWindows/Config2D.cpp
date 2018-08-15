@@ -62,7 +62,7 @@ bool operator==(const Config2D & left, const Config2D & right)
 {
 	if (left.size() != right.size())
 		return false;
-	for (unsigned int i = 0; i < left.size(); i++)
+	for (int i = 0; i < left.size(); i++)
 	{
 		if (left.valueAt(i) != right.valueAt(i)) return false;
 	}
@@ -71,7 +71,7 @@ bool operator==(const Config2D & left, const Config2D & right)
 
 bool operator<(const Config2D & left, const Config2D & right)
 {
-	for (unsigned int i = 0; i < left.size(); i++)
+	for (int i = 0; i < left.size(); i++)
 	{
 		if (left.valueAt(i) > right.valueAt(i)) return false;
 		else if (left.valueAt(i) < right.valueAt(i)) return true;
