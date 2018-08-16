@@ -30,34 +30,35 @@ int fastBinaryDigitsCount(uint32_t v)
 
 ConfigBitset::ConfigBitset(vector<PolyominoGroup> polyominoes, uint32_t gridWidth, uint32_t gridHeight)
 {
+	elementsAmount = polyominoes.size();
 	auto gridMaxDim = max(gridWidth, gridHeight);
 	auto gridMaxDimDigitsAmount = fastBinaryDigitsCount(gridMaxDim);
-	int rotationsBitsAmount = 2, reflectionsBitsAmount = 1, includeBitsAmount,
+	int rotationsBitsAmount = 2, reflectionsBitsAmount = 1, includeBitsAmount=1,
 		bitsForOneConfig= includeBitsAmount+ 2*gridMaxDimDigitsAmount + rotationsBitsAmount + reflectionsBitsAmount;
-
-	config = boost::dynamic_bitset<>(polyominoes.size()*bitsForOneConfig);
-	availablePositions = boost::dynamic_bitset<>(polyominoes.size()*bitsForOneConfig);
-	availablePositions.flip();
-	
-	for (auto i=0;i<polyominoes.size();++i)
-	{
-		polyminoStates states=polyominoes[i].getAvailableStates(gridWidth, gridHeight);
-		if (states.maxDimension < gridMaxDim)
-			for (auto j = fastBinaryDigitsCount(states.maxDimension); j < gridMaxDimDigitsAmount; ++j)
-			{
-				this->availablePositions[i*bitsForOneConfig+ 1 + j] = false;
-				this->availablePositions[i*bitsForOneConfig+ 1 + gridMaxDimDigitsAmount+ j] = false;
-			}
-		if (states.possibleRotationsNumber == 1)
-		{
-			this->availablePositions[i*bitsForOneConfig + 1 + 2 * gridMaxDimDigitsAmount + 1] = false;
-			this->availablePositions[i*bitsForOneConfig + 1 + 2 * gridMaxDimDigitsAmount + 2] = false;
-		}
-		else if (states.possibleRotationsNumber==2)
-			this->availablePositions[i*bitsForOneConfig + 1 + 2 * gridMaxDimDigitsAmount + 2] = false;
-		if(!states.mirrorable)
-			this->availablePositions[i*bitsForOneConfig + 1 + 2 * gridMaxDimDigitsAmount + 2+1] = false;
-	}//maybe that kind of pre-gen would be better with smallmethods a-la changeParam(param, item).
+	//problem 5 here 
+	//config = boost::dynamic_bitset<>(polyominoes.size()*bitsForOneConfig);
+	//availablePositions = boost::dynamic_bitset<>(polyominoes.size()*bitsForOneConfig);
+	//availablePositions.flip();
+//	
+//	for (auto i=0;i<polyominoes.size();++i)
+//	{
+//		polyminoStates states=polyominoes[i].getAvailableStates(gridWidth, gridHeight);
+//		if (states.maxDimension < gridMaxDim)
+//			for (auto j = fastBinaryDigitsCount(states.maxDimension); j < gridMaxDimDigitsAmount; ++j)
+//			{
+//				this->availablePositions[i*bitsForOneConfig+ 1 + j] = false;
+//				this->availablePositions[i*bitsForOneConfig+ 1 + gridMaxDimDigitsAmount+ j] = false;
+//			}
+//		if (states.possibleRotationsNumber == 1)
+//		{
+//			this->availablePositions[i*bitsForOneConfig + 1 + 2 * gridMaxDimDigitsAmount + 1] = false;
+//			this->availablePositions[i*bitsForOneConfig + 1 + 2 * gridMaxDimDigitsAmount + 2] = false;
+//		}
+//		else if (states.possibleRotationsNumber==2)
+//			this->availablePositions[i*bitsForOneConfig + 1 + 2 * gridMaxDimDigitsAmount + 2] = false;
+//		if(!states.mirrorable)
+//			this->availablePositions[i*bitsForOneConfig + 1 + 2 * gridMaxDimDigitsAmount + 2+1] = false;
+//	}//maybe that kind of pre-gen would be better with smallmethods a-la changeParam(param, item).
 }
 
 void ConfigBitset::setValueToActive(int position)
@@ -90,23 +91,23 @@ int ConfigBitset::size() const
 	return config.size();
 }
 
-bool operator==(const ConfigBitset & left, const ConfigBitset & right)
-{
-	if (left.size() != right.size())
-		return false;
-	for (unsigned int i = 0; i < left.size(); i++)
-	{
-		if (left.valueAt(i) != right.valueAt(i)) return false;
-	}
-	return true;
-}
+//bool operator==(const ConfigBitset & left, const ConfigBitset & right) //Problem 6 - sth wrong with function signature.
+//{
+//	if (left.size() != right.size())
+//		return false;
+//	for (unsigned int i = 0; i < left.size(); i++)
+//	{
+//		if (left.valueAt(i) != right.valueAt(i)) return false;
+//	}
+//	return true;
+//}
 
-bool operator<(const ConfigBitset & left, const ConfigBitset & right)
-{
-	for (unsigned int i = 0; i < left.size(); i++)
-	{
-		if (left.valueAt(i) > right.valueAt(i)) return false;
-		else if (left.valueAt(i) < right.valueAt(i)) return true;
-	}
-	return false;
-}
+//bool operator<(const ConfigBitset & left, const ConfigBitset & right)
+//{
+//	for (unsigned int i = 0; i < left.size(); i++)
+//	{
+//		if (left.valueAt(i) > right.valueAt(i)) return false;
+//		else if (left.valueAt(i) < right.valueAt(i)) return true;
+//	}
+//	return false;
+//}

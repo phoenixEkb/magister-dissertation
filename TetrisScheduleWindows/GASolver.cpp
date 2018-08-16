@@ -4,10 +4,11 @@
 #include "GASolver.h"
 
 //We create genetical algorithm with fixed way of genetics and mutation, based on previous realisation by me.
-GASolver::GASolver()
-{
-	
-}
+
+//GASolver::GASolver()
+//{
+//	
+//}
 
 GASolver::GASolver(std::string figuresFile, std::string restrictionsFile, int confAm, double mutationPercentage, int bestConfigsAmount)
 {
