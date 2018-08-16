@@ -1,9 +1,10 @@
+#include "stdafx.h"
 #include "Config2D.h"
 
 
-vector<unsigned int> Config2D::getFiguresStatesAmount() const
+std::vector<unsigned int> Config2D::getFiguresStatesAmount() const
 {
-	vector<unsigned int> cpyRestrictions(maxValues);
+	std::vector<unsigned int> cpyRestrictions(maxValues);
 	return cpyRestrictions;
 }
 
@@ -12,9 +13,9 @@ Config2D::Config2D()
 	
 }
 
-Config2D::Config2D(unsigned int elementsAmount, vector<unsigned int>& maxValues)
+Config2D::Config2D(unsigned int elementsAmount, std::vector<unsigned int>& maxValues)
 {
-	config = vector<unsigned int>(elementsAmount);
+	config = std::vector<unsigned int>(elementsAmount);
 	this->maxValues = maxValues;
 }
 
@@ -58,6 +59,7 @@ bool operator==(const Config2D & left, const Config2D & right)
 {
 	if (left.size() != right.size())
 		return false;
+
 	for (int i = 0; i < left.size(); i++)
 	{
 		if (left.valueAt(i) != right.valueAt(i)) return false;
@@ -67,6 +69,7 @@ bool operator==(const Config2D & left, const Config2D & right)
 
 bool operator<(const Config2D & left, const Config2D & right)
 {
+
 	for (int i = 0; i < left.size(); i++)
 	{
 		if (left.valueAt(i) > right.valueAt(i)) return false;

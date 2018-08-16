@@ -1,20 +1,24 @@
 #pragma once
+#include "stdafx.h"
+
 #include <vector>
 #include <string>
 
-using namespace std;
+
+//using namespace std;
 
 
 //This configuration class saves information about current configuration in linear vector.
 //Not included in program.
 class Config2D
 {
-private: vector<unsigned int> config;
-		 vector<unsigned int> maxValues;
+private: std::vector<unsigned int> config;
+		 std::vector<unsigned int> maxValues;
 		 //bit
 	
 public:
-	Config2D(unsigned int elementsAmount, vector<unsigned int>& maxValues);
+
+	Config2D(unsigned int elementsAmount, std::vector<unsigned int>& maxValues);
 	//Config2D(const vector<unsigned int>&);
 	~Config2D();
 	void nullPosition(unsigned int position);
@@ -23,7 +27,8 @@ public:
 	int size() const;
 	friend bool operator==(const Config2D& left, const Config2D& right);
 	friend bool operator<(const Config2D& left, const Config2D& right);
-	vector<unsigned int> getFiguresStatesAmount() const;
+	
+	std::vector<unsigned int> getFiguresStatesAmount() const;
 
 	Config2D();
 };

@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "ConfigBitset.h"
 
 
@@ -42,11 +43,10 @@ int fastBinaryDigitsCount(uint32_t v)
 	return MultiplyDeBruijnBitPosition[(uint32_t)(v * 0x07C4ACDDU) >> 27];
 }
 
-ConfigBitset::ConfigBitset(vector<PolyominoGroup> polyominoes, uint32_t gridWidth, uint32_t gridHeight)
+ConfigBitset::ConfigBitset(std::vector<PolyominoGroup> polyominoes, uint32_t gridWidth, uint32_t gridHeight)
 {
-	elementsAmount = polyominoes.size();
-	auto gridMaxDim = max(gridWidth, gridHeight);
-	auto gridMaxDimDigitsAmount = fastBinaryDigitsCount(gridMaxDim);
+	auto gridMaxDim = std::max(gridWidth, gridHeight);
+	elementsAmount = polyominoes.size();	auto gridMaxDimDigitsAmount = fastBinaryDigitsCount(gridMaxDim);
 
 	int rotationsBitsAmount = 2, reflectionsBitsAmount = 1, includeBitsAmount=1,
 		bitsForOneConfig= includeBitsAmount+ 2*gridMaxDimDigitsAmount + rotationsBitsAmount + reflectionsBitsAmount;

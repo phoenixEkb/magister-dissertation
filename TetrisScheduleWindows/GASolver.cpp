@@ -1,16 +1,11 @@
+#include "stdafx.h"
 #include <fstream>
 #include<iostream>
-
 #include "GASolver.h"
 
 //We create genetical algorithm with fixed way of genetics and mutation, based on previous realisation by me.
 
-//GASolver::GASolver()
-//{
-//	
-//}
-
-GASolver::GASolver(std::string figuresFile, std::string restrictionsFile, int confAm, double mutationPercentage, int bestConfigsAmount)
+GASolver::GASolver(std::string figuresFile, std::string restrictionsFile, std::string resultFile, int confAm, double mutationPercentage, int bestConfigsAmount)
 {
 	std::ifstream restrFile(restrictionsFile, std::ifstream::in);
 	restrFile >> gridWidth>>gridHeight;
@@ -95,45 +90,59 @@ void GASolver::startCycling()
 	}
 }
 
-void GASolver::emptyBestConfigs(std::vector<Config2D>& targetConfig)
+
+void GASolver::emptyBestConfigs(std::vector<ConfigBitset>& targetConfig)
 {
 }
 
-void GASolver::updateConfigs(std::vector<Config2D>& currentPool, double tuningCoeff)
+
+void GASolver::updateConfigs(std::vector<ConfigBitset>& currentPool, double tuningCoeff)
 {
 }
 
-Config2D GASolver::FirstApproachGenerate()
+
+ConfigBitset GASolver::FirstApproachGenerate()
 {
-	return Config2D();
+
+	return ConfigBitset();
 }
 
-Config2D GASolver::SinglePointCrossover(Config2D sack1, Config2D sack2, bool isLeft)
+
+ConfigBitset GASolver::SinglePointCrossover(ConfigBitset sack1, ConfigBitset sack2, bool isLeft)
 {
-	return Config2D();
+
+	return ConfigBitset();
 }
 
-Config2D GASolver::SinglePointMutation(Config2D sack, std::mt19937 rand)
+
+ConfigBitset GASolver::SinglePointMutation(ConfigBitset sack, std::mt19937 rand)
 {
-	return Config2D();
+
+	return ConfigBitset();
 }
 
-bool GASolver::IsValid(Config2D config)
+
+bool GASolver::IsValid(ConfigBitset config)
 {
 	return false;
 }
 
-double GASolver::GetKnapsackCost(Config2D sack)
+
+double GASolver::GetKnapsackCost(ConfigBitset sack)
 {
 	return 0.0;
 }
 
-Config2D GASolver::MakeValid(Config2D sack)
+
+ConfigBitset GASolver::MakeValid(ConfigBitset sack)
 {
-	return Config2D();
+
+	return ConfigBitset();
 }
 
-vector<double> GASolver::GetBestConfigsCosts()
+
+std::vector<double> GASolver::GetBestConfigsCosts()
 {
-	return vector<double>();
+
+	return std::vector<double>();
 }

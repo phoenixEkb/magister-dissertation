@@ -1,7 +1,6 @@
+#include "stdafx.h"
+
 #include "PolyominoGroup.h"
-#include <algorithm>
-namespace bg = boost::geometry;
-namespace trans = bg::strategy::transform;
 
 
 //Problem 2, appears in these 3 functions
@@ -52,7 +51,7 @@ unsigned int PolyominoGroup::getPlacementsAmount()
 	return 0;
 }
 
-//matrix PolyominoGroup::getMatrix(unsigned int number)
+//bMatrix PolyominoGroup::getMatrix(unsigned int number)
 //{
 //	return placementsMatrixes[number];
 //}
@@ -61,18 +60,23 @@ PolyominoGroup::~PolyominoGroup()
 {
 }
 
+polyminoState PolyominoGroup::getAvailableStates(int gridWidth, int gridHeight)
+{
+	return polyminoState();
+}
+
 PolyominoGroup::PolyominoGroup()
 {
 }
 
-//returns false if matrix has crosses w/ restrictions matrix;
-bool PolyominoGroup::isMatrixCorrect(const matrix  m)
+//returns false if bMatrix has crosses w/ restrictions bMatrix;
+bool PolyominoGroup::isMatrixCorrect(const bMatrix & m)
 {
 	for (int i = 0; i < gridWidth; i++)
 	{
 		for (int j = 0; j < gridHeight; j++)
 		{
-			if (m(i, j) && restrictMatrix(i, j) == 1) return false;
+			if ((m(i, j))&&(restrictMatrix(i, j)) == 1) return false;
 		}
 	}
 	return true;
@@ -88,14 +92,15 @@ matrix PolyominoGroup::generateMatrix(state s)//todo: rewrite rotation w/ angle,
 		||s.rot < 0 || s.rot >=4 )//TODO: rewrite coordinates condition for rotated fugure
 	{
 		std::cout << "error matrix" << std::endl;
+		return zeroMatrix(gridWidth, gridHeight);
 	}
 	else
 	{
-		//first we generate figure, then create matrix;
+		//first we generate figure, then create bMatrix;
 		MultiPoint2D t(points);
 		if (s.mirrored)
 		{
-			trans::scale_transformer<int,2,2> xMirror(-1, 1);
+			trans::scale_transformer<int,2,2>xMirror(-1, 1);
 			//bg::transform(t, xMirror);Problem 3
 		}
 		if (s.rot!= rotation::right)
@@ -108,7 +113,7 @@ matrix PolyominoGroup::generateMatrix(state s)//todo: rewrite rotation w/ angle,
 			trans::translate_transformer<int, 2, 2> move(s.xCoord, s.yCoord);
 			//bg::transform(t, move);Problem 3
 		}
-		matrix m = zeroMatrix(gridWidth, gridHeight);
+		bMatrix m = zeroMatrix(gridWidth, gridHeight);
 		for (auto &p: points)
 		{
 			m(p.get<0>(), p.get<1>())= 1;
