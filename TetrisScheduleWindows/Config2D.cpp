@@ -1,7 +1,7 @@
 #include "Config2D.h"
 
 
-vector<unsigned int> Config2D::getRestrictions() const
+vector<unsigned int> Config2D::getFiguresStatesAmount() const
 {
 	vector<unsigned int> cpyRestrictions(maxValues);
 	return cpyRestrictions;

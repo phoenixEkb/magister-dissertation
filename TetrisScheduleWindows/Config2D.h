@@ -11,7 +11,7 @@ private: vector<unsigned int> config;
 		 vector<unsigned int> maxValues;
 	
 public:
-	Config2D(unsigned int elementsAmount, vector<unsigned int>& restrictions);
+	Config2D(unsigned int elementsAmount, vector<unsigned int>& maxValues);
 	//Config2D(const vector<unsigned int>&);
 	~Config2D();
 	void nullPosition(unsigned int position);
@@ -20,7 +20,7 @@ public:
 	int size() const;
 	friend bool operator==(const Config2D& left, const Config2D& right);
 	friend bool operator<(const Config2D& left, const Config2D& right);
-	vector<unsigned int> getRestrictions() const;
+	vector<unsigned int> getFiguresStatesAmount() const;
 
 	Config2D();
 };
