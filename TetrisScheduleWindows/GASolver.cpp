@@ -32,7 +32,7 @@ GASolver::GASolver(std::string figuresFile, std::string restrictionsFile, int co
 	this->mutationPercentage = mutationPercentage;
 	this->configsInPoolAmount = confAm;
 	
-	Config2D emptyConfig(static_cast<unsigned int>(figures.size()),&restrPoints);//TODO:rewrite. 
+	//Config2D emptyConfig(static_cast<unsigned int>(figures.size()),&restrPoints);//TODO:rewrite. Problem 5: wrong constructor
 	//In Config2D realised conception of multiple int config, whenever in p-group config is assumed as structure of multiple fields. 
 	//Probably, it would be better to create bit array(bitmask or sth?) as universal interface for configs
 
