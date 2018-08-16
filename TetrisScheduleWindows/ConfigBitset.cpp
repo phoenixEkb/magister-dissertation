@@ -2,6 +2,20 @@
 
 
 
+bool ConfigBitset::isElementActive(int number)
+{
+	if (number<0||number >elementsAmount)
+		return false;//TODO exceptions
+	return currentConfiguration[number];
+}
+
+void ConfigBitset::switchElementState(int number)
+{
+	if (number<0 || number >elementsAmount)
+		return;//TODO exceptions
+
+}
+
 ConfigBitset::ConfigBitset()
 {
 }
@@ -33,8 +47,10 @@ ConfigBitset::ConfigBitset(vector<PolyominoGroup> polyominoes, uint32_t gridWidt
 	elementsAmount = polyominoes.size();
 	auto gridMaxDim = max(gridWidth, gridHeight);
 	auto gridMaxDimDigitsAmount = fastBinaryDigitsCount(gridMaxDim);
+
 	int rotationsBitsAmount = 2, reflectionsBitsAmount = 1, includeBitsAmount=1,
 		bitsForOneConfig= includeBitsAmount+ 2*gridMaxDimDigitsAmount + rotationsBitsAmount + reflectionsBitsAmount;
+
 	//problem 5 here 
 	//config = boost::dynamic_bitset<>(polyominoes.size()*bitsForOneConfig);
 	//availablePositions = boost::dynamic_bitset<>(polyominoes.size()*bitsForOneConfig);
@@ -63,32 +79,32 @@ ConfigBitset::ConfigBitset(vector<PolyominoGroup> polyominoes, uint32_t gridWidt
 
 void ConfigBitset::setValueToActive(int position)
 {
-	config[position] = true;
+	currentConfiguration[position] = true;
 }
 
 void ConfigBitset::setValueToPassive(int position)
 {
-	config[position] = false;
+	currentConfiguration[position] = false;
 }
 
 void ConfigBitset::swapValue(int position)
 {
-	config[position].flip();
+	currentConfiguration[position].flip();
 }
 
 bool ConfigBitset::isValueActive(int position)
 {
-	return config[position];
+	return currentConfiguration[position];
 }
 
 bool ConfigBitset::valueAt(int position) const
 {
-	return config[position];
+	return currentConfiguration[position];
 }
 
 int ConfigBitset::size() const
 {
-	return config.size();
+	return currentConfiguration.size();
 }
 
 //bool operator==(const ConfigBitset & left, const ConfigBitset & right) //Problem 6 - sth wrong with function signature.

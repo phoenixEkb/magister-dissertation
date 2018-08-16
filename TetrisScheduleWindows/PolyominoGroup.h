@@ -16,12 +16,12 @@ enum rotation {
 	bottom = 270
 };
 typedef
-struct polyminoStates
+struct polyminoState
 {
 	unsigned int maxDimension;//(max of xwidth and ywidth)
 	int possibleRotationsNumber;//1,2,4 - depends of symmetries amount
 	bool mirrorable;//if has <2 symmetry
-} polyminoStates;
+} polyminoState;
 
  typedef struct 
 {
@@ -31,6 +31,7 @@ struct polyminoStates
 	bool mirrored = false;
 } state;
 
+ //TODO:Rename to Quasipolyomino
 class PolyominoGroup
 {
 	int groupWidth, groupHeight, gridWidth, gridHeight;
@@ -42,7 +43,7 @@ public:
 	unsigned int getPlacementsAmount();
 	matrix getMatrix(unsigned int number);
 	~PolyominoGroup();
-	polyminoStates getAvailableStates(int gridWidth, int gridHeight);
+	polyminoState getAvailableStates(int gridWidth, int gridHeight);//TODO: Maybe move ConfigBitset::availablePolyominoesPositions here.
 private:
 	matrix generateMatrix(state s);
 	void createMatrixByMultipoint(const MultiPoint2D figure, matrix m, unsigned int width, unsigned int height);
