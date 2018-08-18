@@ -85,7 +85,7 @@ bool PolyominoGroup::isMatrixCorrect(const bMatrix & m)
 
 //Problem 3: usage of bg::transform stops building.
 //Problem 4: can't return matrix
-matrix PolyominoGroup::generateMatrix(state s)//todo: rewrite rotation w/ angle, rewrite as void function;
+bMatrix PolyominoGroup::generateMatrix(state s)//todo: rewrite rotation w/ angle, rewrite as void function;
 {
 	if (s.xCoord<0||s.xCoord>=gridWidth-groupWidth
 		||s.yCoord<0||s.yCoord>=gridHeight-groupHeight
@@ -121,7 +121,7 @@ matrix PolyominoGroup::generateMatrix(state s)//todo: rewrite rotation w/ angle,
 		//return m;//Problem 4
 	}
 	
-	return matrix();
+	return bMatrix();
 }
 
 //Problem 1.
