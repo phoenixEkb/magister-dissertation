@@ -11,5 +11,6 @@
 #include <boost/math/constants/constants.hpp>
 #include <iostream>
 #include <fstream>
-#include "GASolver.h"
+//#include "GASolver.h"
 #include "ISolver.h"
+#include "QuasiPolyominoPackaging.h"

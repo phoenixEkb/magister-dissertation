@@ -183,6 +183,7 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="figures.txt" />
+    <Text Include="restrictions.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

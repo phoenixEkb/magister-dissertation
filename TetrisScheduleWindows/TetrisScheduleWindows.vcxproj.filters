@@ -77,5 +77,8 @@
     <Text Include="figures.txt">
       <Filter>Resource Files</Filter>
     </Text>
+    <Text Include="restrictions.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
   </ItemGroup>
 </Project>

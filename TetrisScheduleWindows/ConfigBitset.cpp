@@ -17,10 +17,10 @@ void ConfigBitset::switchElementState(int number)
 
 }
 
-//ConfigBitset::ConfigBitset()
-//{
-//}
-//
+ConfigBitset::ConfigBitset()
+{
+}
+
 
 ConfigBitset::~ConfigBitset()
 {

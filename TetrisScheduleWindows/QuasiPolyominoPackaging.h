@@ -2,19 +2,25 @@
 #include "stdafx.h"
 #include <vector>
 #include <utility>
+#include <iostream>
+#include <fstream>
 #include <boost/geometry.hpp>
-#include <boost/geometry/strategies/strategies.hpp>
+//#include <boost/geometry/strategies/strategies.hpp>
+#include <boost/geometry/geometries/geometries.hpp>
 #include <boost/numeric/ublas/matrix.hpp>
 #include <algorithm>
+#include <boost/container/vector.hpp>
+#include <boost/geometry/index/rtree.hpp>
 
 namespace bg = boost::geometry;
-namespace trans = bg::strategy::transform;
+//namespace trans = bg::strategy::transform;
 
 typedef bg::model::point<int, 2, boost::geometry::cs::cartesian> Point2D;
 typedef bg::model::multi_point<Point2D> MultiPoint2D;
 
 typedef boost::numeric::ublas::matrix<int> bMatrix;
 typedef boost::numeric::ublas::matrix<int> zeroMatrix;
+
 
 //using namespace std;
 enum rotation {
@@ -23,8 +29,8 @@ enum rotation {
 	left = 180,
 	bottom = 270
 };
-typedef
-struct polyminoState
+
+typedef struct polyminoState
 {
 	unsigned int maxDimension;//(max of xwidth and ywidth)
 	int possibleRotationsNumber;//1,2,4 - depends of symmetries amount
@@ -44,11 +50,11 @@ struct polyminoState
 
 class QuasiPolyominoPackaging
 {
-	static bool isInitialized;
-	static int gridWidth, gridHeight;
-	static MultiPoint2D restrictions;
-	static std::vector<MultiPoint2D> figures;
-	static std::vector<int> figuresWidth, figuresHeight;//in default state;
+	
+	int gridWidth, gridHeight;
+	MultiPoint2D restrictions;
+	boost::container::vector<MultiPoint2D> figures;
+	std::vector<int> figuresWidth, figuresHeight;//in default state;
 	std::vector<state> figuresStates;
 
 	bMatrix currentStateMatrix;
@@ -56,7 +62,7 @@ class QuasiPolyominoPackaging
 	std::vector<Point2D> conflictingPoints;
 	std::vector<int> conflictFiguresNumbers;//2 figures only;
 public:
-	QuasiPolyominoPackaging(int gridWidth, int gridHeight, MultiPoint2D restrictions, std::vector<MultiPoint2D> figures);
+	QuasiPolyominoPackaging(std::string restrictionsFile, std::string figuresFile);
 	MultiPoint2D normaliseFigure(MultiPoint2D figure);
 	//may be useful to make this 2 functions boolean to check, if they led to intersection
 	void AddFigure(int number, state newState);
@@ -74,7 +80,7 @@ public:
 
 public:
 
-	QuasiPolyominoPackaging(const MultiPoint2D points, const MultiPoint2D restrictions, int gridWidth, int gridHeight);
+	//QuasiPolyominoPackaging(const MultiPoint2D points, const MultiPoint2D restrictions, int gridWidth, int gridHeight);
 	unsigned int getPlacementsAmount();
 	bMatrix getMatrix(unsigned int number);
 	~QuasiPolyominoPackaging();
@@ -84,7 +90,7 @@ public:
 private:
 	bMatrix generateMatrix(state s);
 	void createMatrixByMultipoint(const MultiPoint2D & figure, bMatrix & m, unsigned int width, unsigned int height);
-	QuasiPolyominoPackaging();
+	
 
 	bool isMatrixCorrect(const bMatrix& m);
 

@@ -3,20 +3,20 @@
 
 #include <vector>
 #include "boost\dynamic_bitset.hpp" 
-#include "QuasiPolyominoPackaging.h"
+//#include "QuasiPolyominoPackaging.h"
 
 class ConfigBitset
 {
 	int elementsAmount;
 	boost::dynamic_bitset<> currentConfiguration;	
 	static boost::dynamic_bitset<> possiblePolyominoesPositions;
-	QuasiPolyominoPackaging currentState;//Maybe rename as geometryHandler
+	//QuasiPolyominoPackaging currentState;//Maybe rename as geometryHandler
 	//Saves information about possible states in binary form.
 	//If position is enabled, it is possible to switch values in currentConfigurations
 	//TODO: Separate this structure into individual object. 
 public:
 	~ConfigBitset();
-	ConfigBitset(std::vector<QuasiPolyominoPackaging> polyominoes, uint32_t gridWidth, uint32_t gridHeight);
+	//ConfigBitset(std::vector<QuasiPolyominoPackaging> polyominoes, uint32_t gridWidth, uint32_t gridHeight);
 
 	//ConfigBitset(vector<int> &initConfig);//
 	//ConfigBitset(ConfigBitset &conf); //copy constructor

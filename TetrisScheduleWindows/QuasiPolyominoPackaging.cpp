@@ -3,26 +3,49 @@
 #include "QuasiPolyominoPackaging.h"
 
 
-QuasiPolyominoPackaging::QuasiPolyominoPackaging(int gridWidth, int gridHeight, MultiPoint2D restrictions, std::vector<MultiPoint2D> figures)
+QuasiPolyominoPackaging::QuasiPolyominoPackaging(std::string restrictionsFile,std::string figuresFile)
 {
-	if (!(this->isInitialized))
-	{
-		this->isInitialized = true;
+		std::ifstream restrFile(restrictionsFile, std::ifstream::in);
+		restrFile >> gridWidth >> gridHeight;
+		std::string line;
+		restrFile.get();//read \n to get next line;
+		std::getline(restrFile, line);
+
+		MultiPoint2D restrPoints;
+		bg::read_wkt(line, restrPoints);
+
+		boost::container::vector<MultiPoint2D> figuresPoints;
+		std::ifstream inFile(figuresFile, std::ifstream::in);
+		while (inFile.eof())
+		{
+			std::getline(inFile, line);
+			MultiPoint2D p;
+			bg::read_wkt(line, p);
+			figuresPoints.push_back(p);
+		}
 		this->gridWidth = gridWidth;
 		this->gridHeight = gridHeight;
 		this->restrictions = restrictions;
-		this->figures = figures;
-		for (MultiPoint2D fig : figures)
+		this->figures = figuresPoints;
+
+
+		for (int i =0; i<this->figures.size();i++)
 		{
-			fig = this->normaliseFigure(fig);
+			figures[i] = normaliseFigure(figures[i]);
 		}
-	}
-	
 }
 
+MultiPoint2D QuasiPolyominoPackaging::normaliseFigure(MultiPoint2D figure)
+{
+	MultiPoint2D newFigure;
 
+	return newFigure;
+}
 
+QuasiPolyominoPackaging::~QuasiPolyominoPackaging()
+{
 
+}
 
 
 
