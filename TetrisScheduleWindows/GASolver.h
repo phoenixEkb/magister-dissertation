@@ -3,14 +3,14 @@
 #include <vector>
 #include <random>
 #include "ISolver.h"
-#include "PolyominoGroup.h"
+#include "QuasiPolyomino.h"
 #include "ConfigBitset.h"
 
 class GASolver :
 	public ISolver
 {
 private:
-	std::vector<PolyominoGroup> figures;
+	std::vector<QuasiPolyomino> figures;
 	int gridWidth, gridHeight;
 	//private static int itemsAmount, dimensions;
 	//private static double[, ] itemsSet;//amount of items*their dimensions

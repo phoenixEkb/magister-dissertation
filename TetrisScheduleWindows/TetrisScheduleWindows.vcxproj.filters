@@ -27,9 +27,6 @@
     <ClInclude Include="Problem2D.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="PolyominoGroup.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="GASolver.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -40,6 +37,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="TetrisScheduleWindows.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="QuasiPolyomino.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -56,9 +56,6 @@
     <ClCompile Include="Problem2D.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="PolyominoGroup.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="GASolver.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -66,6 +63,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="ConfigBitset.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="QuasiPolyomino.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

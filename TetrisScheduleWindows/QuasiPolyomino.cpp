@@ -1,11 +1,11 @@
 #include "stdafx.h"
 
-#include "PolyominoGroup.h"
+#include "QuasiPolyomino.h"
 
 
 //Problem 2, appears in these 3 functions
 
-PolyominoGroup::PolyominoGroup(const MultiPoint2D points, const MultiPoint2D restrictions, int gridWidth, int gridHeight)
+QuasiPolyomino::QuasiPolyomino(const MultiPoint2D points, const MultiPoint2D restrictions, int gridWidth, int gridHeight)
 {
 	this->restrictions=restrictions;//?Not sure;
 	//createMatrixByMultipoint(restrictions, restrictMatrix, gridWidth, groupHeight);  //Problem string
@@ -25,7 +25,7 @@ PolyominoGroup::PolyominoGroup(const MultiPoint2D points, const MultiPoint2D res
 }
 
 //
-unsigned int PolyominoGroup::getPlacementsAmount()
+unsigned int QuasiPolyomino::getPlacementsAmount()
 {
 	if (placementsMatrixes.empty())//
 	{
@@ -51,26 +51,26 @@ unsigned int PolyominoGroup::getPlacementsAmount()
 	return 0;
 }
 
-//bMatrix PolyominoGroup::getMatrix(unsigned int number)
+//bMatrix QuasiPolyomino::getMatrix(unsigned int number)
 //{
 //	return placementsMatrixes[number];
 //}
 
-PolyominoGroup::~PolyominoGroup()
+QuasiPolyomino::~QuasiPolyomino()
 {
 }
 
-polyminoState PolyominoGroup::getAvailableStates(int gridWidth, int gridHeight)
+polyminoState QuasiPolyomino::getAvailableStates(int gridWidth, int gridHeight)
 {
 	return polyminoState();
 }
 
-PolyominoGroup::PolyominoGroup()
+QuasiPolyomino::QuasiPolyomino()
 {
 }
 
 //returns false if bMatrix has crosses w/ restrictions bMatrix;
-bool PolyominoGroup::isMatrixCorrect(const bMatrix & m)
+bool QuasiPolyomino::isMatrixCorrect(const bMatrix & m)
 {
 	for (int i = 0; i < gridWidth; i++)
 	{
@@ -85,7 +85,7 @@ bool PolyominoGroup::isMatrixCorrect(const bMatrix & m)
 
 //Problem 3: usage of bg::transform stops building.
 //Problem 4: can't return matrix
-bMatrix PolyominoGroup::generateMatrix(state s)//todo: rewrite rotation w/ angle, rewrite as void function;
+bMatrix QuasiPolyomino::generateMatrix(state s)//todo: rewrite rotation w/ angle, rewrite as void function;
 {
 	if (s.xCoord<0||s.xCoord>=gridWidth-groupWidth
 		||s.yCoord<0||s.yCoord>=gridHeight-groupHeight
@@ -126,7 +126,7 @@ bMatrix PolyominoGroup::generateMatrix(state s)//todo: rewrite rotation w/ angle
 
 //Problem 1.
 
-//void PolyominoGroup::createMatrixByMultipoint(const MultiPoint2D figure, matrix m, unsigned int width, unsigned int height)
+//void QuasiPolyomino::createMatrixByMultipoint(const MultiPoint2D figure, matrix m, unsigned int width, unsigned int height)
 //{
 //	m = zeroMatrix(width, height);//Problem string
 //	

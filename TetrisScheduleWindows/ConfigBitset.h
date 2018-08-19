@@ -3,7 +3,7 @@
 
 #include <vector>
 #include "boost\dynamic_bitset.hpp" 
-#include "PolyominoGroup.h"
+#include "QuasiPolyomino.h"
 
 class ConfigBitset
 {
@@ -15,7 +15,7 @@ class ConfigBitset
 	//TODO: Separate this structure into individual object. 
 public:
 	~ConfigBitset();
-	ConfigBitset(std::vector<PolyominoGroup> polyominoes, uint32_t gridWidth, uint32_t gridHeight);
+	ConfigBitset(std::vector<QuasiPolyomino> polyominoes, uint32_t gridWidth, uint32_t gridHeight);
 
 	//ConfigBitset(vector<int> &initConfig);//
 	//ConfigBitset(ConfigBitset &conf); //copy constructor

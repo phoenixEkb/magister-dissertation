@@ -43,7 +43,7 @@ int fastBinaryDigitsCount(uint32_t v)
 	return MultiplyDeBruijnBitPosition[(uint32_t)(v * 0x07C4ACDDU) >> 27];
 }
 
-ConfigBitset::ConfigBitset(std::vector<PolyominoGroup> polyominoes, uint32_t gridWidth, uint32_t gridHeight)
+ConfigBitset::ConfigBitset(std::vector<QuasiPolyomino> polyominoes, uint32_t gridWidth, uint32_t gridHeight)
 {
 	auto gridMaxDim = std::max(gridWidth, gridHeight);
 	elementsAmount = polyominoes.size();	auto gridMaxDimDigitsAmount = fastBinaryDigitsCount(gridMaxDim);
