@@ -3,6 +3,29 @@
 #include "QuasiPolyominoPackaging.h"
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//deprecated
+
 //Problem 2, appears in these 3 functions
 
 QuasiPolyominoPackaging::QuasiPolyominoPackaging(const MultiPoint2D points, const MultiPoint2D restrictions, int gridWidth, int gridHeight)

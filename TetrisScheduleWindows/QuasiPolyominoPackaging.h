@@ -1,6 +1,7 @@
 #pragma once
 #include "stdafx.h"
 #include <vector>
+#include <utility>
 #include <boost/geometry.hpp>
 #include <boost/geometry/strategies/strategies.hpp>
 #include <boost/numeric/ublas/matrix.hpp>
@@ -33,6 +34,7 @@ struct polyminoState
 
  typedef struct 
 {
+	bool isIncluded=false;
 	int xCoord = 0;
 	int yCoord = 0;
 	rotation rot=rotation::right;
@@ -40,18 +42,37 @@ struct polyminoState
 
 } state;
 
- //TODO:Rename to Quasipolyomino
 class QuasiPolyominoPackaging
 {
-	int groupWidth, groupHeight, gridWidth, gridHeight;
-	MultiPoint2D points, restrictions;
-	std::vector<bMatrix> placementsMatrixes;
-	bMatrix restrictMatrix;
+	int gridWidth, gridHeight;
+	MultiPoint2D restrictions;
+	std::vector<MultiPoint2D> figures;
+	std::vector<state> figuresStates;
+	std::vector<int> figuresWidth, figuresHeight;
+	bMatrix currentStateMatrix;
+	bool hasConflicts;
+	std::vector<Point2D> conflictingPoints;
+	std::vector<int> conflictFiguresNumbers;//2 figures only;
+public:
+	QuasiPolyominoPackaging(int gridWidth, int gridHeight, MultiPoint2D restrictions, std::vector<MultiPoint2D> figures);
+	MultiPoint2D normaliseFigures(MultiPoint2D figure);
+	void AddFigure(int number, state newState);
+	void ChangeFigure(int number, state newState);
+	void removeFigure(int number);
+	void showMatrix();
+	int returnFigureNumber(Point2D coords);
+	bool updateFigures(std::vector<state> newStates);
+	std::pair<int, int> getConflictFiguresNumbers();
+
+
+
+//Deprecated
+#pragma region deprecated
+
 public:
 
 	QuasiPolyominoPackaging(const MultiPoint2D points, const MultiPoint2D restrictions, int gridWidth, int gridHeight);
 	unsigned int getPlacementsAmount();
-
 	bMatrix getMatrix(unsigned int number);
 	~QuasiPolyominoPackaging();
 
@@ -63,5 +84,7 @@ private:
 	QuasiPolyominoPackaging();
 
 	bool isMatrixCorrect(const bMatrix& m);
+#pragma endregion
+
 };
 

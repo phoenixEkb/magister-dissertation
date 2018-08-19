@@ -10,7 +10,7 @@ class ConfigBitset
 	int elementsAmount;
 	boost::dynamic_bitset<> currentConfiguration;	
 	static boost::dynamic_bitset<> possiblePolyominoesPositions;
-	QuasiPolyominoPackaging currentState;
+	QuasiPolyominoPackaging currentState;//Maybe rename as geometryHandler
 	//Saves information about possible states in binary form.
 	//If position is enabled, it is possible to switch values in currentConfigurations
 	//TODO: Separate this structure into individual object. 
