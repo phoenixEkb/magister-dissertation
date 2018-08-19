@@ -20,7 +20,7 @@ GASolver::GASolver(std::string figuresFile, std::string restrictionsFile, std::s
 		std::getline(inFile, line);
 		MultiPoint2D p;
 		bg::read_wkt(line, p);
-		QuasiPolyomino group(p,restrPoints,gridWidth,gridHeight);
+		QuasiPolyominoPackaging group(p,restrPoints,gridWidth,gridHeight);
 	//	figures.push_back(group); Problem 4
 	}
 

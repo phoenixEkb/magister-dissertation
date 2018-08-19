@@ -39,7 +39,7 @@
     <ClInclude Include="TetrisScheduleWindows.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="QuasiPolyomino.h">
+    <ClInclude Include="QuasiPolyominoPackaging.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -65,7 +65,7 @@
     <ClCompile Include="ConfigBitset.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="QuasiPolyomino.cpp">
+    <ClCompile Include="QuasiPolyominoPackaging.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

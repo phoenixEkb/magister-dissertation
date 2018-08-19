@@ -41,28 +41,26 @@ struct polyminoState
 } state;
 
  //TODO:Rename to Quasipolyomino
-class QuasiPolyomino
+class QuasiPolyominoPackaging
 {
 	int groupWidth, groupHeight, gridWidth, gridHeight;
 	MultiPoint2D points, restrictions;
-
-
 	std::vector<bMatrix> placementsMatrixes;
 	bMatrix restrictMatrix;
 public:
 
-	QuasiPolyomino(const MultiPoint2D points, const MultiPoint2D restrictions, int gridWidth, int gridHeight);
+	QuasiPolyominoPackaging(const MultiPoint2D points, const MultiPoint2D restrictions, int gridWidth, int gridHeight);
 	unsigned int getPlacementsAmount();
 
 	bMatrix getMatrix(unsigned int number);
-	~QuasiPolyomino();
+	~QuasiPolyominoPackaging();
 
 	polyminoState getAvailableStates(int gridWidth, int gridHeight);//TODO: Maybe move ConfigBitset::possiblePolyominoesPositions here.
 //f, can't recall which one is correct
 private:
 	bMatrix generateMatrix(state s);
 	void createMatrixByMultipoint(const MultiPoint2D & figure, bMatrix & m, unsigned int width, unsigned int height);
-	QuasiPolyomino();
+	QuasiPolyominoPackaging();
 
 	bool isMatrixCorrect(const bMatrix& m);
 };

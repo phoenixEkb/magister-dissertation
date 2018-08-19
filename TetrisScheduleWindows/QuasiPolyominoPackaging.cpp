@@ -1,11 +1,11 @@
 #include "stdafx.h"
 
-#include "QuasiPolyomino.h"
+#include "QuasiPolyominoPackaging.h"
 
 
 //Problem 2, appears in these 3 functions
 
-QuasiPolyomino::QuasiPolyomino(const MultiPoint2D points, const MultiPoint2D restrictions, int gridWidth, int gridHeight)
+QuasiPolyominoPackaging::QuasiPolyominoPackaging(const MultiPoint2D points, const MultiPoint2D restrictions, int gridWidth, int gridHeight)
 {
 	this->restrictions=restrictions;//?Not sure;
 	//createMatrixByMultipoint(restrictions, restrictMatrix, gridWidth, groupHeight);  //Problem string
@@ -25,7 +25,7 @@ QuasiPolyomino::QuasiPolyomino(const MultiPoint2D points, const MultiPoint2D res
 }
 
 //
-unsigned int QuasiPolyomino::getPlacementsAmount()
+unsigned int QuasiPolyominoPackaging::getPlacementsAmount()
 {
 	if (placementsMatrixes.empty())//
 	{
@@ -51,26 +51,26 @@ unsigned int QuasiPolyomino::getPlacementsAmount()
 	return 0;
 }
 
-//bMatrix QuasiPolyomino::getMatrix(unsigned int number)
+//bMatrix QuasiPolyominoPackaging::getMatrix(unsigned int number)
 //{
 //	return placementsMatrixes[number];
 //}
 
-QuasiPolyomino::~QuasiPolyomino()
+QuasiPolyominoPackaging::~QuasiPolyominoPackaging()
 {
 }
 
-polyminoState QuasiPolyomino::getAvailableStates(int gridWidth, int gridHeight)
+polyminoState QuasiPolyominoPackaging::getAvailableStates(int gridWidth, int gridHeight)
 {
 	return polyminoState();
 }
 
-QuasiPolyomino::QuasiPolyomino()
+QuasiPolyominoPackaging::QuasiPolyominoPackaging()
 {
 }
 
 //returns false if bMatrix has crosses w/ restrictions bMatrix;
-bool QuasiPolyomino::isMatrixCorrect(const bMatrix & m)
+bool QuasiPolyominoPackaging::isMatrixCorrect(const bMatrix & m)
 {
 	for (int i = 0; i < gridWidth; i++)
 	{
@@ -85,7 +85,7 @@ bool QuasiPolyomino::isMatrixCorrect(const bMatrix & m)
 
 //Problem 3: usage of bg::transform stops building.
 //Problem 4: can't return matrix
-bMatrix QuasiPolyomino::generateMatrix(state s)//todo: rewrite rotation w/ angle, rewrite as void function;
+bMatrix QuasiPolyominoPackaging::generateMatrix(state s)//todo: rewrite rotation w/ angle, rewrite as void function;
 {
 	if (s.xCoord<0||s.xCoord>=gridWidth-groupWidth
 		||s.yCoord<0||s.yCoord>=gridHeight-groupHeight
@@ -126,7 +126,7 @@ bMatrix QuasiPolyomino::generateMatrix(state s)//todo: rewrite rotation w/ angle
 
 //Problem 1.
 
-//void QuasiPolyomino::createMatrixByMultipoint(const MultiPoint2D figure, matrix m, unsigned int width, unsigned int height)
+//void QuasiPolyominoPackaging::createMatrixByMultipoint(const MultiPoint2D figure, matrix m, unsigned int width, unsigned int height)
 //{
 //	m = zeroMatrix(width, height);//Problem string
 //	
