@@ -44,11 +44,12 @@ struct polyminoState
 
 class QuasiPolyominoPackaging
 {
-	int gridWidth, gridHeight;
-	MultiPoint2D restrictions;
-	std::vector<MultiPoint2D> figures;
+	static int gridWidth, gridHeight;
+	static MultiPoint2D restrictions;
+	static std::vector<MultiPoint2D> figures;
+	static std::vector<int> figuresWidth, figuresHeight;//in default state;
 	std::vector<state> figuresStates;
-	std::vector<int> figuresWidth, figuresHeight;
+
 	bMatrix currentStateMatrix;
 	bool hasConflicts;
 	std::vector<Point2D> conflictingPoints;
@@ -56,8 +57,10 @@ class QuasiPolyominoPackaging
 public:
 	QuasiPolyominoPackaging(int gridWidth, int gridHeight, MultiPoint2D restrictions, std::vector<MultiPoint2D> figures);
 	MultiPoint2D normaliseFigures(MultiPoint2D figure);
+	//may be useful to make this 2 functions boolean to check, if they led to intersection
 	void AddFigure(int number, state newState);
 	void ChangeFigure(int number, state newState);
+	
 	void removeFigure(int number);
 	void showMatrix();
 	int returnFigureNumber(Point2D coords);
