@@ -17,10 +17,10 @@ void ConfigBitset::switchElementState(int number)
 
 }
 
-ConfigBitset::ConfigBitset()
-{
-}
-
+//ConfigBitset::ConfigBitset()
+//{
+//}
+//
 
 ConfigBitset::~ConfigBitset()
 {
@@ -43,6 +43,7 @@ int fastBinaryDigitsCount(uint32_t v)
 	return MultiplyDeBruijnBitPosition[(uint32_t)(v * 0x07C4ACDDU) >> 27];
 }
 
+/*
 ConfigBitset::ConfigBitset(std::vector<QuasiPolyominoPackaging> polyominoes, uint32_t gridWidth, uint32_t gridHeight)
 {
 	auto gridMaxDim = std::max(gridWidth, gridHeight);
@@ -76,6 +77,7 @@ ConfigBitset::ConfigBitset(std::vector<QuasiPolyominoPackaging> polyominoes, uin
 //			this->availablePositions[i*bitsForOneConfig + 1 + 2 * gridMaxDimDigitsAmount + 2+1] = false;
 //	}//maybe that kind of pre-gen would be better with smallmethods a-la changeParam(param, item).
 }
+*/
 
 void ConfigBitset::setValueToActive(int position)
 {

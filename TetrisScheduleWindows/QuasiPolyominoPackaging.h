@@ -44,6 +44,7 @@ struct polyminoState
 
 class QuasiPolyominoPackaging
 {
+	static bool isInitialized;
 	static int gridWidth, gridHeight;
 	static MultiPoint2D restrictions;
 	static std::vector<MultiPoint2D> figures;
@@ -56,7 +57,7 @@ class QuasiPolyominoPackaging
 	std::vector<int> conflictFiguresNumbers;//2 figures only;
 public:
 	QuasiPolyominoPackaging(int gridWidth, int gridHeight, MultiPoint2D restrictions, std::vector<MultiPoint2D> figures);
-	MultiPoint2D normaliseFigures(MultiPoint2D figure);
+	MultiPoint2D normaliseFigure(MultiPoint2D figure);
 	//may be useful to make this 2 functions boolean to check, if they led to intersection
 	void AddFigure(int number, state newState);
 	void ChangeFigure(int number, state newState);
@@ -70,7 +71,6 @@ public:
 
 
 //Deprecated
-#pragma region deprecated
 
 public:
 
@@ -87,7 +87,6 @@ private:
 	QuasiPolyominoPackaging();
 
 	bool isMatrixCorrect(const bMatrix& m);
-#pragma endregion
 
 };
 
