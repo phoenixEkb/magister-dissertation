@@ -64,7 +64,8 @@ public:
 	QuasiPolyominoPackaging(std::string restrictionsFile, std::string figuresFile);
 	MultiPoint2D normaliseFigure(MultiPoint2D figure, int number);
 	//may be useful to make this 2 functions boolean to check, if they led to intersection
-	void AddFigure(int number, state newState);
+	
+	//void AddFigure(int number, state newState);//
 	void ChangeFigure(int number, state newState);
 	
 	void removeFigure(int number);

@@ -12,8 +12,6 @@ QuasiPolyominoPackaging::QuasiPolyominoPackaging(std::string restrictionsFile,st
 		std::getline(restrFile, line);
 
 		bg::read_wkt(line, restrictions);
-
-		boost::container::vector<MultiPoint2D> figures;
 		std::ifstream inFile(figuresFile, std::ifstream::in);
 		std::getline(inFile, line);
 		while (!inFile.eof())
@@ -35,6 +33,10 @@ QuasiPolyominoPackaging::QuasiPolyominoPackaging(std::string restrictionsFile,st
 		{
 			currentStateMatrix(restrictions[i].get<0>(), restrictions[i].get<1>()) = -1;
 		}
+		figuresStates = std::vector<state>(figures.size());
+		hasConflicts = false;
+		conflictingPoints = std::vector<Point2D>();
+		conflictFiguresNumbers = std::vector<int>();
 }
 
 MultiPoint2D QuasiPolyominoPackaging::normaliseFigure(MultiPoint2D figure,int number)
