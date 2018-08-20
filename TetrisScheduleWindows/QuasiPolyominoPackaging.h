@@ -5,7 +5,6 @@
 #include <iostream>
 #include <fstream>
 #include <boost/geometry.hpp>
-//#include <boost/geometry/strategies/strategies.hpp>
 #include <boost/geometry/geometries/geometries.hpp>
 #include <boost/numeric/ublas/matrix.hpp>
 #include <boost/numeric/ublas/io.hpp>
@@ -14,7 +13,7 @@
 #include <boost/geometry/index/rtree.hpp>
 
 namespace bg = boost::geometry;
-//namespace trans = bg::strategy::transform;
+namespace trans = bg::strategy::transform;
 
 typedef bg::model::point<int, 2, boost::geometry::cs::cartesian> Point2D;
 typedef bg::model::multi_point<Point2D> MultiPoint2D;

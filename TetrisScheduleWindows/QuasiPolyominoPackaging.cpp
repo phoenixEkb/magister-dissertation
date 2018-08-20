@@ -11,34 +11,23 @@ QuasiPolyominoPackaging::QuasiPolyominoPackaging(std::string restrictionsFile,st
 		restrFile.get();//read \n to get next line;
 		std::getline(restrFile, line);
 
-		MultiPoint2D restrPoints;
-		bg::read_wkt(line, restrPoints);
+		bg::read_wkt(line, restrictions);
 
-		boost::container::vector<MultiPoint2D> figuresPoints;
+		boost::container::vector<MultiPoint2D> figures;
 		std::ifstream inFile(figuresFile, std::ifstream::in);
-		while (inFile.eof())
+		std::getline(inFile, line);
+		while (!inFile.eof())
 		{
-			std::getline(inFile, line);
 			MultiPoint2D p;
 			bg::read_wkt(line, p);
-			figuresPoints.push_back(p);
+			figures.push_back(p);
+			std::getline(inFile, line);
 		}
-		this->gridWidth = gridWidth;
-		this->gridHeight = gridHeight;
-		this->restrictions = restrPoints;
-		this->figures = figuresPoints;
-		for (int i =0; i<this->figures.size();i++)
+		figuresWidth = std::vector<int>(figures.size());
+		figuresHeight= std::vector<int>(figures.size());
+
+		for (int i =0; i<figures.size();i++)
 		{
-			int xMin = INT_MAX, yMin = INT_MAX, xMax = INT_MIN, yMax = INT_MIN;
-				for (int j = 0; j < bg::num_points(figures[i]); i++)
-				{
-					xMax = std::max(figures[i][j].get<0>(),xMax);
-					yMax = std::max(figures[i][j].get<1>(), yMax);
-					xMin = std::min(figures[i][j].get<0>(), xMin);
-					yMin = std::min(figures[i][j].get<1>(), yMin);
-				}
-			figuresWidth[i] = 1 + xMax - xMin;
-			figuresHeight[i] = 1 + yMax - yMin;
 			figures[i] = normaliseFigure(figures[i],i);
 		}
 		currentStateMatrix = boost::numeric::ublas::zero_matrix<int>(gridWidth, gridHeight);
@@ -50,8 +39,20 @@ QuasiPolyominoPackaging::QuasiPolyominoPackaging(std::string restrictionsFile,st
 
 MultiPoint2D QuasiPolyominoPackaging::normaliseFigure(MultiPoint2D figure,int number)
 {
-	MultiPoint2D newFigure;
+	int xMin = INT_MAX, yMin = INT_MAX, xMax = INT_MIN, yMax = INT_MIN;
+	for (int j = 0; j < bg::num_points(figure); j++)
+	{
+		xMax = std::max(figure[j].get<0>(), xMax);
+		yMax = std::max(figure[j].get<1>(), yMax);
+		xMin = std::min(figure[j].get<0>(), xMin);
+		yMin = std::min(figure[j].get<1>(), yMin);
+	}
+	figuresWidth[number] = 1 + xMax - xMin;
+	figuresHeight[number] = 1 + yMax - yMin;
 
+	trans::translate_transformer<double, 2, 2> translate(-xMin, -yMin);
+	MultiPoint2D newFigure;
+	bg::transform(figure, newFigure, translate);
 	return newFigure;
 }
 
@@ -61,6 +62,18 @@ QuasiPolyominoPackaging::~QuasiPolyominoPackaging()
 }
 
 
+void QuasiPolyominoPackaging::showMatrix()
+{
+
+	for (int i = currentStateMatrix.size1() - 1; i >= 0; i--)
+	{
+		for (size_t j = 0; j < currentStateMatrix.size2(); j++)
+		{
+			std::cout << std::setw(3) << std::setfill(' ') << currentStateMatrix(i, j) << " ";//TODO: calculate perfect range for setw(i.e. 2 for <10 figures, 3 for 10-99 etc.)
+		}
+		std::cout << std::endl;
+	}
+}
 
 
 
@@ -211,15 +224,3 @@ QuasiPolyominoPackaging::~QuasiPolyominoPackaging()
 //	}
 //}
 
-void QuasiPolyominoPackaging::showMatrix()
-{
-	
-	for (int i = currentStateMatrix.size1()-1; i >=0 ; i--)
-	{
-		for (size_t j = 0; j < currentStateMatrix.size2(); j++)
-		{
-			std::cout << std::setw(3) << std::setfill(' ')<<currentStateMatrix(i, j)<<" ";//TODO: calculate perfect range for setw(i.e. 2 for <10 figures, 3 for 10-99 etc.)
-		}
-		std::cout << std::endl;
-	}
-}
