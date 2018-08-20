@@ -67,7 +67,7 @@ void QuasiPolyominoPackaging::changeFigure(int number, state newState)
 }
 
 
- bool Equals(state& lhs, state& rhs)//comparator
+ bool QuasiPolyominoPackaging::Equals(state& lhs, state& rhs)//comparator
  {
 	 return (lhs.isIncluded == rhs.isIncluded &&
 		 lhs.mirrored == rhs.mirrored&&

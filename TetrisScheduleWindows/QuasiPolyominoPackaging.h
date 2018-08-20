@@ -74,7 +74,7 @@ public:
 	bool updateFigures(std::vector<state> newStates);
 	std::pair<int, int> getConflictFiguresNumbers();
 	//UpdateMatrix?
-
+	bool Equals(state& lhs, state& rhs);//TODO: move with structs into utility.
 
 //Deprecated
 
