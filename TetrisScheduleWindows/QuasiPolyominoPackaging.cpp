@@ -46,7 +46,6 @@ QuasiPolyominoPackaging::QuasiPolyominoPackaging(std::string restrictionsFile,st
 		{
 			currentStateMatrix(restrictions[i].get<0>(), restrictions[i].get<1>()) = -1;
 		}
-		showMatrix();
 }
 
 MultiPoint2D QuasiPolyominoPackaging::normaliseFigure(MultiPoint2D figure,int number)
@@ -215,11 +214,11 @@ QuasiPolyominoPackaging::~QuasiPolyominoPackaging()
 void QuasiPolyominoPackaging::showMatrix()
 {
 	
-	for (size_t i = 0; i < currentStateMatrix.size1(); i++)
+	for (int i = currentStateMatrix.size1()-1; i >=0 ; i--)
 	{
 		for (size_t j = 0; j < currentStateMatrix.size2(); j++)
 		{
-			std::cout << std::setw(4) << std::setfill(' ')<<currentStateMatrix(i, j)<<" ";//TODO: add aligning
+			std::cout << std::setw(3) << std::setfill(' ')<<currentStateMatrix(i, j)<<" ";//TODO: calculate perfect range for setw(i.e. 2 for <10 figures, 3 for 10-99 etc.)
 		}
 		std::cout << std::endl;
 	}
