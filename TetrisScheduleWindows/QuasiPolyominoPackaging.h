@@ -8,6 +8,7 @@
 //#include <boost/geometry/strategies/strategies.hpp>
 #include <boost/geometry/geometries/geometries.hpp>
 #include <boost/numeric/ublas/matrix.hpp>
+#include <boost/numeric/ublas/io.hpp>
 #include <algorithm>
 #include <boost/container/vector.hpp>
 #include <boost/geometry/index/rtree.hpp>
@@ -37,7 +38,6 @@ typedef struct polyminoState
 	bool mirrorable;//if has <2 symmetry
 } polyminoState;
 
-
  typedef struct 
 {
 	bool isIncluded=false;
@@ -50,7 +50,7 @@ typedef struct polyminoState
 
 class QuasiPolyominoPackaging
 {
-	
+	//possible to make them static
 	int gridWidth, gridHeight;
 	MultiPoint2D restrictions;
 	boost::container::vector<MultiPoint2D> figures;
@@ -63,7 +63,7 @@ class QuasiPolyominoPackaging
 	std::vector<int> conflictFiguresNumbers;//2 figures only;
 public:
 	QuasiPolyominoPackaging(std::string restrictionsFile, std::string figuresFile);
-	MultiPoint2D normaliseFigure(MultiPoint2D figure);
+	MultiPoint2D normaliseFigure(MultiPoint2D figure, int number);
 	//may be useful to make this 2 functions boolean to check, if they led to intersection
 	void AddFigure(int number, state newState);
 	void ChangeFigure(int number, state newState);

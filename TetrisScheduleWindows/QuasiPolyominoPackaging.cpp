@@ -25,17 +25,30 @@ QuasiPolyominoPackaging::QuasiPolyominoPackaging(std::string restrictionsFile,st
 		}
 		this->gridWidth = gridWidth;
 		this->gridHeight = gridHeight;
-		this->restrictions = restrictions;
+		this->restrictions = restrPoints;
 		this->figures = figuresPoints;
-
-
 		for (int i =0; i<this->figures.size();i++)
 		{
-			figures[i] = normaliseFigure(figures[i]);
+			int xMin = INT_MAX, yMin = INT_MAX, xMax = INT_MIN, yMax = INT_MIN;
+				for (int j = 0; j < bg::num_points(figures[i]); i++)
+				{
+					xMax = std::max(figures[i][j].get<0>(),xMax);
+					yMax = std::max(figures[i][j].get<1>(), yMax);
+					xMin = std::min(figures[i][j].get<0>(), xMin);
+					yMin = std::min(figures[i][j].get<1>(), yMin);
+				}
+			figuresWidth[i] = 1 + xMax - xMin;
+			figuresHeight[i] = 1 + yMax - yMin;
+			figures[i] = normaliseFigure(figures[i],i);
+		}
+		currentStateMatrix = boost::numeric::ublas::zero_matrix<int>(gridWidth, gridHeight);
+		for (size_t i = 0; i < bg::num_points(restrictions); i++)
+		{
+			currentStateMatrix(restrictions[i].get<0>(), restrictions[i].get<1>()) = -1;
 		}
 }
 
-MultiPoint2D QuasiPolyominoPackaging::normaliseFigure(MultiPoint2D figure)
+MultiPoint2D QuasiPolyominoPackaging::normaliseFigure(MultiPoint2D figure,int number)
 {
 	MultiPoint2D newFigure;
 
