@@ -30,7 +30,7 @@ enum rotation {
 	bottom = 270
 };
 
-typedef struct polyminoState
+typedef struct polyminoState //contains info about possible transformations of QP. Currently not in use.
 {
 	unsigned int maxDimension;//(max of xwidth and ywidth)
 	int possibleRotationsNumber;//1,2,4 - depends of symmetries amount
@@ -44,8 +44,8 @@ typedef struct polyminoState
 	int yCoord = 0;
 	rotation rot=rotation::right;
 	bool mirrored = false;
-
 } state;
+
 
 class QuasiPolyominoPackaging
 {
@@ -66,14 +66,14 @@ public:
 	//may be useful to make this 2 functions boolean to check, if they led to intersection
 	
 	//void AddFigure(int number, state newState);//
-	void ChangeFigure(int number, state newState);
+	void changeFigure(int number, state newState);
 	
 	void removeFigure(int number);
 	void showMatrix();
 	int returnFigureNumber(Point2D coords);
 	bool updateFigures(std::vector<state> newStates);
 	std::pair<int, int> getConflictFiguresNumbers();
-
+	//UpdateMatrix?
 
 
 //Deprecated

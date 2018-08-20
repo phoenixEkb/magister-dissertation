@@ -10,8 +10,10 @@ QuasiPolyominoPackaging::QuasiPolyominoPackaging(std::string restrictionsFile,st
 		std::string line;
 		restrFile.get();//read \n to get next line;
 		std::getline(restrFile, line);
-
-		bg::read_wkt(line, restrictions);
+		if (line != "")
+			bg::read_wkt(line, restrictions);
+		else
+			restrictions = MultiPoint2D();//TODO:Check if works
 		std::ifstream inFile(figuresFile, std::ifstream::in);
 		std::getline(inFile, line);
 		while (!inFile.eof())
@@ -58,11 +60,26 @@ MultiPoint2D QuasiPolyominoPackaging::normaliseFigure(MultiPoint2D figure,int nu
 	return newFigure;
 }
 
+void QuasiPolyominoPackaging::changeFigure(int number, state newState)
+{
+	if (Equals(figuresStates[number] ,newState))
+		return;
+}
+
+
+ bool Equals(state& lhs, state& rhs)//comparator
+ {
+	 return (lhs.isIncluded == rhs.isIncluded &&
+		 lhs.mirrored == rhs.mirrored&&
+		 lhs.rot == rhs.rot&&
+		 lhs.xCoord == rhs.xCoord&&
+		 lhs.yCoord == rhs.yCoord);
+ };
+
 QuasiPolyominoPackaging::~QuasiPolyominoPackaging()
 {
 
 }
-
 
 void QuasiPolyominoPackaging::showMatrix()
 {
