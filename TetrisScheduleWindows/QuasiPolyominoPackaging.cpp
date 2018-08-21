@@ -30,10 +30,17 @@ QuasiPolyominoPackaging::QuasiPolyominoPackaging(std::string restrictionsFile, s
 	{
 		figures[i] = normaliseFigure(figures[i], i);
 	}
-	currentStateMatrix = boost::numeric::ublas::zero_matrix<int>(gridWidth, gridHeight);
+	currentStateMatrix = boost::numeric::ublas::matrix<int>(gridWidth, gridHeight);
+	for (size_t i = 0; i < gridWidth; i++)
+	{
+		for (size_t j = 0; j < gridHeight; j++)
+		{
+			currentStateMatrix(i, j) = -1;
+		}
+	}
 	for (size_t i = 0; i < bg::num_points(restrictions); i++)
 	{
-		currentStateMatrix(restrictions[i].get<0>(), restrictions[i].get<1>()) = -1;
+		currentStateMatrix(restrictions[i].get<0>(), restrictions[i].get<1>()) = -2;
 	}
 	figuresStates = std::vector<state>(figures.size());
 	hasConflicts = false;
@@ -83,7 +90,7 @@ bool QuasiPolyominoPackaging::changeFigure(int number, state newState)
 	
 	for (int i = 0; i < bg::num_points(newFigure); i++)
 	{
-		if (currentStateMatrix(newFigure[i].get<0>(), newFigure[i].get<1>() != 0))
+		if (currentStateMatrix(newFigure[i].get<0>(), newFigure[i].get<1>() != -1))
 			return false;
 	}
 	for (int i = 0; i < bg::num_points(newFigure); i++)
@@ -132,8 +139,8 @@ void QuasiPolyominoPackaging::removeFigure(int number)
 	{
 		for (size_t j = 0; j < currentStateMatrix.size2(); j++)
 		{
-			if (currentStateMatrix(i, j) == number + 1)
-				currentStateMatrix(i, j) = 0;
+			if (currentStateMatrix(i, j) == number )
+				currentStateMatrix(i, j) = -1;
 		}
 	}
 }
@@ -151,15 +158,23 @@ void QuasiPolyominoPackaging::showMatrix()
 	{
 		for (size_t j = 0; j < currentStateMatrix.size2(); j++)
 		{
-			std::cout << std::setw(3) << std::setfill(' ') << currentStateMatrix(i, j) << " ";//TODO: calculate perfect range for setw(i.e. 2 for <10 figures, 3 for 10-99 etc.)
+			std::cout << std::setw(3) << std::setfill(' ');
+			switch (currentStateMatrix(i, j))
+			{//TODO: write some wraparound for numbers.
+			case -1:std::cout << '_'; break;//no figure
+			case -2:std::cout << '#'; break;//restriction
+			case -3:std::cout << '*'; break;//error
+			default:std::cout << currentStateMatrix(i, j);
+			};
+				std::cout<< " ";//TODO: calculate perfect range for setw(i.e. 2 for <10 figures, 3 for 10-99 etc.)
 		}
 		std::cout << std::endl;
 	}
 }
 
-int QuasiPolyominoPackaging::returnFigureNumber(Point2D coords)//returns -1 if not a figure.
+int QuasiPolyominoPackaging::returnFigureNumber(Point2D coords)//returns -1 if no figure found.
 {
-	return this->currentStateMatrix(coords.get<0>(), coords.get<1>())>0?this->currentStateMatrix(coords.get<0>(), coords.get<1>())-1:-1;
+	return this->currentStateMatrix(coords.get<0>(), coords.get<1>())>-1?this->currentStateMatrix(coords.get<0>(), coords.get<1>()):-1;
 }
 
 bool QuasiPolyominoPackaging::updateFigures(std::vector<state> newStates)
