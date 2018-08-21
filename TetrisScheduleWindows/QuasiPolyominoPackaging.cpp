@@ -90,7 +90,7 @@ bool QuasiPolyominoPackaging::changeFigure(int number, state newState)
 	
 	for (int i = 0; i < bg::num_points(newFigure); i++)
 	{
-		if (currentStateMatrix(newFigure[i].get<0>(), newFigure[i].get<1>() != -1))
+		if (currentStateMatrix(newFigure[i].get<0>(), newFigure[i].get<1>()) != -1)
 			return false;
 	}
 	for (int i = 0; i < bg::num_points(newFigure); i++)
@@ -177,19 +177,48 @@ int QuasiPolyominoPackaging::returnFigureNumber(Point2D coords)//returns -1 if n
 	return this->currentStateMatrix(coords.get<0>(), coords.get<1>())>-1?this->currentStateMatrix(coords.get<0>(), coords.get<1>()):-1;
 }
 
-bool QuasiPolyominoPackaging::updateFigures(std::vector<state> newStates)
+bool QuasiPolyominoPackaging::updateFigures(std::vector<state> newStates,int startPosition)
 {
 	if (newStates.size() != this->figuresStates.size())
 	{
 		std::cout << "Wrong states vector" << std::endl;
 		return false;
 	}
-	this->tempStates = newStates;
-	for (int i = 0; i < newStates.size(); i++)
+	tempStates = newStates;
+	if (!startPosition)//clear matrix
 	{
-		
+		for (size_t i = 0; i < gridWidth; i++)
+		{
+			for (size_t j = 0; j < gridHeight; j++)
+			{
+				currentStateMatrix(i, j) = -1;
+			}
+		}
 	}
-	return false;
+	for (int i = startPosition; i < tempStates.size(); i++)
+	{
+		MultiPoint2D newFigure = generateFigureByState(tempStates[i], i);
+		for (int j = 0; j < bg::num_points(newFigure); j++)
+		{
+			if (currentStateMatrix(newFigure[j].get<0>(), newFigure[j].get<1>()) != -1)
+			{
+				if (!hasConflicts)
+				{
+					hasConflicts = true;
+					this->conflictFiguresNumbers = std::make_pair(j, currentStateMatrix(newFigure[j].get<0>(), newFigure[j].get<1>()));
+				}
+				this->conflictingPoints.push_back(Point2D(newFigure[j].get<0>(), newFigure[j].get<1>()));
+				
+			}
+		}
+		if (hasConflicts)
+			return false;
+		for (int j = 0; j < bg::num_points(newFigure); j++)
+		{
+			currentStateMatrix(newFigure[j].get<0>(), newFigure[j].get<1>()) = j;
+		}
+	}
+	return true;
 }
 
 std::pair<int, int> QuasiPolyominoPackaging::getConflictFiguresNumbers()

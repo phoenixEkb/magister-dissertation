@@ -60,7 +60,7 @@ class QuasiPolyominoPackaging
 	bool hasConflicts;
 	std::vector<Point2D> conflictingPoints;
 	std::pair<int,int> conflictFiguresNumbers;//2 figures only;
-	boost::container::vector<MultiPoint2D> tempFigures;//if figure added via updateFigures without intersections, it is added into that vector. 
+	//boost::container::vector<MultiPoint2D> tempFigures;//if figure added via updateFigures without intersections, it is added into that vector. 
 	std::vector<state> tempStates;
 	//While all the figures are proceeded - this vector is used for updating stateMatrix
 	//It is possible to check on whichfigure we have stopped - it is second argument of confFigNum
@@ -68,20 +68,17 @@ public:
 	QuasiPolyominoPackaging(std::string restrictionsFile, std::string figuresFile);
 	~QuasiPolyominoPackaging();
 	MultiPoint2D normaliseFigure(MultiPoint2D figure, int number);
-	//may be useful to make this 2 functions boolean to check, if they led to intersection
-	
-	//void AddFigure(int number, state newState);//
-	bool changeFigure(int number, state newState);
+
+	bool changeFigure(int number, state newState); //returns false if state didn't changed
 	MultiPoint2D generateFigureByState(state newState, int figureNumber);
-	//returns false if state didn't changed
+	
 	void removeFigure(int number);
 	void showMatrix();
 	int returnFigureNumber(Point2D coords);
 
-	bool updateFigures(std::vector<state> newStates);//returns false if there are conflicts between figures. Presumably used for crossingover.
+	bool updateFigures(std::vector<state> newStates, int startPositon=0);//returns false if there are conflicts between figures. Presumably used for crossingover.
 	std::pair<int, int> getConflictFiguresNumbers();
 	void resolveLastConflictWithRemove(int figureToRemoveNumber);
-	//UpdateMatrix?
 	bool Equals(state& lhs, state& rhs);//TODO: move with structs into utility.
 
 //Deprecated
