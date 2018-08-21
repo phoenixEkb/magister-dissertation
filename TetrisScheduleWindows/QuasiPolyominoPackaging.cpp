@@ -3,45 +3,45 @@
 #include "QuasiPolyominoPackaging.h"
 
 
-QuasiPolyominoPackaging::QuasiPolyominoPackaging(std::string restrictionsFile,std::string figuresFile)
+QuasiPolyominoPackaging::QuasiPolyominoPackaging(std::string restrictionsFile, std::string figuresFile)
 {
-		std::ifstream restrFile(restrictionsFile, std::ifstream::in);
-		restrFile >> gridWidth >> gridHeight;
-		std::string line;
-		restrFile.get();//read \n to get next line;
-		std::getline(restrFile, line);
-		if (line != "")
-			bg::read_wkt(line, restrictions);
-		else
-			restrictions = MultiPoint2D();//TODO:Check if works
-		std::ifstream inFile(figuresFile, std::ifstream::in);
+	std::ifstream restrFile(restrictionsFile, std::ifstream::in);
+	restrFile >> gridWidth >> gridHeight;
+	std::string line;
+	restrFile.get();//read \n to get next line;
+	std::getline(restrFile, line);
+	if (line != "")
+		bg::read_wkt(line, restrictions);
+	else
+		restrictions = MultiPoint2D();//TODO:Check if works
+	std::ifstream inFile(figuresFile, std::ifstream::in);
+	std::getline(inFile, line);
+	while (!inFile.eof())
+	{
+		MultiPoint2D p;
+		bg::read_wkt(line, p);
+		figures.push_back(p);
 		std::getline(inFile, line);
-		while (!inFile.eof())
-		{
-			MultiPoint2D p;
-			bg::read_wkt(line, p);
-			figures.push_back(p);
-			std::getline(inFile, line);
-		}
-		figuresWidth = std::vector<int>(figures.size());
-		figuresHeight= std::vector<int>(figures.size());
+	}
+	figuresWidth = std::vector<int>(figures.size());
+	figuresHeight = std::vector<int>(figures.size());
 
-		for (int i =0; i<figures.size();i++)
-		{
-			figures[i] = normaliseFigure(figures[i],i);
-		}
-		currentStateMatrix = boost::numeric::ublas::zero_matrix<int>(gridWidth, gridHeight);
-		for (size_t i = 0; i < bg::num_points(restrictions); i++)
-		{
-			currentStateMatrix(restrictions[i].get<0>(), restrictions[i].get<1>()) = -1;
-		}
-		figuresStates = std::vector<state>(figures.size());
-		hasConflicts = false;
-		conflictingPoints = std::vector<Point2D>();
-		conflictFiguresNumbers = std::vector<int>();
+	for (int i = 0; i < figures.size(); i++)
+	{
+		figures[i] = normaliseFigure(figures[i], i);
+	}
+	currentStateMatrix = boost::numeric::ublas::zero_matrix<int>(gridWidth, gridHeight);
+	for (size_t i = 0; i < bg::num_points(restrictions); i++)
+	{
+		currentStateMatrix(restrictions[i].get<0>(), restrictions[i].get<1>()) = -1;
+	}
+	figuresStates = std::vector<state>(figures.size());
+	hasConflicts = false;
+	conflictingPoints = std::vector<Point2D>();
+	conflictFiguresNumbers = std::pair<int,int>();
 }
 
-MultiPoint2D QuasiPolyominoPackaging::normaliseFigure(MultiPoint2D figure,int number)
+MultiPoint2D QuasiPolyominoPackaging::normaliseFigure(MultiPoint2D figure, int number)
 {
 	int xMin = INT_MAX, yMin = INT_MAX, xMax = INT_MIN, yMax = INT_MIN;
 	for (int j = 0; j < bg::num_points(figure); j++)
@@ -60,21 +60,84 @@ MultiPoint2D QuasiPolyominoPackaging::normaliseFigure(MultiPoint2D figure,int nu
 	return newFigure;
 }
 
-void QuasiPolyominoPackaging::changeFigure(int number, state newState)
+bool QuasiPolyominoPackaging::changeFigure(int number, state newState)
 {
-	if (Equals(figuresStates[number] ,newState))
-		return;
+	if (newState.xCoord < 0 ||
+		newState.xCoord >= gridWidth ||
+		newState.yCoord < 0 ||
+		newState.yCoord >= gridHeight ||
+		newState.rot < 0 ||
+		newState.rot >= 4)//TODO: rewrite coordinates condition for rotated fugure
+	{
+		std::cout << "error state obtained" << std::endl;
+		return false;
+	}
+	if (Equals(figuresStates[number], newState))
+		return false;
+	if (newState.isIncluded == false)
+	{
+		removeFigure(number);
+		return true;
+	}
+	MultiPoint2D newFigure=generateFigureByState(newState,number);
+	
+	for (int i = 0; i < bg::num_points(newFigure); i++)
+	{
+		if (currentStateMatrix(newFigure[i].get<0>(), newFigure[i].get<1>() != 0))
+			return false;
+	}
+	for (int i = 0; i < bg::num_points(newFigure); i++)
+	{
+		currentStateMatrix(newFigure[i].get<0>(), newFigure[i].get<1>()) = number;
+	}
+	figuresStates[number] = newState;
+	return true;
 }
 
+MultiPoint2D QuasiPolyominoPackaging::generateFigureByState(state newState, int figureNumber)
+{
+	MultiPoint2D newFigure(figures[figureNumber]);
+	//first we generate figure, then create bMatrix;
+	if (newState.mirrored)
+	{
+		trans::scale_transformer<int, 2, 2>xMirror(-1, 1);
+		bg::transform(newFigure, newFigure, xMirror);
+	}
+	if (newState.rot != rotation::right)
+	{
+		trans::rotate_transformer<bg::degree, int, 2, 2> rotate(newState.rot);//TODO:check if works correctly
+		bg::transform(newFigure, newFigure, rotate);
+	}
+	if (newState.xCoord != 0 || newState.yCoord != 0)
+	{
+		trans::translate_transformer<int, 2, 2> move(newState.xCoord, newState.yCoord);
+		bg::transform(newFigure, newFigure, move);
+	}
+	return newFigure;
+}
 
- bool QuasiPolyominoPackaging::Equals(state& lhs, state& rhs)//comparator
- {
-	 return (lhs.isIncluded == rhs.isIncluded &&
-		 lhs.mirrored == rhs.mirrored&&
-		 lhs.rot == rhs.rot&&
-		 lhs.xCoord == rhs.xCoord&&
-		 lhs.yCoord == rhs.yCoord);
- };
+bool QuasiPolyominoPackaging::Equals(state& lhs, state& rhs)//comparator
+{
+	return (lhs.isIncluded == rhs.isIncluded &&
+		lhs.mirrored == rhs.mirrored&&
+		lhs.rot == rhs.rot&&
+		lhs.xCoord == rhs.xCoord&&
+		lhs.yCoord == rhs.yCoord);
+};
+
+void QuasiPolyominoPackaging::removeFigure(int number)
+{
+	figuresStates[number] = state();
+	for (int i = currentStateMatrix.size1() - 1; i >= 0; i--)
+	{
+		for (size_t j = 0; j < currentStateMatrix.size2(); j++)
+		{
+			if (currentStateMatrix(i, j) == number + 1)
+				currentStateMatrix(i, j) = 0;
+		}
+	}
+}
+
 
 QuasiPolyominoPackaging::~QuasiPolyominoPackaging()
 {
@@ -92,6 +155,31 @@ void QuasiPolyominoPackaging::showMatrix()
 		}
 		std::cout << std::endl;
 	}
+}
+
+int QuasiPolyominoPackaging::returnFigureNumber(Point2D coords)//returns -1 if not a figure.
+{
+	return this->currentStateMatrix(coords.get<0>(), coords.get<1>())>0?this->currentStateMatrix(coords.get<0>(), coords.get<1>())-1:-1;
+}
+
+bool QuasiPolyominoPackaging::updateFigures(std::vector<state> newStates)
+{
+	if (newStates.size() != this->figuresStates.size())
+	{
+		std::cout << "Wrong states vector" << std::endl;
+		return false;
+	}
+	this->tempStates = newStates;
+	for (int i = 0; i < newStates.size(); i++)
+	{
+		
+	}
+	return false;
+}
+
+std::pair<int, int> QuasiPolyominoPackaging::getConflictFiguresNumbers()
+{
+	return conflictFiguresNumbers;
 }
 
 

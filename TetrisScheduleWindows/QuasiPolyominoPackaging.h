@@ -55,44 +55,45 @@ class QuasiPolyominoPackaging
 	boost::container::vector<MultiPoint2D> figures;
 	std::vector<int> figuresWidth, figuresHeight;//in default state;
 	std::vector<state> figuresStates;
-
 	bMatrix currentStateMatrix;
+
 	bool hasConflicts;
 	std::vector<Point2D> conflictingPoints;
-	std::vector<int> conflictFiguresNumbers;//2 figures only;
+	std::pair<int,int> conflictFiguresNumbers;//2 figures only;
+	boost::container::vector<MultiPoint2D> tempFigures;//if figure added via updateFigures without intersections, it is added into that vector. 
+	std::vector<state> tempStates;
+	//While all the figures are proceeded - this vector is used for updating stateMatrix
+	//It is possible to check on whichfigure we have stopped - it is second argument of confFigNum
 public:
 	QuasiPolyominoPackaging(std::string restrictionsFile, std::string figuresFile);
+	~QuasiPolyominoPackaging();
 	MultiPoint2D normaliseFigure(MultiPoint2D figure, int number);
 	//may be useful to make this 2 functions boolean to check, if they led to intersection
 	
 	//void AddFigure(int number, state newState);//
-	void changeFigure(int number, state newState);
-	
+	bool changeFigure(int number, state newState);
+	MultiPoint2D generateFigureByState(state newState, int figureNumber);
+	//returns false if state didn't changed
 	void removeFigure(int number);
 	void showMatrix();
 	int returnFigureNumber(Point2D coords);
-	bool updateFigures(std::vector<state> newStates);
+
+	bool updateFigures(std::vector<state> newStates);//returns false if there are conflicts between figures. Presumably used for crossingover.
 	std::pair<int, int> getConflictFiguresNumbers();
+	void resolveLastConflictWithRemove(int figureToRemoveNumber);
 	//UpdateMatrix?
 	bool Equals(state& lhs, state& rhs);//TODO: move with structs into utility.
 
 //Deprecated
-
 public:
-
 	//QuasiPolyominoPackaging(const MultiPoint2D points, const MultiPoint2D restrictions, int gridWidth, int gridHeight);
-	unsigned int getPlacementsAmount();
+	/*unsigned int getPlacementsAmount();
 	bMatrix getMatrix(unsigned int number);
-	~QuasiPolyominoPackaging();
-
-	polyminoState getAvailableStates(int gridWidth, int gridHeight);//TODO: Maybe move ConfigBitset::possiblePolyominoesPositions here.
-//f, can't recall which one is correct
+	polyminoState getAvailableStates(int gridWidth, int gridHeight);*///TODO: Maybe move ConfigBitset::possiblePolyominoesPositions here.
+	//f, can't recall which one is correct
 private:
-	bMatrix generateMatrix(state s);
-	void createMatrixByMultipoint(const MultiPoint2D & figure, bMatrix & m, unsigned int width, unsigned int height);
-	
-
-	bool isMatrixCorrect(const bMatrix& m);
-
+	//bMatrix generateMatrix(state s);
+	//void createMatrixByMultipoint(const MultiPoint2D & figure, bMatrix & m, unsigned int width, unsigned int height);
+	//bool isMatrixCorrect(const bMatrix& m);
 };
 
