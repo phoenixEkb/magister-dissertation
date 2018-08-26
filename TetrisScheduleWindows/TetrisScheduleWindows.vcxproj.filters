@@ -30,9 +30,6 @@
     <ClInclude Include="GASolver.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ISolver.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="ConfigBitset.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -40,6 +37,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="QuasiPolyominoPackaging.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ConfigSequential.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -59,13 +59,13 @@
     <ClCompile Include="GASolver.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ISolver.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="ConfigBitset.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="QuasiPolyominoPackaging.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ConfigSequential.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -44,8 +44,8 @@ QuasiPolyominoPackaging::QuasiPolyominoPackaging(std::string restrictionsFile, s
 	}
 	figuresStates = std::vector<state>(figures.size());
 	hasConflicts = false;
-	conflictingPoints = std::vector<Point2D>();
-	conflictFiguresNumbers = std::pair<int,int>();
+	conflictingPoints = std::map<int, std::vector<Point2D>>();
+	conflictFiguresNumbers = std::set<int>();
 }
 
 MultiPoint2D QuasiPolyominoPackaging::normaliseFigure(MultiPoint2D figure, int number)
@@ -86,8 +86,8 @@ bool QuasiPolyominoPackaging::changeFigure(int number, state newState)
 		removeFigure(number);
 		return true;
 	}
-	MultiPoint2D newFigure=generateFigureByState(newState,number);
-	
+	MultiPoint2D newFigure = generateFigureByState(newState, number);
+
 	for (int i = 0; i < bg::num_points(newFigure); i++)
 	{
 		if (currentStateMatrix(newFigure[i].get<0>(), newFigure[i].get<1>()) != -1)
@@ -139,7 +139,7 @@ void QuasiPolyominoPackaging::removeFigure(int number)
 	{
 		for (size_t j = 0; j < currentStateMatrix.size2(); j++)
 		{
-			if (currentStateMatrix(i, j) == number )
+			if (currentStateMatrix(i, j) == number)
 				currentStateMatrix(i, j) = -1;
 		}
 	}
@@ -166,7 +166,7 @@ void QuasiPolyominoPackaging::showMatrix()
 			case -3:std::cout << '*'; break;//error
 			default:std::cout << currentStateMatrix(i, j);
 			};
-				std::cout<< " ";//TODO: calculate perfect range for setw(i.e. 2 for <10 figures, 3 for 10-99 etc.)
+			std::cout << " ";//TODO: calculate perfect range for setw(i.e. 2 for <10 figures, 3 for 10-99 etc.)
 		}
 		std::cout << std::endl;
 	}
@@ -174,10 +174,10 @@ void QuasiPolyominoPackaging::showMatrix()
 
 int QuasiPolyominoPackaging::returnFigureNumber(Point2D coords)//returns -1 if no figure found.
 {
-	return this->currentStateMatrix(coords.get<0>(), coords.get<1>())>-1?this->currentStateMatrix(coords.get<0>(), coords.get<1>()):-1;
+	return this->currentStateMatrix(coords.get<0>(), coords.get<1>()) > -1 ? this->currentStateMatrix(coords.get<0>(), coords.get<1>()) : -1;
 }
 
-bool QuasiPolyominoPackaging::updateFigures(std::vector<state> newStates,int startPosition)
+bool QuasiPolyominoPackaging::updateFigures(std::vector<state> newStates, int startPosition)
 {
 	if (newStates.size() != this->figuresStates.size())
 	{
@@ -200,15 +200,21 @@ bool QuasiPolyominoPackaging::updateFigures(std::vector<state> newStates,int sta
 		MultiPoint2D newFigure = generateFigureByState(tempStates[i], i);
 		for (int j = 0; j < bg::num_points(newFigure); j++)
 		{
-			if (currentStateMatrix(newFigure[j].get<0>(), newFigure[j].get<1>()) != -1)
+			if (currentStateMatrix(newFigure[j].get<0>(), newFigure[j].get<1>()) != -1)//TODO: intersection w/ restriction!.
 			{
+				int conflictFigureNumber = currentStateMatrix(newFigure[j].get<0>(), newFigure[j].get<1>());
 				if (!hasConflicts)
 				{
 					hasConflicts = true;
-					this->conflictFiguresNumbers = std::make_pair(j, currentStateMatrix(newFigure[j].get<0>(), newFigure[j].get<1>()));
+					stopStep = i;
 				}
-				this->conflictingPoints.push_back(Point2D(newFigure[j].get<0>(), newFigure[j].get<1>()));
-				
+
+				this->conflictFiguresNumbers.insert(conflictFigureNumber);
+				if (conflictingPoints.find(conflictFigureNumber) == conflictingPoints.end())
+				{
+					conflictingPoints[conflictFigureNumber] = std::vector<Point2D>();
+				}
+				this->conflictingPoints[conflictFigureNumber].push_back(Point2D(newFigure[j].get<0>(), newFigure[j].get<1>()));
 			}
 		}
 		if (hasConflicts)
@@ -221,9 +227,28 @@ bool QuasiPolyominoPackaging::updateFigures(std::vector<state> newStates,int sta
 	return true;
 }
 
-std::pair<int, int> QuasiPolyominoPackaging::getConflictFiguresNumbers()
+std::vector<int> QuasiPolyominoPackaging::getConflictFiguresNumbers()
 {
-	return conflictFiguresNumbers;
+
+	return std::vector<int>(conflictFiguresNumbers.begin(), conflictFiguresNumbers.end());
+}
+
+void QuasiPolyominoPackaging::resolveLastConflictWithRemove(int figureToRemoveNumber)
+{
+	if (figureToRemoveNumber != this->stopStep || conflictFiguresNumbers.find(figureToRemoveNumber) == conflictFiguresNumbers.end())
+		if (figureToRemoveNumber == this->stopStep)
+		{
+			updateFigures(tempStates, stopStep + 1);
+		}
+		else if (int i = conflictFiguresNumbers.find(figureToRemoveNumber) != conflictFiguresNumbers.end())
+		{
+
+		}
+		else
+		{
+			std::cout << "wrong number, can't resolve conflict";
+			return;//and throw exception;
+		}
 }
 
 
@@ -243,25 +268,6 @@ std::pair<int, int> QuasiPolyominoPackaging::getConflictFiguresNumbers()
 //deprecated
 
 //Problem 2, appears in these 3 functions
-//
-//QuasiPolyominoPackaging::QuasiPolyominoPackaging(const MultiPoint2D points, const MultiPoint2D restrictions, int gridWidth, int gridHeight)
-//{
-//	this->restrictions=restrictions;//?Not sure;
-//	//createMatrixByMultipoint(restrictions, restrictMatrix, gridWidth, groupHeight);  //Problem string
-//	////calculating figure sizes and normalisation
-//	int xMin = INT_MAX, yMin = INT_MAX, xMax=INT_MIN,yMax=INT_MIN;
-//	for (int i = 0; i < bg::num_points(points); i++)
-//	{
-//		xMax = std::max(points[i].get<0>(),xMax);
-//		yMax = std::max(points[i].get<1>(), yMax);
-//		xMin = std::min(points[i].get<0>(), xMin);
-//		yMin = std::min(points[i].get<1>(), yMin);
-//	}
-//	groupWidth = 1 + xMax - xMin;
-//	groupHeight = 1 + yMax - yMin;
-//	trans::translate_transformer<int, 2, 2> normTranslation(-xMin , -yMin);
-//	bg::transform(points, this->points, normTranslation);
-//}
 //
 ////
 //unsigned int QuasiPolyominoPackaging::getPlacementsAmount()

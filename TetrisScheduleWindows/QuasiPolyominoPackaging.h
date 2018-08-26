@@ -1,6 +1,8 @@
 #pragma once
 #include "stdafx.h"
 #include <vector>
+#include <map>
+#include <set>
 #include <utility>
 #include <iostream>
 #include <fstream>
@@ -53,17 +55,24 @@ class QuasiPolyominoPackaging
 	int gridWidth, gridHeight;
 	MultiPoint2D restrictions;
 	boost::container::vector<MultiPoint2D> figures;
-	std::vector<int> figuresWidth, figuresHeight;//in default state;
+	//figures sizes in default state, may be unnecessary as class params.
+	std::vector<int> figuresWidth, figuresHeight;
 	std::vector<state> figuresStates;
 	bMatrix currentStateMatrix;
 
 	bool hasConflicts;
-	std::vector<Point2D> conflictingPoints;
-	std::pair<int,int> conflictFiguresNumbers;//2 figures only;
-	//boost::container::vector<MultiPoint2D> tempFigures;//if figure added via updateFigures without intersections, it is added into that vector. 
+	std::map<int,std::vector<Point2D>> conflictingPoints;
+	std::set<int> conflictFiguresNumbers;
+	//Number of figure, conflicting with others through the process of updateMatrix.
+	int stopStep;
+	//if figure added via updateFigures without intersections, it is added into that vector. Or not.
+	//boost::container::vector<MultiPoint2D> tempFigures;
+
+	//While the figures are proceeded - this vector is used for updating stateMatrix.
+	//However, we can dynamically add and remove figures from stateMatrix.
+
 	std::vector<state> tempStates;
-	//While all the figures are proceeded - this vector is used for updating stateMatrix
-	//It is possible to check on whichfigure we have stopped - it is second argument of confFigNum
+	
 public:
 	QuasiPolyominoPackaging(std::string restrictionsFile, std::string figuresFile);
 	~QuasiPolyominoPackaging();
@@ -77,7 +86,7 @@ public:
 	int returnFigureNumber(Point2D coords);
 
 	bool updateFigures(std::vector<state> newStates, int startPositon=0);//returns false if there are conflicts between figures. Presumably used for crossingover.
-	std::pair<int, int> getConflictFiguresNumbers();
+	std::vector<int> getConflictFiguresNumbers();
 	void resolveLastConflictWithRemove(int figureToRemoveNumber);
 	bool Equals(state& lhs, state& rhs);//TODO: move with structs into utility.
 
