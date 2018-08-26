@@ -2,12 +2,10 @@
 #include <string>
 #include <vector>
 #include <random>
-#include "ISolver.h"
 //#include "QuasiPolyominoPackaging.h"
 #include "ConfigBitset.h"
 
-class GASolver :
-	public ISolver
+class GASolver 
 {
 private:
 	//std::vector<QuasiPolyominoPackaging> figures;

@@ -3,11 +3,11 @@
 
 
 
-ConfigSequential::ConfigSequential()
-{
-}
-
-
-ConfigSequential::~ConfigSequential()
-{
-}
+//ConfigSequential::ConfigSequential()
+//{
+//}
+//
+//
+//ConfigSequential::~ConfigSequential()
+//{
+//}
