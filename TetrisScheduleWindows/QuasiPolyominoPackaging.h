@@ -48,6 +48,13 @@ typedef struct polyminoState //contains info about possible transformations of Q
 	bool mirrored = false;
 } state;
 
+ typedef struct
+ {
+	 bool isIncluded=false;
+	 rotation rot = rotation::right;
+	 bool mirrored = false;
+ }stateSeq;
+
 
 class QuasiPolyominoPackaging
 {
