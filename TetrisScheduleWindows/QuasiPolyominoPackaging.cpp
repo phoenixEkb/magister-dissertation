@@ -153,7 +153,6 @@ QuasiPolyominoPackaging::~QuasiPolyominoPackaging()
 
 void QuasiPolyominoPackaging::showMatrix()
 {
-
 	for (int i = currentStateMatrix.size1() - 1; i >= 0; i--)
 	{
 		for (size_t j = 0; j < currentStateMatrix.size2(); j++)

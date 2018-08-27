@@ -48,12 +48,7 @@ typedef struct polyminoState //contains info about possible transformations of Q
 	bool mirrored = false;
 } state;
 
- typedef struct
- {
-	 bool isIncluded=false;
-	 rotation rot = rotation::right;
-	 bool mirrored = false;
- }stateSeq;
+
 
 
 class QuasiPolyominoPackaging
@@ -96,6 +91,8 @@ public:
 	std::vector<int> getConflictFiguresNumbers();
 	void resolveLastConflictWithRemove(int figureToRemoveNumber);
 	bool Equals(state& lhs, state& rhs);//TODO: move with structs into utility.
+
+	//
 
 //Deprecated
 public:
