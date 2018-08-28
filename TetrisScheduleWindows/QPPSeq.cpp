@@ -108,7 +108,7 @@ void QPPSeq::packFigures(std::vector<stateSeq> newStates, std::vector<int> newOr
 {
 	if (newStates.size() != this->figures.size() || newOrder.size() != this->figures.size())
 		return;
-	Point2D currentPosition, oldPosition;
+	Point2D currentPosition(0,0), oldPosition;
 	placedFiguresAmount = 0;
 	clearMatrix();
 	for (int i : newOrder)
@@ -121,10 +121,10 @@ void QPPSeq::packFigures(std::vector<stateSeq> newStates, std::vector<int> newOr
 		{
 			std::swap(currentFigureWidth, currentFigureHeigth);
 		}
-		currentPosition = findFreeStartPoint(Point2D(0, 0), currentFigureWidth, currentFigureHeigth);
+		//Also possible to use 0.0 as 1st argument if want more clumsy packaging.
+		currentPosition = findFreeStartPoint(currentPosition, currentFigureWidth, currentFigureHeigth);
 		if (currentPosition.get<0>() == -1)
 		{
-			//this->placedFiguresAmount = i;
 			return;
 		}
 		oldPosition = Point2D(0, 0);
@@ -181,6 +181,11 @@ std::vector<int> QPPSeq::getFiguresOrder()
 {
 	
 	return this->figuresOrder;
+}
+
+std::vector<stateSeq> QPPSeq::getFiguresStates()
+{
+	return this->figuresStates;
 }
 
 int QPPSeq::getPlacedFiguresAmount()
@@ -253,8 +258,11 @@ MultiPoint2D QPPSeq::normaliseFigure(MultiPoint2D figure, int number)
 	if (figuresWidth[number] < figuresHeight[number])//VERY IMPORTANT, rotatig figures for 90 degrees clockwise 
 	{
 		std::swap(figuresWidth[number], figuresHeight[number]);
-		trans::rotate_transformer<bg::degree, int, 2, 2> rotate(90);//TODO:check if works correctly
+		trans::translate_transformer<double, 2, 2> t2(1, 1),t3(-1,1);
+		trans::rotate_transformer<bg::degree, double, 2, 2> rotate(90.0);//TODO:check if works correctly
+		bg::transform(newFigure, newFigure, t2);
 		bg::transform(newFigure, newFigure, rotate);
+		bg::transform(newFigure, newFigure, t3);
 	}
 	return newFigure;
 }
