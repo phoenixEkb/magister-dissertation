@@ -30,7 +30,7 @@ enum rotation {
 };
 typedef struct
 {
-	bool isIncluded = true;
+	//bool isIncluded = true;
 	rotation rot = rotation::right;
 	bool mirrored = false;
 }stateSeq;
@@ -53,7 +53,7 @@ public:
 	~QPPSeq();
 	bool changeFigure(int number, stateSeq newState);
 	//returns false if state didn't changed
-	void swapFigures(int firstPos, int secondPos);
+	void swapPositionsInCurrentOrder(int firstPos, int secondPos);
 	void showMatrix();
 	int returnFigureNumber(Point2D coords);
 	//We divide these 2 structures here and connect them in ConfigSeq
@@ -65,6 +65,7 @@ private:
 	Point2D findFreeStartPoint(Point2D oldStartPoint, int figureWidth, int figureHeight);
 	MultiPoint2D normaliseFigure(MultiPoint2D figure, int number);
 	MultiPoint2D getFigureByState(int number, stateSeq newState);
+	void clearMatrix();
 
 };
 

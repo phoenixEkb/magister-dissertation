@@ -32,13 +32,7 @@ QPPSeq::QPPSeq(std::string restrictionsFile, std::string figuresFile)
 		figures[i] = normaliseFigure(figures[i], i);
 	}
 	currentStateMatrix = boost::numeric::ublas::matrix<int>(gridWidth, gridHeight);
-	for (size_t i = 0; i < gridWidth; i++)
-	{
-		for (size_t j = 0; j < gridHeight; j++)
-		{
-			currentStateMatrix(i, j) = -1;
-		}
-	}
+	clearMatrix();
 	for (size_t i = 0; i < bg::num_points(restrictions); i++)
 	{
 		currentStateMatrix(restrictions[i].get<0>(), restrictions[i].get<1>()) = -2;
@@ -47,22 +41,47 @@ QPPSeq::QPPSeq(std::string restrictionsFile, std::string figuresFile)
 	figuresOrder = std::vector<int>(figures.size());
 	for (int i = 0; i < figures.size(); i++)
 		figuresOrder[i] = i;
-	std::cout << "finished constructor work, starting packing" << std::endl;
-	showMatrix();
 	packFigures(figuresStates, figuresOrder);
 }
 
+void QPPSeq::clearMatrix()
+{
+	for (size_t i = 0; i < gridWidth; i++)
+	{
+		for (size_t j = 0; j < gridHeight; j++)
+		{
+			if (currentStateMatrix(i, j)!=-2)
+				currentStateMatrix(i, j) = -1;
+		}
+	}
+}
 
 QPPSeq::~QPPSeq()
 {
 }
 
+void QPPSeq::swapPositionsInCurrentOrder(int firstPos, int secondPos)
+{
+	if (firstPos >= 0 && secondPos >= 0 && firstPos < figuresOrder.size() && secondPos < figuresOrder.size())
+	{
+		std::swap(this->figuresOrder[firstPos], this->figuresOrder[secondPos]);
+		this->packFigures(figuresStates, figuresOrder);
+	}
+}
+
+
+
 void QPPSeq::showMatrix()
 {
-	for (int i = currentStateMatrix.size1() - 1; i >= 0; i--)
+	/*for (int i = currentStateMatrix.size1() - 1; i >= 0; i--)
 	{
 		for (size_t j = 0; j < currentStateMatrix.size2(); j++)
+		{*/
+	for (int j = currentStateMatrix.size2() - 1; j >= 0; j--)
+	{
+		for (int i = 0; i < currentStateMatrix.size1(); i++)
 		{
+
 			std::cout << std::setw(3) << std::setfill(' ');
 			switch (currentStateMatrix(i, j))
 			{//TODO: write some wraparound for numbers.
@@ -75,6 +94,12 @@ void QPPSeq::showMatrix()
 		}
 		std::cout << std::endl;
 	}
+	std::cout << std::endl;
+}
+//returns -1 for emply positions and -2 for restricted positions
+int QPPSeq::returnFigureNumber(Point2D coords)
+{
+	return this->currentStateMatrix(coords.get<0>(), coords.get<1>());
 }
 
 
@@ -84,10 +109,12 @@ void QPPSeq::packFigures(std::vector<stateSeq> newStates, std::vector<int> newOr
 	if (newStates.size() != this->figures.size() || newOrder.size() != this->figures.size())
 		return;
 	Point2D currentPosition, oldPosition;
+	placedFiguresAmount = 0;
+	clearMatrix();
 	for (int i : newOrder)
 	{
-		if (!newStates[i].isIncluded)
-			continue;
+		/*if (!newStates[i].isIncluded)
+			continue;*/
 		MultiPoint2D currentFigure = getFigureByState(i, newStates[i]);
 		int currentFigureWidth = figuresWidth[i], currentFigureHeigth = figuresHeight[i];
 		if (newStates[i].rot == top || newStates[i].rot == bottom)
@@ -97,7 +124,7 @@ void QPPSeq::packFigures(std::vector<stateSeq> newStates, std::vector<int> newOr
 		currentPosition = findFreeStartPoint(Point2D(0, 0), currentFigureWidth, currentFigureHeigth);
 		if (currentPosition.get<0>() == -1)
 		{
-			this->placedFiguresAmount = i;
+			//this->placedFiguresAmount = i;
 			return;
 		}
 		oldPosition = Point2D(0, 0);
@@ -133,21 +160,40 @@ void QPPSeq::packFigures(std::vector<stateSeq> newStates, std::vector<int> newOr
 			}
 			if (positionAcceptible)
 				foundPlacement = true;
-			std::cout << "finished while iteration for figure "<<i << std::endl;
+			//std::cout << "finished while iteration for figure "<<i << std::endl;
 		}
 
 		if (!foundPlacement)
 		{
-			this->placedFiguresAmount = i;
+			//this->placedFiguresAmount = i;
 			return;
 		}
 		for (int j = 0; j < currentFigure.size(); j++)
 		{
 			currentStateMatrix(currentFigure[j].get<0>(), currentFigure[j].get<1>()) = i;
-			//Find starting point for next figure. 
 		}
+		placedFiguresAmount++;
 	}
 	this->placedFiguresAmount = figures.size();
+}
+
+std::vector<int> QPPSeq::getFiguresOrder()
+{
+	
+	return this->figuresOrder;
+}
+
+int QPPSeq::getPlacedFiguresAmount()
+{
+	return this->placedFiguresAmount;
+}
+
+int QPPSeq::getFreeArea()
+{
+	int sum = 0;
+	for (int i = 0; i < this->placedFiguresAmount; i++)
+		sum += figures[figuresOrder[i]].size();
+	return gridWidth*gridHeight-sum-this->restrictions.size();
 }
 
 MultiPoint2D QPPSeq::getFigureByState(int number, stateSeq newState)
@@ -169,6 +215,13 @@ MultiPoint2D QPPSeq::getFigureByState(int number, stateSeq newState)
 Point2D QPPSeq::findFreeStartPoint(Point2D oldStartPoint, int figureWidth, int figureHeight)
 {
 	//find new point,satisfying this condition and pack again
+	for (int l = oldStartPoint.get<0>()+1; l <= gridWidth - figureWidth; l++)
+	{
+		if (currentStateMatrix(l, oldStartPoint.get<1>()) == -1)
+		{
+			return Point2D(l, oldStartPoint.get<1>());
+		}
+	}
 	for (int k = oldStartPoint.get<1>() + 1; k <= gridHeight - figureHeight; k++)
 	{
 		for (int l = 0; l <= gridWidth - figureWidth; l++)
