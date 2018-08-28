@@ -50,7 +50,7 @@ void QPPSeq::clearMatrix()
 	{
 		for (size_t j = 0; j < gridHeight; j++)
 		{
-			if (currentStateMatrix(i, j)!=-2)
+			if (currentStateMatrix(i, j) != -2)
 				currentStateMatrix(i, j) = -1;
 		}
 	}
@@ -108,7 +108,7 @@ void QPPSeq::packFigures(std::vector<stateSeq> newStates, std::vector<int> newOr
 {
 	if (newStates.size() != this->figures.size() || newOrder.size() != this->figures.size())
 		return;
-	Point2D currentPosition(0,0), oldPosition;
+	Point2D currentPosition(0, 0), oldPosition;
 	placedFiguresAmount = 0;
 	clearMatrix();
 	for (int i : newOrder)
@@ -136,7 +136,7 @@ void QPPSeq::packFigures(std::vector<stateSeq> newStates, std::vector<int> newOr
 			{
 				break;
 			}
-			else if (gridWidth  < currentFigureWidth + currentPosition.get<0>())//figure does not fit to the right
+			else if (gridWidth < currentFigureWidth + currentPosition.get<0>())//figure does not fit to the right
 			{
 				oldPosition = currentPosition;
 				currentPosition = findFreeStartPoint(currentPosition, currentFigureWidth, currentFigureHeigth);
@@ -179,7 +179,7 @@ void QPPSeq::packFigures(std::vector<stateSeq> newStates, std::vector<int> newOr
 
 std::vector<int> QPPSeq::getFiguresOrder()
 {
-	
+
 	return this->figuresOrder;
 }
 
@@ -198,7 +198,7 @@ int QPPSeq::getFreeArea()
 	int sum = 0;
 	for (int i = 0; i < this->placedFiguresAmount; i++)
 		sum += figures[figuresOrder[i]].size();
-	return gridWidth*gridHeight-sum-this->restrictions.size();
+	return gridWidth * gridHeight - sum - this->restrictions.size();
 }
 
 MultiPoint2D QPPSeq::getFigureByState(int number, stateSeq newState)
@@ -220,7 +220,7 @@ MultiPoint2D QPPSeq::getFigureByState(int number, stateSeq newState)
 Point2D QPPSeq::findFreeStartPoint(Point2D oldStartPoint, int figureWidth, int figureHeight)
 {
 	//find new point,satisfying this condition and pack again
-	for (int l = oldStartPoint.get<0>()+1; l <= gridWidth - figureWidth; l++)
+	for (int l = oldStartPoint.get<0>() + 1; l <= gridWidth - figureWidth; l++)
 	{
 		if (currentStateMatrix(l, oldStartPoint.get<1>()) == -1)
 		{
@@ -258,11 +258,63 @@ MultiPoint2D QPPSeq::normaliseFigure(MultiPoint2D figure, int number)
 	if (figuresWidth[number] < figuresHeight[number])//VERY IMPORTANT, rotatig figures for 90 degrees clockwise 
 	{
 		std::swap(figuresWidth[number], figuresHeight[number]);
-		trans::translate_transformer<double, 2, 2> t2(1, 1),t3(-1,1);
-		trans::rotate_transformer<bg::degree, double, 2, 2> rotate(90.0);//TODO:check if works correctly
+		trans::translate_transformer<double, 2, 2> t2(1, 1), t3(-1, 1);//TODO:check if works correctly, check numbers for t3. t2 is chosen to move avay from axis lines.
+		trans::rotate_transformer<bg::degree, double, 2, 2> rotate(90.0);
 		bg::transform(newFigure, newFigure, t2);
 		bg::transform(newFigure, newFigure, rotate);
 		bg::transform(newFigure, newFigure, t3);
+	}
+	return newFigure;
+}
+
+MultiPoint2D QPPSeq::rotateSavingLeftCorner(MultiPoint2D figure, rotation rot, int xLeftCorner, int yLeftCorner, int width, int height)
+{
+	if (rot == rotation::right)
+		return figure;
+	MultiPoint2D newFigure;
+	if (!xLeftCorner)
+	{
+		if (!yLeftCorner)
+		{
+			trans::translate_transformer<double, 2, 2> t1(1, 1);
+			bg::transform(figure, newFigure, t1);
+		}
+		else
+		{
+			trans::translate_transformer<double, 2, 2> t1(1, 0);
+			bg::transform(figure, newFigure, t1);
+		}
+	}
+	else
+	{
+		if (!yLeftCorner)
+		{
+			trans::translate_transformer<double, 2, 2> t1(0, 1);
+			bg::transform(figure, newFigure, t1);
+		}
+	}
+	trans::rotate_transformer<bg::degree, double, 2, 2> rotate(rot);
+	bg::transform(newFigure, newFigure, rotate);
+	switch (rot)
+	{
+	case rotation::bottom:
+	{
+		trans::translate_transformer<double, 2, 2> t2(-1, width);
+		bg::transform(newFigure, newFigure, t2);
+		break;
+	}
+	case rotation::left:
+	{
+		trans::translate_transformer<double, 2, 2> t2(width-1, height);
+		bg::transform(newFigure, newFigure, t2);
+		break;
+	}
+	case rotation::top:
+	{
+		trans::translate_transformer<double, 2, 2> t2(height, 0);
+		bg::transform(newFigure, newFigure, t2);
+		break;
+	}
 	}
 	return newFigure;
 }

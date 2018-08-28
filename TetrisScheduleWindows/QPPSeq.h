@@ -16,17 +16,19 @@
 
 namespace bg = boost::geometry;
 namespace trans = bg::strategy::transform;
+namespace constants = boost::math::double_constants;
+
 
 typedef bg::model::point<int, 2, boost::geometry::cs::cartesian> Point2D;
 typedef bg::model::multi_point<Point2D> MultiPoint2D;
 
 typedef boost::numeric::ublas::matrix<int> bMatrix;
 typedef boost::numeric::ublas::matrix<int> zeroMatrix;
-enum rotation {
+enum rotation {//in this order because of boost rotation transforms.
 	right = 0,
-	top = 90,
+	top = 270,
 	left = 180,
-	bottom = 270
+	bottom = 90
 };
 typedef struct
 {
@@ -62,6 +64,7 @@ public:
 	std::vector<stateSeq> getFiguresStates();
 	int getPlacedFiguresAmount();//can be used for area calculation;
 	int getFreeArea();
+	MultiPoint2D rotateSavingLeftCorner(MultiPoint2D figure, rotation rot, int xLeftCorner, int yLeftCorner, int width, int heigth);
 
 private:
 	Point2D findFreeStartPoint(Point2D oldStartPoint, int figureWidth, int figureHeight);
