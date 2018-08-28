@@ -30,7 +30,7 @@ enum rotation {
 };
 typedef struct
 {
-	bool isIncluded = false;
+	bool isIncluded = true;
 	rotation rot = rotation::right;
 	bool mirrored = false;
 }stateSeq;

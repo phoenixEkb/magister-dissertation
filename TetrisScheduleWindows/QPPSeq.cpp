@@ -83,29 +83,37 @@ void QPPSeq::packFigures(std::vector<stateSeq> newStates, std::vector<int> newOr
 {
 	if (newStates.size() != this->figures.size() || newOrder.size() != this->figures.size())
 		return;
-	Point2D currentPosition(0, 0), oldPosition(0, 0);
+	Point2D currentPosition, oldPosition;
 	for (int i : newOrder)
 	{
+		if (!newStates[i].isIncluded)
+			continue;
 		MultiPoint2D currentFigure = getFigureByState(i, newStates[i]);
 		int currentFigureWidth = figuresWidth[i], currentFigureHeigth = figuresHeight[i];
 		if (newStates[i].rot == top || newStates[i].rot == bottom)
 		{
 			std::swap(currentFigureWidth, currentFigureHeigth);
 		}
-
+		currentPosition = findFreeStartPoint(Point2D(0, 0), currentFigureWidth, currentFigureHeigth);
+		if (currentPosition.get<0>() == -1)
+		{
+			this->placedFiguresAmount = i;
+			return;
+		}
+		oldPosition = Point2D(0, 0);
 		bool foundPlacement = false;
 
 		while (!foundPlacement)
 		{
-			if (gridHeight - 1 < currentFigureHeigth + currentPosition.get<1>())//figure does not fit to the top
+			if (gridHeight < currentFigureHeigth + currentPosition.get<1>())//figure does not fit to the top
 			{
 				break;
 			}
-			else if (gridWidth - 1 < currentFigureWidth + currentPosition.get<0>())//figure does not fit to the right
+			else if (gridWidth  < currentFigureWidth + currentPosition.get<0>())//figure does not fit to the right
 			{
 				oldPosition = currentPosition;
 				currentPosition = findFreeStartPoint(currentPosition, currentFigureWidth, currentFigureHeigth);
-				if (currentPosition.get<0>() == -1)
+				if (currentPosition.get<0>() == -1)//проверить эти брейки
 				{
 					break;
 				}
