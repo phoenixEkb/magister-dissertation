@@ -59,8 +59,12 @@ public:
 	//We divide these 2 structures here and connect them in ConfigSeq
 	void packFigures(std::vector<stateSeq> newStates,std::vector<int> newOrder);
 	std::vector<int> getFiguresOrder();
-	int getPlacedFiguresAmount();
+	int getPlacedFiguresAmount();//can be used for area calculation;
+	int getFreeArea();
 private:
+	Point2D findFreeStartPoint(Point2D oldStartPoint, int figureWidth, int figureHeight);
 	MultiPoint2D normaliseFigure(MultiPoint2D figure, int number);
+	MultiPoint2D getFigureByState(int number, stateSeq newState);
+
 };
 
