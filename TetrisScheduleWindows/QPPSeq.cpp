@@ -47,6 +47,8 @@ QPPSeq::QPPSeq(std::string restrictionsFile, std::string figuresFile)
 	figuresOrder = std::vector<int>(figures.size());
 	for (int i = 0; i < figures.size(); i++)
 		figuresOrder[i] = i;
+	std::cout << "finished constructor work, starting packing" << std::endl;
+	showMatrix();
 	packFigures(figuresStates, figuresOrder);
 }
 
@@ -92,6 +94,7 @@ void QPPSeq::packFigures(std::vector<stateSeq> newStates, std::vector<int> newOr
 		}
 
 		bool foundPlacement = false;
+
 		while (!foundPlacement)
 		{
 			if (gridHeight - 1 < currentFigureHeigth + currentPosition.get<1>())//figure does not fit to the top
@@ -115,12 +118,16 @@ void QPPSeq::packFigures(std::vector<stateSeq> newStates, std::vector<int> newOr
 				if (currentStateMatrix(currentFigure[j].get<0>(), currentFigure[j].get<1>()) != -1)
 				{
 					positionAcceptible = false;
+					oldPosition = currentPosition;
+					currentPosition = findFreeStartPoint(currentPosition, currentFigureWidth, currentFigureHeigth);
 					break;
 				}
 			}
 			if (positionAcceptible)
 				foundPlacement = true;
+			std::cout << "finished while iteration for figure "<<i << std::endl;
 		}
+
 		if (!foundPlacement)
 		{
 			this->placedFiguresAmount = i;
@@ -129,8 +136,10 @@ void QPPSeq::packFigures(std::vector<stateSeq> newStates, std::vector<int> newOr
 		for (int j = 0; j < currentFigure.size(); j++)
 		{
 			currentStateMatrix(currentFigure[j].get<0>(), currentFigure[j].get<1>()) = i;
+			//Find starting point for next figure. 
 		}
 	}
+	this->placedFiguresAmount = figures.size();
 }
 
 MultiPoint2D QPPSeq::getFigureByState(int number, stateSeq newState)
