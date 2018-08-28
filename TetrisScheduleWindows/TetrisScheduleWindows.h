@@ -12,5 +12,6 @@
 #include <iostream>
 #include <fstream>
 //#include "GASolver.h"
-#include "QuasiPolyominoPackaging.h"
+//#include "QuasiPolyominoPackaging.h"
 #include "ConfigSequential.h"
+#include "QPPSeq.h"
