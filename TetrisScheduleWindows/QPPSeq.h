@@ -22,6 +22,12 @@ typedef bg::model::multi_point<Point2D> MultiPoint2D;
 
 typedef boost::numeric::ublas::matrix<int> bMatrix;
 typedef boost::numeric::ublas::matrix<int> zeroMatrix;
+enum rotation {
+	right = 0,
+	top = 90,
+	left = 180,
+	bottom = 270
+};
 typedef struct
 {
 	bool isIncluded = false;
@@ -29,12 +35,7 @@ typedef struct
 	bool mirrored = false;
 }stateSeq;
 
-enum rotation {
-	right = 0,
-	top = 90,
-	left = 180,
-	bottom = 270
-};
+
 
 class QPPSeq
 {
@@ -58,7 +59,7 @@ public:
 	//We divide these 2 structures here and connect them in ConfigSeq
 	void packFigures(std::vector<stateSeq> newStates,std::vector<int> newOrder);
 	std::vector<int> getFiguresOrder();
-	int placedFiguresAmount();
+	int getPlacedFiguresAmount();
 private:
 	MultiPoint2D normaliseFigure(MultiPoint2D figure, int number);
 };

@@ -73,6 +73,31 @@ void QPPSeq::showMatrix()
 	}
 }
 
+
+//Packing occurs without spaces, we don't skip figures.
+void QPPSeq::packFigures(std::vector<stateSeq> newStates, std::vector<int> newOrder)
+{
+	if (newStates.size() != this->figures.size() || newOrder.size() != this->figures.size())
+		return;
+	Point2D currentPosition(0, 0);
+	for (int i : newOrder)
+	{
+		MultiPoint2D currentFigure = figures[i];
+		stateSeq curentState = newStates[i];
+		if (newStates[i].mirrored)
+		{
+			trans::scale_transformer<int, 2, 2>xMirror(-1, 1);
+			bg::transform(currentFigure, currentFigure, xMirror);
+		}
+		if (newStates[i].rot != right)
+		{
+			trans::rotate_transformer<bg::degree, int, 2, 2> rotate(newStates[i].rot);//TODO:check if works correctly
+			bg::transform(currentFigure, currentFigure, rotate);
+		}
+		//for 
+	}
+}
+
 MultiPoint2D QPPSeq::normaliseFigure(MultiPoint2D figure, int number)
 {
 	int xMin = INT_MAX, yMin = INT_MAX, xMax = INT_MIN, yMax = INT_MIN;
@@ -85,9 +110,14 @@ MultiPoint2D QPPSeq::normaliseFigure(MultiPoint2D figure, int number)
 	}
 	figuresWidth[number] = 1 + xMax - xMin;
 	figuresHeight[number] = 1 + yMax - yMin;
-
-	trans::translate_transformer<double, 2, 2> translate(-xMin, -yMin);
 	MultiPoint2D newFigure;
+	trans::translate_transformer<double, 2, 2> translate(-xMin, -yMin);
 	bg::transform(figure, newFigure, translate);
+	if (figuresWidth[number] < figuresHeight[number])//VERY IMPORTANT, rotatig figures for 90 degrees clockwise 
+	{
+		std::swap(figuresWidth[number], figuresHeight[number]);
+		trans::rotate_transformer<bg::degree, int, 2, 2> rotate(90);//TODO:check if works correctly
+		bg::transform(newFigure, newFigure, rotate);
+	}
 	return newFigure;
 }
