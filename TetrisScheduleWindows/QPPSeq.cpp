@@ -4,6 +4,10 @@
 
 
 
+QPPSeq::QPPSeq()
+{
+}
+
 QPPSeq::QPPSeq(std::string restrictionsFile, std::string figuresFile)
 {
 	std::ifstream restrFile(restrictionsFile, std::ifstream::in);
@@ -371,4 +375,9 @@ MultiPoint2D QPPSeq::rotateTransform(MultiPoint2D figure, rotation angle)
 		newFigure.push_back(Point2D(newFigureMatrix( i,0), newFigureMatrix(i,1))) ;
 	}
 	return newFigure;
+}
+
+int QPPSeq::getFiguresAmount()
+{
+	return figures.size();
 }

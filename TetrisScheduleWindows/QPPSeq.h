@@ -51,7 +51,9 @@ class QPPSeq
 	std::vector<int> figuresOrder;
 	bMatrix currentStateMatrix;
 	int placedFiguresAmount;
+	
 public:
+	QPPSeq();
 	QPPSeq(std::string restrictionsFile, std::string figuresFile);
 	~QPPSeq();
 	bool changeFigureByPosition(int number, stateSeq newState);
@@ -70,7 +72,7 @@ public:
 	MultiPoint2D rotateSavingLeftCorner(MultiPoint2D figure, rotation rot, int xLeftCorner, int yLeftCorner, int width, int heigth);
 
 	MultiPoint2D rotateTransform(MultiPoint2D figure, rotation angle);
-
+	int getFiguresAmount();
 private:
 	Point2D findFreeStartPoint(Point2D oldStartPoint, int figureWidth, int figureHeight);
 	MultiPoint2D normaliseFigure(MultiPoint2D figure, int number);
