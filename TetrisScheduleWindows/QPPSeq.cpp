@@ -211,8 +211,7 @@ MultiPoint2D QPPSeq::getFigureByState(int number, stateSeq newState)
 	}
 	if (newState.rot != right)
 	{
-		trans::rotate_transformer<bg::degree, int, 2, 2> rotate(newState.rot);//TODO:check if works correctly
-		bg::transform(newFigure, newFigure, rotate);
+		newFigure = this->rotateSavingLeftCorner(newFigure, newState.rot, 0, 0, figuresWidth[number], figuresHeight[number]);
 	}
 	return newFigure;
 }
@@ -258,11 +257,12 @@ MultiPoint2D QPPSeq::normaliseFigure(MultiPoint2D figure, int number)
 	if (figuresWidth[number] < figuresHeight[number])//VERY IMPORTANT, rotatig figures for 90 degrees clockwise AND VERY bugged.
 	{
 		std::swap(figuresWidth[number], figuresHeight[number]);
-		trans::translate_transformer<double, 2, 2> t2(1, 1), t3(-1, 1);//TODO:check if works correctly, check numbers for t3. t2 is chosen to move avay from axis lines.
-		trans::rotate_transformer<bg::degree, double, 2, 2> rotate(90.0);
-		bg::transform(newFigure, newFigure, t2);
-		bg::transform(newFigure, newFigure, rotate);
-		bg::transform(newFigure, newFigure, t3);
+		//trans::translate_transformer<double, 2, 2> t2(1, 1), t3(-1, 1);//TODO:check if works correctly, check numbers for t3. t2 is chosen to move avay from axis lines.
+		//trans::rotate_transformer<bg::degree, double, 2, 2> rotate(90.0);
+		//bg::transform(newFigure, newFigure, t2);
+		//bg::transform(newFigure, newFigure, rotate);
+		//bg::transform(newFigure, newFigure, t3);
+		newFigure = rotateSavingLeftCorner(newFigure, rotation::bottom, 0, 0, figuresWidth[number], figuresHeight[number]);
 	}
 	return newFigure;
 }
