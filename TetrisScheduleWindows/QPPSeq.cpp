@@ -381,3 +381,23 @@ int QPPSeq::getFiguresAmount()
 {
 	return figures.size();
 }
+
+int QPPSeq::getWidth()
+{
+	return gridWidth;
+}
+
+int QPPSeq::getHeight()
+{
+	return gridHeight;
+}
+
+int QPPSeq::getGridArea()
+{
+	return gridWidth*gridHeight;
+}
+
+int QPPSeq::getRestrictionsArea()
+{
+	return restrictions.size();
+}

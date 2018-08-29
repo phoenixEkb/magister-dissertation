@@ -73,11 +73,15 @@ public:
 
 	MultiPoint2D rotateTransform(MultiPoint2D figure, rotation angle);
 	int getFiguresAmount();
+	int getWidth();
+	int getHeight();
+	int getGridArea();
+	int getRestrictionsArea();
 private:
 	Point2D findFreeStartPoint(Point2D oldStartPoint, int figureWidth, int figureHeight);
 	MultiPoint2D normaliseFigure(MultiPoint2D figure, int number);
 	MultiPoint2D createFigureByState(int number, stateSeq newState);
 	void clearMatrix();
-
+	
 };
 

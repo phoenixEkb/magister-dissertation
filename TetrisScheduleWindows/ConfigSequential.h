@@ -23,5 +23,6 @@ public:
 	int getFreeCellsPercentage();
 	//bool Equals(ConfigSequential lhs, ConfigSequential rhs) if == does not work
 	void setBitsForConfig(int number, stateSeq state);
+	void updateQPPs();//Have to do it manually right now; TODO: fix.
 };
 
