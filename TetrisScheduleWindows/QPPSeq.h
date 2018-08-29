@@ -13,7 +13,8 @@
 #include <algorithm>
 #include <boost/container/vector.hpp>
 #include <boost/geometry/index/rtree.hpp>
-
+#include <boost/units/quantity.hpp>
+#include <boost/units/systems/angle/degrees.hpp>
 namespace bg = boost::geometry;
 namespace trans = bg::strategy::transform;
 namespace constants = boost::math::double_constants;
@@ -53,7 +54,8 @@ class QPPSeq
 public:
 	QPPSeq(std::string restrictionsFile, std::string figuresFile);
 	~QPPSeq();
-	bool changeFigure(int number, stateSeq newState);
+	bool changeFigureByPosition(int number, stateSeq newState);
+	bool changeFigureByNumber(int number, stateSeq newState);
 	//returns false if state didn't changed
 	void swapPositionsInCurrentOrder(int firstPos, int secondPos);
 	void showMatrix();
@@ -65,6 +67,8 @@ public:
 	int getPlacedFiguresAmount();//can be used for area calculation;
 	int getFreeArea();
 	MultiPoint2D rotateSavingLeftCorner(MultiPoint2D figure, rotation rot, int xLeftCorner, int yLeftCorner, int width, int heigth);
+
+	MultiPoint2D rotateTransform(MultiPoint2D figure, rotation angle);
 
 private:
 	Point2D findFreeStartPoint(Point2D oldStartPoint, int figureWidth, int figureHeight);

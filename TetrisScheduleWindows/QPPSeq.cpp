@@ -255,7 +255,7 @@ MultiPoint2D QPPSeq::normaliseFigure(MultiPoint2D figure, int number)
 	MultiPoint2D newFigure;
 	trans::translate_transformer<double, 2, 2> translate(-xMin, -yMin);
 	bg::transform(figure, newFigure, translate);
-	if (figuresWidth[number] < figuresHeight[number])//VERY IMPORTANT, rotatig figures for 90 degrees clockwise 
+	if (figuresWidth[number] < figuresHeight[number])//VERY IMPORTANT, rotatig figures for 90 degrees clockwise AND VERY bugged.
 	{
 		std::swap(figuresWidth[number], figuresHeight[number]);
 		trans::translate_transformer<double, 2, 2> t2(1, 1), t3(-1, 1);//TODO:check if works correctly, check numbers for t3. t2 is chosen to move avay from axis lines.
@@ -293,8 +293,9 @@ MultiPoint2D QPPSeq::rotateSavingLeftCorner(MultiPoint2D figure, rotation rot, i
 			bg::transform(figure, newFigure, t1);
 		}
 	}
-	trans::rotate_transformer<bg::degree, double, 2, 2> rotate(rot);
-	bg::transform(newFigure, newFigure, rotate);
+	//trans::rotate_transformer<bg::degree, double, 2, 2> rotate(rot);
+	//bg::transform(newFigure, newFigure, rotate);
+	newFigure = rotateTransform(newFigure, rot);
 	switch (rot)
 	{
 	case rotation::bottom:
@@ -305,16 +306,39 @@ MultiPoint2D QPPSeq::rotateSavingLeftCorner(MultiPoint2D figure, rotation rot, i
 	}
 	case rotation::left:
 	{
-		trans::translate_transformer<double, 2, 2> t2(width-1, height);
+		trans::translate_transformer<double, 2, 2> t2(width, height);
 		bg::transform(newFigure, newFigure, t2);
 		break;
 	}
 	case rotation::top:
 	{
-		trans::translate_transformer<double, 2, 2> t2(height, 0);
+		trans::translate_transformer<double, 2, 2> t2(height, -1);
 		bg::transform(newFigure, newFigure, t2);
 		break;
 	}
+	}
+	return newFigure;
+}
+
+MultiPoint2D QPPSeq::rotateTransform(MultiPoint2D figure, rotation angle)
+{
+	bMatrix rotMatrix = boost::numeric::ublas::matrix<int>(2, 2);
+	bMatrix tmpFigure = boost::numeric::ublas::matrix<int>(figure.size(),2 );
+	for(int i=0;i<figure.size();i++)
+	{
+		tmpFigure(i,0) = figure[i].get<0>();
+		tmpFigure(i,1) = figure[i].get<1>();
+	}
+	double rAngle = angle * constants::pi / 180;
+	rotMatrix(0, 0) = cos(rAngle);
+	rotMatrix(1, 0) = sin(rAngle);
+	rotMatrix(0, 1) = -sin(rAngle);
+	rotMatrix(1, 1) = cos(rAngle);
+	bMatrix newFigureMatrix = boost::numeric::ublas::prod(tmpFigure,rotMatrix);
+	MultiPoint2D newFigure;
+	for (int i = 0; i < figure.size(); i++)
+	{
+		newFigure.push_back(Point2D(newFigureMatrix( i,0), newFigureMatrix(i,1))) ;
 	}
 	return newFigure;
 }
