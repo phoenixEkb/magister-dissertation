@@ -55,6 +55,7 @@ public:
 	QPPSeq(std::string restrictionsFile, std::string figuresFile);
 	~QPPSeq();
 	bool changeFigureByPosition(int number, stateSeq newState);
+	bool Equals(stateSeq & lhs, stateSeq & rhs);
 	bool changeFigureByNumber(int number, stateSeq newState);
 	//returns false if state didn't changed
 	void swapPositionsInCurrentOrder(int firstPos, int secondPos);
@@ -73,7 +74,7 @@ public:
 private:
 	Point2D findFreeStartPoint(Point2D oldStartPoint, int figureWidth, int figureHeight);
 	MultiPoint2D normaliseFigure(MultiPoint2D figure, int number);
-	MultiPoint2D getFigureByState(int number, stateSeq newState);
+	MultiPoint2D createFigureByState(int number, stateSeq newState);
 	void clearMatrix();
 
 };

@@ -60,6 +60,36 @@ QPPSeq::~QPPSeq()
 {
 }
 
+bool QPPSeq::changeFigureByPosition(int number, stateSeq newState)//Presumably works
+{
+	//work with figures[i]
+	if (!Equals(figuresStates[number], newState))
+	{
+		figuresStates[number]=newState;
+		this->packFigures(figuresStates, figuresOrder);
+		return true;
+	}
+		return false;
+}
+
+bool QPPSeq::Equals(stateSeq& lhs, stateSeq& rhs)//comparator
+{
+	return (lhs.mirrored == rhs.mirrored&&
+		lhs.rot == rhs.rot);
+}
+bool QPPSeq::changeFigureByNumber(int number, stateSeq newState)//Presumably works
+{
+	int index= distance(figuresOrder.begin(),std::find(figuresOrder.begin(), figuresOrder.end(), number));
+	if (!Equals(figuresStates[index], newState))
+	{
+		figuresStates[index] = newState;
+		this->packFigures(figuresStates, figuresOrder);
+		return true;
+	}
+	return false;
+}
+;
+
 void QPPSeq::swapPositionsInCurrentOrder(int firstPos, int secondPos)
 {
 	if (firstPos >= 0 && secondPos >= 0 && firstPos < figuresOrder.size() && secondPos < figuresOrder.size())
@@ -104,7 +134,7 @@ int QPPSeq::returnFigureNumber(Point2D coords)
 
 
 //Packing occurs without spaces, we don't skip figures.
-void QPPSeq::packFigures(std::vector<stateSeq> newStates, std::vector<int> newOrder)
+void QPPSeq::packFigures(std::vector<stateSeq> newStates, std::vector<int> newOrder)//TODO: maybe, add starting number;
 {
 	if (newStates.size() != this->figures.size() || newOrder.size() != this->figures.size())
 		return;
@@ -115,7 +145,7 @@ void QPPSeq::packFigures(std::vector<stateSeq> newStates, std::vector<int> newOr
 	{
 		/*if (!newStates[i].isIncluded)
 			continue;*/
-		MultiPoint2D currentFigure = getFigureByState(i, newStates[i]);
+		MultiPoint2D currentFigure = createFigureByState(i, newStates[i]);
 		int currentFigureWidth = figuresWidth[i], currentFigureHeigth = figuresHeight[i];
 		if (newStates[i].rot == top || newStates[i].rot == bottom)
 		{
@@ -201,7 +231,7 @@ int QPPSeq::getFreeArea()
 	return gridWidth * gridHeight - sum - this->restrictions.size();
 }
 
-MultiPoint2D QPPSeq::getFigureByState(int number, stateSeq newState)
+MultiPoint2D QPPSeq::createFigureByState(int number, stateSeq newState)
 {
 	MultiPoint2D newFigure = figures[number];
 	if (newState.mirrored)
