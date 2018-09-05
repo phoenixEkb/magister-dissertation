@@ -109,7 +109,7 @@ int ConfigSequential::getFreeCellsAmount()
 
 int ConfigSequential::getFreeCellsPercentage()
 {
-	return;
+	return QPPs.getFreeArea()/(QPPs.getGridArea()-QPPs.getRestrictionsArea());
 }
 
 void ConfigSequential::setBitsForConfig(int number, stateSeq st)

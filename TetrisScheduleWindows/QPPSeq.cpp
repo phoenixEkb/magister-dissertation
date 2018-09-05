@@ -8,7 +8,7 @@ QPPSeq::QPPSeq()
 {
 }
 
-QPPSeq::QPPSeq(std::string restrictionsFile, std::string figuresFile)
+QPPSeq::QPPSeq(std::string figuresFile,std::string restrictionsFile)
 {
 	std::ifstream restrFile(restrictionsFile, std::ifstream::in);
 	restrFile >> gridWidth >> gridHeight;
@@ -19,6 +19,7 @@ QPPSeq::QPPSeq(std::string restrictionsFile, std::string figuresFile)
 		bg::read_wkt(line, restrictions);
 	else
 		restrictions = MultiPoint2D();//TODO:Check if works
+	restrFile.close();
 	std::ifstream inFile(figuresFile, std::ifstream::in);
 	std::getline(inFile, line);
 	while (!inFile.eof())
@@ -30,7 +31,7 @@ QPPSeq::QPPSeq(std::string restrictionsFile, std::string figuresFile)
 	}
 	figuresWidth = std::vector<int>(figures.size());
 	figuresHeight = std::vector<int>(figures.size());
-
+	inFile.close();
 	for (int i = 0; i < figures.size(); i++)
 	{
 		figures[i] = normaliseFigure(figures[i], i);

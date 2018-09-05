@@ -77,6 +77,7 @@ public:
 	int getHeight();
 	int getGridArea();
 	int getRestrictionsArea();
+	
 private:
 	Point2D findFreeStartPoint(Point2D oldStartPoint, int figureWidth, int figureHeight);
 	MultiPoint2D normaliseFigure(MultiPoint2D figure, int number);

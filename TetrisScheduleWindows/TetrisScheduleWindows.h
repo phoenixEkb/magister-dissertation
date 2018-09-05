@@ -15,3 +15,4 @@
 //#include "QuasiPolyominoPackaging.h"
 #include "ConfigSequential.h"
 #include "QPPSeq.h"
+#include "GASolverSeq.h"

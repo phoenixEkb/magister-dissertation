@@ -10,11 +10,6 @@ class GASolver
 private:
 	//std::vector<QuasiPolyominoPackaging> figures;
 	int gridWidth, gridHeight;
-	//private static int itemsAmount, dimensions;
-	//private static double[, ] itemsSet;//amount of items*their dimensions
-	//private static double[] restrictions;
-	//private double[] itemsCosts;
-
 	int configsInPoolAmount;
 	int bestConfigsAmount;
 	std::vector<ConfigBitset> configsPool;
