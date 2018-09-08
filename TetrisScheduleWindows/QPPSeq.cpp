@@ -207,6 +207,7 @@ void QPPSeq::packFigures(std::vector<stateSeq> newStates, std::vector<int> newOr
 		{
 			currentStateMatrix(currentFigure[j].get<0>(), currentFigure[j].get<1>()) = i;
 		}
+		showMatrix();
 		placedFiguresAmount++;
 	}
 	this->placedFiguresAmount = figures.size();

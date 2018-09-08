@@ -34,6 +34,7 @@ void GASolverSeq::startCycling()
 	{
 		std::cout << "Optimal configuration found before GA started" << std::endl;
 		saveResults(0);
+		return;
 	}
 	for (int i = 1; i < configsInPoolAmount; i++)
 	{

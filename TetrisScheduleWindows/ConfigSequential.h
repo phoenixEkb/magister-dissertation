@@ -20,11 +20,12 @@ public:
 	~ConfigSequential();
 	std::vector<stateSeq> generateStatesByConfig();
 	int getFreeCellsAmount();
-	int getFreeCellsPercentage();
-	//bool Equals(ConfigSequential lhs, ConfigSequential rhs) if == does not work
+	//returns result from 0 to 1.
+	double getFreeCellsPercentage();
 	void setBitsForConfig(int number, stateSeq state);
 	void updateQPPs();//Have to do it manually right now; TODO: fix.
 	int length();
 	void showMatrix();
+	//bool Equals(ConfigSequential lhs, ConfigSequential rhs) if == does not work
 };
 
