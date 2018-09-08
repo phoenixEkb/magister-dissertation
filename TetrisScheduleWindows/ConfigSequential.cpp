@@ -155,3 +155,14 @@ void ConfigSequential::updateQPPs()
 	auto states = generateStatesByConfig();
 	QPPs.packFigures(states, currentOrder);
 }
+
+int ConfigSequential::length()
+{
+	return currentConfiguration.size();
+}
+
+//For debugging purposes
+void ConfigSequential::showMatrix()
+{
+	this->QPPs.showMatrix();
+}

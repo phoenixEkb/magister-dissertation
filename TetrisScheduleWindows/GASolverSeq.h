@@ -9,6 +9,7 @@ class GASolverSeq
 	std::vector<ConfigSequential> configsPool;
 	const unsigned int leastEmptyCellsPossible = 0;//very interesting parameter.
 	std::mt19937 rand;
+	std::uniform_int_distribution<int> distribution;
 	double mutationPercentage;
 	std::string resultFile;
 public:
@@ -34,5 +35,6 @@ private:
 	double GetKnapsackCost(ConfigSequential sack);
 	ConfigSequential MakeValid(ConfigSequential sack);
 	std::vector<double> GetBestConfigsCosts();
+	void saveResults(int poolPosition);
 };
 
