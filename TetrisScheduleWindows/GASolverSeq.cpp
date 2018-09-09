@@ -38,11 +38,11 @@ void GASolverSeq::startCycling()
 	}
 	for (int i = 1; i < configsInPoolAmount; i++)
 	{
-		configsPool[i] = SinglePointMutation(configsPool[0], rand);//or use active mutation.
+		configsPool[i] = SinglePointMutation(configsPool[0]);//or use active mutation.
 	}
 }
 
-ConfigSequential GASolverSeq::SinglePointMutation(ConfigSequential sack, std::mt19937 rand)
+ConfigSequential GASolverSeq::SinglePointMutation(ConfigSequential sack)
 {
 
 	ConfigSequential mutatedSack = ConfigSequential(sack);//copy constructor

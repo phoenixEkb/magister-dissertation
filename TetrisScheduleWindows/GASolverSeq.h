@@ -26,11 +26,11 @@ public:
 	double GetAbsoluteAverageKnapsackCost();
 private:
 	void startCycling();
+	ConfigSequential SinglePointMutation(ConfigSequential sack);
 	//void emptyBestConfigs(std::vector<ConfigSequential> &targetConfig);
 	void updateConfigs(std::vector<ConfigSequential> & currentPool, double tuningCoeff);
 	ConfigSequential FirstApproachGenerate();
 	ConfigSequential SinglePointCrossover(ConfigSequential sack1, ConfigSequential sack2, bool isLeft);
-	ConfigSequential SinglePointMutation(ConfigSequential sack, std::mt19937 rand);
 	bool IsValid(ConfigSequential config);
 	double GetKnapsackCost(ConfigSequential sack);
 	ConfigSequential MakeValid(ConfigSequential sack);
