@@ -143,6 +143,7 @@ void QPPSeq::packFigures(std::vector<stateSeq> newStates, std::vector<int> newOr
 {
 	if (newStates.size() != this->figures.size() || newOrder.size() != this->figures.size())
 		return;
+	std::cout << "placement started" << std::endl;
 	Point2D currentPosition(0, 0), oldPosition;
 	placedFiguresAmount = 0;
 	clearMatrix();
@@ -167,6 +168,7 @@ void QPPSeq::packFigures(std::vector<stateSeq> newStates, std::vector<int> newOr
 
 		while (!foundPlacement)
 		{
+			//std::cout <<"pos is "<< currentPosition.get<0>() << " " << currentPosition.get<1>()<<std::endl;
 			if (gridHeight < currentFigureHeigth + currentPosition.get<1>())//figure does not fit to the top
 			{
 				break;
@@ -195,9 +197,10 @@ void QPPSeq::packFigures(std::vector<stateSeq> newStates, std::vector<int> newOr
 			}
 			if (positionAcceptible)
 				foundPlacement = true;
+			
 			//std::cout << "finished while iteration for figure "<<i << std::endl;
 		}
-
+		//std::cout << "Figure placed" << std::endl;
 		if (!foundPlacement)
 		{
 			//this->placedFiguresAmount = i;
@@ -207,7 +210,6 @@ void QPPSeq::packFigures(std::vector<stateSeq> newStates, std::vector<int> newOr
 		{
 			currentStateMatrix(currentFigure[j].get<0>(), currentFigure[j].get<1>()) = i;
 		}
-		showMatrix();
 		placedFiguresAmount++;
 	}
 	this->placedFiguresAmount = figures.size();
@@ -244,6 +246,8 @@ MultiPoint2D QPPSeq::createFigureByState(int number, stateSeq newState)
 	{
 		trans::scale_transformer<int, 2, 2>xMirror(-1, 1);
 		bg::transform(newFigure, newFigure, xMirror);
+		trans::translate_transformer<int, 2, 2>xMove(figuresWidth[number]-1, 0);
+		bg::transform(newFigure, newFigure, xMove);
 	}
 	if (newState.rot != right)
 	{
