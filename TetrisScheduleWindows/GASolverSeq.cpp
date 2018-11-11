@@ -21,15 +21,50 @@ GASolverSeq::GASolverSeq(std::string figuresFile, std::string restrictionsFile, 
 	this->configsInPoolAmount = confAm;
 	this->configsPool = std::vector<ConfigSequential>(configsInPoolAmount);
 	configsPool[0] = ConfigSequential(figuresFile, restrictionsFile);
+	configsPool[0].showMatrix();
 	rand = std::mt19937(42);
-	distribution = std::uniform_int_distribution<int>(0, configsPool[0].length() - 1);
+	configLengthDistribution = std::uniform_int_distribution<int>(0, configsPool[0].length() - 1);
+	configAmountsDistribution = std::uniform_int_distribution<int>(0, configsInPoolAmount);
+	iterations = 0;
 	startCycling();
+}
+
+void GASolverSeq::makeIteration()
+{
+
+	if (configsPool[0].getFreeCellsPercentage() == 0) return;
+	std::vector<int> positions;
+
+	while (positions.size() < mutationPercentage * configsInPoolAmount)
+	{
+		positions.push_back(configAmountsDistribution(rand));
+		auto last = std::unique(positions.begin(), positions.end());
+		positions.erase(last, positions.end());
+	}
+	for (int i = 0; i < configsInPoolAmount; i++)
+	{
+		configsPool[i] = SinglePointMutation(configsPool[i]);
+	}
+	std::vector<ConfigSequential> CrossoverPool(configsInPoolAmount * 2 - 2);//not very well, if i want to customize Crossover ,but works
+	for (int j = 0; j < configsInPoolAmount - 1; j++)
+	{
+		CrossoverPool[j] = this->BitByBitCrossover(configsPool[j], configsPool[j + 1], true);
+		CrossoverPool[(CrossoverPool.size() - 1) - j] = this->BitByBitCrossover(configsPool[j], configsPool[j + 1], false);
+	}
+	std::sort(CrossoverPool.begin(), CrossoverPool.end(), [](ConfigSequential l, ConfigSequential r) {return l.getFreeCellsPercentage()< r.getFreeCellsPercentage();});//TODO:add comparator by cost!
+	auto last = std::unique(positions.begin(), positions.end());
+	positions.erase(last, positions.end());
+
+	if (CrossoverPool.size() > configsInPoolAmount)
+		for (int i = 0; i < CrossoverPool.size() - configsInPoolAmount;i++);
+	CrossoverPool.pop_back();
+	configsPool = CrossoverPool;
 }
 
 void GASolverSeq::startCycling()
 {
 	//UNDONE: add some checks in here for the case of accidental solving of the problem with default config.
-	
+
 	if (configsPool[0].getFreeCellsPercentage() == 0)
 	{
 		std::cout << "Optimal configuration found before GA started" << std::endl;
@@ -46,29 +81,40 @@ ConfigSequential GASolverSeq::SinglePointMutation(ConfigSequential sack)
 {
 
 	ConfigSequential mutatedSack = ConfigSequential(sack);//copy constructor
-	int mutationPosition = distribution(rand);
+	int mutationPosition = configLengthDistribution(rand);//TODO: add order-based things. Maybe -- work with elAm*4. Somehow.
 	sack.swapValue(mutationPosition);
 	sack.updateQPPs();
 	sack.showMatrix();
-	//var count = 0;
-	//while (mutatedSack.Equals(sack) && count < 1000000)//TODO - not mutate empty sack
-	//{
-	//	mutatedSack.swapValue(mutationPosition);
-	//	if (!IsValid(mutatedSack))
-	//	{
-	//		mutatedSack.swapValue(mutationPosition);
-	//		mutationPosition = rand.Next(itemsAmount);
-	//		count++;
-	//	}
-	//}
-	//if (count == 1000000)
-	//{
-	//	return MakeValid(mutatedSack);
-	//}
 	return sack;
+}
+
+ConfigSequential GASolverSeq::BitByBitCrossover(ConfigSequential sack1, ConfigSequential sack2, bool isLeft)//TODO: add order-based things
+{
+	ConfigSequential newSack;
+	if (isLeft)
+	{
+		for (int i = 0; i < sack1.length(); i++)
+		{
+			if (i % 2 == 0)
+				newSack.setValue(i,sack2.valueAt(i));
+			else
+				newSack.setValue(i,sack1.valueAt(i));
+		}
+	}
+	else
+	{
+		for (int i = 0; i < sack1.length(); i++)
+		{
+			if (i % 2 == 0)
+				newSack.setValue(i,sack1.valueAt(i));
+			else
+				newSack.setValue(i, sack2.valueAt(i));
+		}
+	}
+	return newSack;
 }
 
 void GASolverSeq::saveResults(int poolPosition)
 {
-	//UNDONE
+	configsPool[poolPosition].printMatrix(this->resultFile);
 }

@@ -24,7 +24,7 @@ void ConfigSequential::setValueToActive(int position)
 {
 	if (position >= 0 && position < elementsAmount)
 	{
-		currentConfiguration[position]=1;
+		currentConfiguration[position]=true;
 	}
 }
 
@@ -32,7 +32,15 @@ void ConfigSequential::setValueToPassive(int position)
 {
 	if (position >= 0 && position < elementsAmount)
 	{
-		currentConfiguration[position] = 0;
+		currentConfiguration[position] = false;
+	}
+}
+
+void ConfigSequential::setValue(int position, bool value)
+{
+	if (position >= 0 && position < elementsAmount)
+	{
+		currentOrder[position] = value;
 	}
 }
 
@@ -165,4 +173,14 @@ int ConfigSequential::length()
 void ConfigSequential::showMatrix()
 {
 	this->QPPs.showMatrix();
+}
+
+void ConfigSequential::printMatrix(std::string resFile)
+{
+	this->QPPs.printMatrix(resFile);
+}
+
+bool ConfigSequential::valueAt(int position)
+{
+	return currentConfiguration[position];
 }

@@ -132,6 +132,31 @@ void QPPSeq::showMatrix()
 	std::cout << std::endl;
 }
 //returns -1 for emply positions and -2 for restricted positions
+
+void QPPSeq::printMatrix(std::string resFile)
+{
+	std::ofstream restrFile(resFile, std::ifstream::out);
+	for (int j = currentStateMatrix.size2() - 1; j >= 0; j--)
+	{
+		for (int i = 0; i < currentStateMatrix.size1(); i++)
+		{
+
+			restrFile << std::setw(3) << std::setfill(' ');
+			switch (currentStateMatrix(i, j))
+			{//TODO: write some wraparound for numbers.
+			case -1:restrFile << '_'; break;//no figure
+			case -2:restrFile << '#'; break;//restriction
+			case -3:restrFile << '*'; break;//error
+			default:restrFile << currentStateMatrix(i, j);
+			};
+			restrFile << " ";//TODO: calculate perfect range for setw(i.e. 2 for <10 figures, 3 for 10-99 etc.)
+		}
+		restrFile << std::endl;
+	}
+	restrFile << std::endl;
+}
+
+
 int QPPSeq::returnFigureNumber(Point2D coords)
 {
 	return this->currentStateMatrix(coords.get<0>(), coords.get<1>());
@@ -168,7 +193,11 @@ void QPPSeq::packFigures(std::vector<stateSeq> newStates, std::vector<int> newOr
 
 		while (!foundPlacement)
 		{
-			//std::cout <<"pos is "<< currentPosition.get<0>() << " " << currentPosition.get<1>()<<std::endl;
+			if (currentPosition.get<0>() == -1)//проверить эти брейки
+			{
+				break;
+			}
+			std::cout <<"pos is "<< currentPosition.get<0>() << " " << currentPosition.get<1>()<<std::endl;
 			if (gridHeight < currentFigureHeigth + currentPosition.get<1>())//figure does not fit to the top
 			{
 				break;
@@ -177,6 +206,8 @@ void QPPSeq::packFigures(std::vector<stateSeq> newStates, std::vector<int> newOr
 			{
 				oldPosition = currentPosition;
 				currentPosition = findFreeStartPoint(currentPosition, currentFigureWidth, currentFigureHeigth);
+				std::cout << "next pos is " << currentPosition.get<0>() << " " << currentPosition.get<1>() << std::endl;
+
 				if (currentPosition.get<0>() == -1)//проверить эти брейки
 				{
 					break;
@@ -198,9 +229,9 @@ void QPPSeq::packFigures(std::vector<stateSeq> newStates, std::vector<int> newOr
 			if (positionAcceptible)
 				foundPlacement = true;
 			
-			//std::cout << "finished while iteration for figure "<<i << std::endl;
+			std::cout << "finished while iteration for figure "<<i << std::endl;
 		}
-		//std::cout << "Figure placed" << std::endl;
+		std::cout << "Figure placed" << std::endl;
 		if (!foundPlacement)
 		{
 			//this->placedFiguresAmount = i;
@@ -336,7 +367,15 @@ MultiPoint2D QPPSeq::rotateSavingLeftCorner(MultiPoint2D figure, rotation rot, i
 	//trans::rotate_transformer<bg::degree, double, 2, 2> rotate(rot);
 	//bg::transform(newFigure, newFigure, rotate);
 	newFigure = rotateTransform(newFigure, rot);
-	switch (rot)
+	int xMin = INT_MAX, yMin = INT_MAX;
+	for (int j = 0; j < bg::num_points(figure); j++)
+	{
+		xMin = std::min(figure[j].get<0>(), xMin);
+		yMin = std::min(figure[j].get<1>(), yMin);
+	}
+	trans::translate_transformer<double, 2, 2> translate(-xMin, -yMin);
+	bg::transform(figure, newFigure, translate);
+	/*switch (rot)
 	{
 	case rotation::bottom:
 	{
@@ -356,7 +395,7 @@ MultiPoint2D QPPSeq::rotateSavingLeftCorner(MultiPoint2D figure, rotation rot, i
 		bg::transform(newFigure, newFigure, t2);
 		break;
 	}
-	}
+	}*/
 	return newFigure;
 }
 

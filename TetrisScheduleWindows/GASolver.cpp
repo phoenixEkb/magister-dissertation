@@ -39,7 +39,7 @@ GASolver::~GASolver()
 {
 }
 
-void GASolver::MakeIteration()
+void GASolver::makeIteration()
 {
 
 }

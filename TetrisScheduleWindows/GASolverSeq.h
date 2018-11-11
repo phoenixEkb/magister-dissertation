@@ -1,6 +1,8 @@
 #pragma once
 #include "ConfigSequential.h"
+#include <vector>
 #include <random>
+#include <algorithm>
 
 class GASolverSeq
 {
@@ -9,32 +11,28 @@ class GASolverSeq
 	std::vector<ConfigSequential> configsPool;
 	const unsigned int leastEmptyCellsPossible = 0;//very interesting parameter.
 	std::mt19937 rand;
-	std::uniform_int_distribution<int> distribution;
+	std::uniform_int_distribution<int> configLengthDistribution,configAmountsDistribution;
 	double mutationPercentage;
 	std::string resultFile;
+
+	int iterations;
 public:
 	GASolverSeq();
 	~GASolverSeq();
 	GASolverSeq(std::string figuresFile, std::string restrictionsFile, std::string resultFile, int confAm, double mutationPercentage, int bestConfigsAmount);
 	
-	void MakeIteration();
+	void makeIteration();
 	//void RestartAlgorithm(double flushPercent);
 
-	double GetNormalizedMaximalKnapsackCost();
+	/*double GetNormalizedMaximalKnapsackCost();
 	double GetNormaizedAveragePoolCost();
 	double GetAbsoluteMaximalKnapsackCost();
-	double GetAbsoluteAverageKnapsackCost();
+	double GetAbsoluteAverageKnapsackCost();*/
 private:
 	void startCycling();
 	ConfigSequential SinglePointMutation(ConfigSequential sack);
 	//void emptyBestConfigs(std::vector<ConfigSequential> &targetConfig);
-	void updateConfigs(std::vector<ConfigSequential> & currentPool, double tuningCoeff);
-	ConfigSequential FirstApproachGenerate();
-	ConfigSequential SinglePointCrossover(ConfigSequential sack1, ConfigSequential sack2, bool isLeft);
-	bool IsValid(ConfigSequential config);
-	double GetKnapsackCost(ConfigSequential sack);
-	ConfigSequential MakeValid(ConfigSequential sack);
-	std::vector<double> GetBestConfigsCosts();
+	ConfigSequential BitByBitCrossover(ConfigSequential sack1, ConfigSequential sack2, bool isLeft);
 	void saveResults(int poolPosition);
 };
 

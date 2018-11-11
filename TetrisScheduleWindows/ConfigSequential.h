@@ -9,11 +9,13 @@ class ConfigSequential
 	int figuresAmount,elementsAmount;
 	boost::dynamic_bitset<> currentConfiguration;//for states,length= elAm*3?
 	std::vector<int> currentOrder;//permutation
+	//TODO: вы€снить/про€снить св€зь currentConfiguration и currentOrder
 	QPPSeq QPPs;
 public:
 	void swapValue(int position);//mindless
 	void setValueToActive(int position);
 	void setValueToPassive(int position);
+	void setValue(int position, bool value);
 	void swapPositionsInOrder(int pos1, int pos2);
 	ConfigSequential();
 	ConfigSequential(std::string figuresFile,std::string restrictionsFile);
@@ -26,6 +28,8 @@ public:
 	void updateQPPs();//Have to do it manually right now; TODO: fix.
 	int length();
 	void showMatrix();
+	void printMatrix(std::string resFile);
 	//bool Equals(ConfigSequential lhs, ConfigSequential rhs) if == does not work
+	bool valueAt(int position);
 };
 

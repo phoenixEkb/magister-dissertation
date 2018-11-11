@@ -62,6 +62,7 @@ public:
 	//returns false if state didn't changed
 	void swapPositionsInCurrentOrder(int firstPos, int secondPos);
 	void showMatrix();
+	void printMatrix(std::string resFile);
 	int returnFigureNumber(Point2D coords);
 	//We divide these 2 structures here and connect them in ConfigSeq
 	void packFigures(std::vector<stateSeq> newStates,std::vector<int> newOrder);

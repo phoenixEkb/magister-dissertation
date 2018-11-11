@@ -25,7 +25,7 @@ public:
 	GASolver();
 	GASolver(std::string figuresFile, std::string restrictionsFile, std::string resultFile,int confAm, /*Crossover myCrs, Mutation myMt,*/ double mutationPercentage, int bestConfigsAmount);
 	~GASolver();
-	void MakeIteration();
+	void makeIteration();
 	void RestartAlgorithm(double flushPercent);
 
 	double GetNormalizedMaximalKnapsackCost();
