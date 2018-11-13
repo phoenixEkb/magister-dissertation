@@ -21,7 +21,11 @@ GASolverSeq::GASolverSeq(std::string figuresFile, std::string restrictionsFile, 
 	this->configsInPoolAmount = confAm;
 	this->configsPool = std::vector<ConfigSequential>(configsInPoolAmount);
 	configsPool[0] = ConfigSequential(figuresFile, restrictionsFile);
+	//Debug
+	std::cout << "Constructor matrix(from naive algorithm)" << std::endl;
 	configsPool[0].showMatrix();
+
+
 	rand = std::mt19937(42);
 	configLengthDistribution = std::uniform_int_distribution<int>(0, configsPool[0].length() - 1);
 	configAmountsDistribution = std::uniform_int_distribution<int>(0, configsInPoolAmount);
@@ -77,38 +81,40 @@ void GASolverSeq::startCycling()
 	}
 }
 
-ConfigSequential GASolverSeq::SinglePointMutation(ConfigSequential sack)
+ConfigSequential GASolverSeq::SinglePointMutation(ConfigSequential conf)
 {
 
-	ConfigSequential mutatedSack = ConfigSequential(sack);//copy constructor
+	ConfigSequential mutatedSack = ConfigSequential(conf);//copy constructor
 	int mutationPosition = configLengthDistribution(rand);//TODO: add order-based things. Maybe -- work with elAm*4. Somehow.
-	sack.swapValue(mutationPosition);
-	sack.updateQPPs();
-	sack.showMatrix();
-	return sack;
+	conf.swapValue(mutationPosition);
+	conf.updateQPPs();
+	//Debug
+	conf.showMatrix();
+	std::cout << "Mutation on " << this->iterations << "iteration" << std::endl;
+	return conf;
 }
 
-ConfigSequential GASolverSeq::BitByBitCrossover(ConfigSequential sack1, ConfigSequential sack2, bool isLeft)//TODO: add order-based things
+ConfigSequential GASolverSeq::BitByBitCrossover(ConfigSequential conf1, ConfigSequential conf2, bool isLeft)//TODO: add order-based things
 {
 	ConfigSequential newSack;
 	if (isLeft)
 	{
-		for (int i = 0; i < sack1.length(); i++)
+		for (int i = 0; i < conf1.length(); i++)
 		{
 			if (i % 2 == 0)
-				newSack.setValue(i,sack2.valueAt(i));
+				newSack.setValue(i,conf2.valueAt(i));
 			else
-				newSack.setValue(i,sack1.valueAt(i));
+				newSack.setValue(i,conf1.valueAt(i));
 		}
 	}
 	else
 	{
-		for (int i = 0; i < sack1.length(); i++)
+		for (int i = 0; i < conf1.length(); i++)
 		{
 			if (i % 2 == 0)
-				newSack.setValue(i,sack1.valueAt(i));
+				newSack.setValue(i,conf1.valueAt(i));
 			else
-				newSack.setValue(i, sack2.valueAt(i));
+				newSack.setValue(i, conf2.valueAt(i));
 		}
 	}
 	return newSack;
