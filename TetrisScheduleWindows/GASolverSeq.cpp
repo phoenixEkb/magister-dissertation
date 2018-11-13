@@ -51,7 +51,7 @@ void GASolverSeq::makeIteration()
 		CrossoverPool[j] = this->BitByBitCrossover(configsPool[j], configsPool[j + 1], true);
 		CrossoverPool[(CrossoverPool.size() - 1) - j] = this->BitByBitCrossover(configsPool[j], configsPool[j + 1], false);
 	}
-	std::sort(CrossoverPool.begin(), CrossoverPool.end(), [](ConfigSequential l, ConfigSequential r) {return l.getFreeCellsPercentage()< r.getFreeCellsPercentage();});//TODO:add comparator by cost!
+	std::sort(CrossoverPool.begin(), CrossoverPool.end(), [](ConfigSequential l, ConfigSequential r) {return l.getFreeCellsPercentage()< r.getFreeCellsPercentage();});
 	auto last = std::unique(positions.begin(), positions.end());
 	positions.erase(last, positions.end());
 
