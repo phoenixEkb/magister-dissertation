@@ -12,41 +12,45 @@
 //{
 //}
 
-void ConfigSequential::swapValue(int position)
+void ConfigSequential::swapStateBinaryValue(int position)
 {
 	if (position >= 0 && position < elementsAmount)
 	{
 		currentConfiguration[position].flip();
+		QPPsUpdated = false;
 	}
 }
 
-void ConfigSequential::setValueToActive(int position)
+void ConfigSequential::setStateBinaryValueToActive(int position)
 {
 	if (position >= 0 && position < elementsAmount)
 	{
-		currentConfiguration[position]=true;
+		currentConfiguration[position] = true;
+		QPPsUpdated = false;
 	}
 }
 
-void ConfigSequential::setValueToPassive(int position)
+void ConfigSequential::setStateBinaryValueToPassive(int position)
 {
 	if (position >= 0 && position < elementsAmount)
 	{
 		currentConfiguration[position] = false;
+		QPPsUpdated = false;
 	}
 }
-
-void ConfigSequential::setValue(int position, bool value)
+//This method replaces methods above, can refactor
+void ConfigSequential::setStateBinaryValue(int position, bool value)
 {
 	if (position >= 0 && position < elementsAmount)
 	{
-		currentOrder[position] = value;
+		currentConfiguration[position] = value;
+		QPPsUpdated = false;
 	}
 }
 
-void ConfigSequential::swapPositionsInOrder(int pos1, int pos2)//maybe rewrite with find?
+void ConfigSequential::swapPositionsInOrder(int pos1, int pos2)//TODO:MINOR:maybe rewrite with find?
 {
-	if(pos1>=0&&pos2>=0&&pos1<figuresAmount&&pos2<figuresAmount)
+	if (pos1 >= 0 && pos2 >= 0 && pos1 < figuresAmount&&pos2 < figuresAmount)
 	{
 		int loc1 = -1, loc2 = -1;
 		for (int i = 0; i < figuresAmount; ++i)
@@ -60,7 +64,9 @@ void ConfigSequential::swapPositionsInOrder(int pos1, int pos2)//maybe rewrite w
 				std::swap(currentOrder[loc1], currentOrder[loc2]);
 			}
 		}
+		QPPsUpdated = false;
 	}
+
 }
 
 ConfigSequential::ConfigSequential()
@@ -80,6 +86,7 @@ ConfigSequential::ConfigSequential(std::string figuresFile, std::string restrict
 	{
 		setBitsForConfig(i, states[i]);
 	}
+	QPPsUpdated = false;
 }
 
 ConfigSequential::~ConfigSequential()
@@ -112,12 +119,16 @@ std::vector<stateSeq> ConfigSequential::generateStatesByConfig()
 
 int ConfigSequential::getFreeCellsAmount()
 {
+	if (!QPPsUpdated)
+		updateQPPs();
 	return QPPs.getFreeArea();
 }
 
 double ConfigSequential::getFreeCellsPercentage()
 {
-	return (double)QPPs.getFreeArea()/ (double)(QPPs.getGridArea()-QPPs.getRestrictionsArea());
+	if (!QPPsUpdated)
+		updateQPPs();
+	return (double)QPPs.getFreeArea() / (double)(QPPs.getGridArea() - QPPs.getRestrictionsArea());
 }
 
 void ConfigSequential::setBitsForConfig(int number, stateSeq st)
@@ -160,11 +171,13 @@ void ConfigSequential::setBitsForConfig(int number, stateSeq st)
 
 void ConfigSequential::updateQPPs()
 {
+	if (QPPsUpdated) return;
 	auto states = generateStatesByConfig();
 	QPPs.packFigures(states, currentOrder);
+	QPPsUpdated = true;
 }
 
-int ConfigSequential::length()
+int ConfigSequential::length()//TODO:check where is used, probably can return CCsize+COsize
 {
 	return currentConfiguration.size();
 }
@@ -172,11 +185,15 @@ int ConfigSequential::length()
 //For debugging purposes
 void ConfigSequential::showMatrix()
 {
+	if (!QPPsUpdated)
+		updateQPPs();
 	this->QPPs.showMatrix();
 }
 
 void ConfigSequential::printMatrix(std::string resFile)
 {
+	if (!QPPsUpdated)
+		updateQPPs();
 	this->QPPs.printMatrix(resFile);
 }
 

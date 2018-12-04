@@ -79,17 +79,17 @@ ConfigBitset::ConfigBitset(std::vector<QuasiPolyominoPackaging> polyominoes, uin
 }
 */
 
-void ConfigBitset::setValueToActive(int position)
+void ConfigBitset::setStateBinaryValueToActive(int position)
 {
 	currentConfiguration[position] = true;
 }
 
-void ConfigBitset::setValueToPassive(int position)
+void ConfigBitset::setStateBinaryValueToPassive(int position)
 {
 	currentConfiguration[position] = false;
 }
 
-void ConfigBitset::swapValue(int position)
+void ConfigBitset::swapStateBinaryValue(int position)
 {
 	currentConfiguration[position].flip();
 }

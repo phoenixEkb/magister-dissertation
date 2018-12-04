@@ -23,7 +23,7 @@ public:
 	~Config2D();
 	void nullPosition(unsigned int position);
 	const unsigned int valueAt(unsigned int position) const;
-	bool setValue(unsigned int value, unsigned int position);
+	bool setStateBinaryValue(unsigned int value, unsigned int position);
 	int size() const;
 	friend bool operator==(const Config2D& left, const Config2D& right);
 	friend bool operator<(const Config2D& left, const Config2D& right);

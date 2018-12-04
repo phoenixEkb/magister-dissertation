@@ -189,7 +189,7 @@ void QPPSeq::packFigures(std::vector<stateSeq> newStates, std::vector<int> newOr
 		{
 			std::swap(currentFigureWidth, currentFigureHeigth);
 		}
-		std::cout << "Figure sizes are " << currentFigureWidth<<" " << currentFigureHeigth<<", rotation is "<<newStates[i].rot<<std::endl;
+		//std::cout << "Figure sizes are " << currentFigureWidth<<" " << currentFigureHeigth<<", rotation is "<<newStates[i].rot<<std::endl;
 
 		//TODO:Also possible to use 0.0 as 1st argument if want more clumsy packaging. Or not.
 		if (currentPosition.get<0>() == -1)
@@ -205,7 +205,7 @@ void QPPSeq::packFigures(std::vector<stateSeq> newStates, std::vector<int> newOr
 				break;
 			}
 
-			std::cout << "Position is " << currentPosition.get<0>() << " " << currentPosition.get<1>() << std::endl;
+			//std::cout << "Position is " << currentPosition.get<0>() << " " << currentPosition.get<1>() << std::endl;
 
 			if (!checkAvailableHeight(currentPosition, currentFigureHeigth))//figure does not fit to the top
 			{
@@ -253,13 +253,14 @@ void QPPSeq::packFigures(std::vector<stateSeq> newStates, std::vector<int> newOr
 		}
 		placedFiguresAmount++;
 		std::cout << "Figure "<< i <<" placed" << std::endl;
-		showMatrix();
+		//showMatrix();
 
 		//clumsy packing trick, can be disabled
 		currentPosition = Point2D(0, 0);
 		oldPosition = currentPosition;
 		//
 	}
+	showMatrix();
 	this->placedFiguresAmount = figures.size();
 }
 

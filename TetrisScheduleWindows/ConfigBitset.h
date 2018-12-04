@@ -23,9 +23,9 @@ public:
 	//Two constructors above are taken from old GA and were never used
 	
 	//What if methods doesnt't work if element is passive?
-	void setValueToActive(int position);
-	void setValueToPassive(int position);
-	void swapValue(int position);
+	void setStateBinaryValueToActive(int position);
+	void setStateBinaryValueToPassive(int position);
+	void swapStateBinaryValue(int position);
 	bool isValueActive(int position);
 	bool valueAt(int position) const;
 	int size() const;

@@ -83,7 +83,7 @@ ConfigSequential GASolverSeq::SinglePointMutation(ConfigSequential conf)
 {
 	ConfigSequential mutatedSack = ConfigSequential(conf);//copy constructor
 	int mutationPosition = configLengthDistribution(rand);//TODO: add order-based things. Maybe -- work with elAm*4. Somehow.
-	conf.swapValue(mutationPosition);
+	conf.swapStateBinaryValue(mutationPosition);
 	conf.updateQPPs();
 	//Debug
 	conf.showMatrix();
@@ -99,9 +99,9 @@ ConfigSequential GASolverSeq::BitByBitCrossover(ConfigSequential conf1, ConfigSe
 		for (int i = 0; i < conf1.length(); i++)
 		{
 			if (i % 2 == 0)
-				newSack.setValue(i,conf2.valueAt(i));
+				newSack.setStateBinaryValue(i,conf2.valueAt(i));
 			else
-				newSack.setValue(i,conf1.valueAt(i));
+				newSack.setStateBinaryValue(i,conf1.valueAt(i));
 		}
 	}
 	else
@@ -109,9 +109,9 @@ ConfigSequential GASolverSeq::BitByBitCrossover(ConfigSequential conf1, ConfigSe
 		for (int i = 0; i < conf1.length(); i++)
 		{
 			if (i % 2 == 0)
-				newSack.setValue(i,conf1.valueAt(i));
+				newSack.setStateBinaryValue(i,conf1.valueAt(i));
 			else
-				newSack.setValue(i, conf2.valueAt(i));
+				newSack.setStateBinaryValue(i, conf2.valueAt(i));
 		}
 	}
 	return newSack;

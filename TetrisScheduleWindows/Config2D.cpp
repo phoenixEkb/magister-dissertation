@@ -35,7 +35,7 @@ const unsigned int Config2D::valueAt(unsigned int position) const
 	return config[position];
 }
 
-bool Config2D::setValue(unsigned int value, unsigned int position)
+bool Config2D::setStateBinaryValue(unsigned int value, unsigned int position)
 {
 	if (maxValues[position]<value)
 	{
