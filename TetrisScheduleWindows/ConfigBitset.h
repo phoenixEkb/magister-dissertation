@@ -7,8 +7,8 @@
 
 class ConfigBitset
 {
-	int elementsAmount;
-	boost::dynamic_bitset<> currentConfiguration;	
+	int statesAmount;
+	boost::dynamic_bitset<> currentStatesConfiguration;	
 	static boost::dynamic_bitset<> possiblePolyominoesPositions;
 	//QuasiPolyominoPackaging currentState;//Maybe rename as geometryHandler
 	//Saves information about possible states in binary form.

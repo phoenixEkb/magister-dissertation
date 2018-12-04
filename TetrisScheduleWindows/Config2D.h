@@ -18,7 +18,7 @@ private: std::vector<unsigned int> config;
 	
 public:
 
-	Config2D(unsigned int elementsAmount, std::vector<unsigned int>& maxValues);
+	Config2D(unsigned int statesAmount, std::vector<unsigned int>& maxValues);
 	//Config2D(const vector<unsigned int>&);
 	~Config2D();
 	void nullPosition(unsigned int position);

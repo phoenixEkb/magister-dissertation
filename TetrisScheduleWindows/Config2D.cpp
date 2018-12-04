@@ -13,9 +13,9 @@ Config2D::Config2D()
 	
 }
 
-Config2D::Config2D(unsigned int elementsAmount, std::vector<unsigned int>& maxValues)
+Config2D::Config2D(unsigned int statesAmount, std::vector<unsigned int>& maxValues)
 {
-	config = std::vector<unsigned int>(elementsAmount);
+	config = std::vector<unsigned int>(statesAmount);
 	this->maxValues = maxValues;
 }
 

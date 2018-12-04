@@ -5,14 +5,14 @@
 
 bool ConfigBitset::isElementActive(int number)
 {
-	if (number<0||number >elementsAmount)
+	if (number<0||number >statesAmount)
 		return false;//TODO exceptions
-	return currentConfiguration[number];
+	return currentStatesConfiguration[number];
 }
 
 void ConfigBitset::switchElementState(int number)
 {
-	if (number<0 || number >elementsAmount)
+	if (number<0 || number >statesAmount)
 		return;//TODO exceptions
 
 }
@@ -47,7 +47,7 @@ int fastBinaryDigitsCount(uint32_t v)
 ConfigBitset::ConfigBitset(std::vector<QuasiPolyominoPackaging> polyominoes, uint32_t gridWidth, uint32_t gridHeight)
 {
 	auto gridMaxDim = std::max(gridWidth, gridHeight);
-	elementsAmount = polyominoes.size();	auto gridMaxDimDigitsAmount = fastBinaryDigitsCount(gridMaxDim);
+	statesAmount = polyominoes.size();	auto gridMaxDimDigitsAmount = fastBinaryDigitsCount(gridMaxDim);
 
 	int rotationsBitsAmount = 2, reflectionsBitsAmount = 1, includeBitsAmount=1,
 		bitsForOneConfig= includeBitsAmount+ 2*gridMaxDimDigitsAmount + rotationsBitsAmount + reflectionsBitsAmount;
@@ -81,32 +81,32 @@ ConfigBitset::ConfigBitset(std::vector<QuasiPolyominoPackaging> polyominoes, uin
 
 void ConfigBitset::setStateBinaryValueToActive(int position)
 {
-	currentConfiguration[position] = true;
+	currentStatesConfiguration[position] = true;
 }
 
 void ConfigBitset::setStateBinaryValueToPassive(int position)
 {
-	currentConfiguration[position] = false;
+	currentStatesConfiguration[position] = false;
 }
 
 void ConfigBitset::swapStateBinaryValue(int position)
 {
-	currentConfiguration[position].flip();
+	currentStatesConfiguration[position].flip();
 }
 
 bool ConfigBitset::isValueActive(int position)
 {
-	return currentConfiguration[position];
+	return currentStatesConfiguration[position];
 }
 
 bool ConfigBitset::valueAt(int position) const
 {
-	return currentConfiguration[position];
+	return currentStatesConfiguration[position];
 }
 
 int ConfigBitset::size() const
 {
-	return currentConfiguration.size();
+	return currentStatesConfiguration.size();
 }
 
 //bool operator==(const ConfigBitset & left, const ConfigBitset & right) //Problem 6 - sth wrong with function signature.

@@ -14,36 +14,36 @@
 
 void ConfigSequential::swapStateBinaryValue(int position)
 {
-	if (position >= 0 && position < elementsAmount)
+	if (position >= 0 && position < statesAmount)
 	{
-		currentConfiguration[position].flip();
+		currentStatesConfiguration[position].flip();
 		QPPsUpdated = false;
 	}
 }
 
 void ConfigSequential::setStateBinaryValueToActive(int position)
 {
-	if (position >= 0 && position < elementsAmount)
+	if (position >= 0 && position < statesAmount)
 	{
-		currentConfiguration[position] = true;
+		currentStatesConfiguration[position] = true;
 		QPPsUpdated = false;
 	}
 }
 
 void ConfigSequential::setStateBinaryValueToPassive(int position)
 {
-	if (position >= 0 && position < elementsAmount)
+	if (position >= 0 && position < statesAmount)
 	{
-		currentConfiguration[position] = false;
+		currentStatesConfiguration[position] = false;
 		QPPsUpdated = false;
 	}
 }
 //This method replaces methods above, can refactor
 void ConfigSequential::setStateBinaryValue(int position, bool value)
 {
-	if (position >= 0 && position < elementsAmount)
+	if (position >= 0 && position < statesAmount)
 	{
-		currentConfiguration[position] = value;
+		currentStatesConfiguration[position] = value;
 		QPPsUpdated = false;
 	}
 }
@@ -78,8 +78,8 @@ ConfigSequential::ConfigSequential(std::string figuresFile, std::string restrict
 {
 	QPPs = QPPSeq(figuresFile, restrictionsFile);
 	figuresAmount = QPPs.getFiguresAmount();
-	elementsAmount = figuresAmount * 3;
-	currentConfiguration = boost::dynamic_bitset<>(elementsAmount);
+	statesAmount = figuresAmount * 3;
+	currentStatesConfiguration = boost::dynamic_bitset<>(statesAmount);
 	this->currentOrder = QPPs.getFiguresOrder();
 	auto states = QPPs.getFiguresStates();
 	for (int i = 0; i < states.size(); i++)
@@ -98,17 +98,17 @@ std::vector<stateSeq> ConfigSequential::generateStatesByConfig()
 	std::vector<stateSeq> states(figuresAmount);
 	for (int i = 0; i < figuresAmount; i++)
 	{
-		states[i].mirrored = currentConfiguration[3 * i];
-		if (currentConfiguration[3 * i + 1])
+		states[i].mirrored = currentStatesConfiguration[3 * i];
+		if (currentStatesConfiguration[3 * i + 1])
 		{
-			if (currentConfiguration[3 * i + 2])
+			if (currentStatesConfiguration[3 * i + 2])
 				states[i].rot = top;
 			else
 				states[i].rot = left;
 		}
 		else
 		{
-			if (currentConfiguration[3 * i + 2])
+			if (currentStatesConfiguration[3 * i + 2])
 				states[i].rot = bottom;
 			else
 				states[i].rot = right;
@@ -135,34 +135,34 @@ void ConfigSequential::setBitsForConfig(int number, stateSeq st)
 {
 	if (st.mirrored)
 	{
-		currentConfiguration[number * 3] = 1;
+		currentStatesConfiguration[number * 3] = 1;
 	}
 	else
-		currentConfiguration[number * 3] = 0;
+		currentStatesConfiguration[number * 3] = 0;
 	switch (st.rot)
 	{
 	case right:
 	{
-		currentConfiguration[number * 3 + 1] = 0;
-		currentConfiguration[number * 3 + 2] = 0;
+		currentStatesConfiguration[number * 3 + 1] = 0;
+		currentStatesConfiguration[number * 3 + 2] = 0;
 		break;
 	}
 	case bottom:
 	{
-		currentConfiguration[number * 3 + 1] = 0;
-		currentConfiguration[number * 3 + 2] = 1;
+		currentStatesConfiguration[number * 3 + 1] = 0;
+		currentStatesConfiguration[number * 3 + 2] = 1;
 		break;
 	}
 	case left:
 	{
-		currentConfiguration[number * 3 + 1] = 1;
-		currentConfiguration[number * 3 + 2] = 0;
+		currentStatesConfiguration[number * 3 + 1] = 1;
+		currentStatesConfiguration[number * 3 + 2] = 0;
 		break;
 	}
 	case top:
 	{
-		currentConfiguration[number * 3 + 1] = 1;
-		currentConfiguration[number * 3 + 2] = 1;
+		currentStatesConfiguration[number * 3 + 1] = 1;
+		currentStatesConfiguration[number * 3 + 2] = 1;
 		break;
 	}
 	}
@@ -177,9 +177,14 @@ void ConfigSequential::updateQPPs()
 	QPPsUpdated = true;
 }
 
-int ConfigSequential::length()//TODO:check where is used, probably can return CCsize+COsize
+int ConfigSequential::getStatesAmount()//TODO:check where is used, probably can return CCsize+COsize
 {
-	return currentConfiguration.size();
+	return currentStatesConfiguration.size();
+}
+
+int ConfigSequential::getFiguresAmount()
+{
+	return this->figuresAmount;
 }
 
 //For debugging purposes
@@ -199,5 +204,5 @@ void ConfigSequential::printMatrix(std::string resFile)
 
 bool ConfigSequential::valueAt(int position)
 {
-	return currentConfiguration[position];
+	return currentStatesConfiguration[position];
 }

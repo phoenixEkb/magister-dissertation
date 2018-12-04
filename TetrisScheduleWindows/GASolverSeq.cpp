@@ -23,10 +23,13 @@ GASolverSeq::GASolverSeq(std::string figuresFile, std::string restrictionsFile, 
 	//DEBUG
 	std::cout << "Naive algorithm starting placement" << std::endl;
 	configsPool[0] = ConfigSequential(figuresFile, restrictionsFile);
-	   
-	rand = std::mt19937(42);
-	configLengthDistribution = std::uniform_int_distribution<int>(0, configsPool[0].length() - 1);
-	configAmountsDistribution = std::uniform_int_distribution<int>(0, configsInPoolAmount);
+
+	rand = std::mt19937(42);//DEBUG
+	configStatesLengthDistr = std::uniform_int_distribution<int>(0, configsPool[0].getStatesAmount() - 1);
+	configsAmountDistr = std::uniform_int_distribution<int>(0, configsInPoolAmount);
+	configOrderLengthDistr = std::uniform_int_distribution<int>(0, configsPool[0].getFiguresAmount() - 1);
+	uniformDistr = std::uniform_real_distribution<double>(0, 1);
+
 	iteration = 0;
 	startCycling();
 }
@@ -39,7 +42,7 @@ void GASolverSeq::makeIteration()
 
 	while (positions.size() < mutationPercentage * configsInPoolAmount)
 	{
-		positions.push_back(configAmountsDistribution(rand));
+		positions.push_back(configsAmountDistr(rand));
 		auto last = std::unique(positions.begin(), positions.end());
 		positions.erase(last, positions.end());
 	}
@@ -53,12 +56,12 @@ void GASolverSeq::makeIteration()
 		CrossoverPool[j] = this->BitByBitCrossover(configsPool[j], configsPool[j + 1], true);
 		CrossoverPool[(CrossoverPool.size() - 1) - j] = this->BitByBitCrossover(configsPool[j], configsPool[j + 1], false);
 	}
-	std::sort(CrossoverPool.begin(), CrossoverPool.end(), [](ConfigSequential l, ConfigSequential r) {return l.getFreeCellsPercentage()< r.getFreeCellsPercentage();});
+	std::sort(CrossoverPool.begin(), CrossoverPool.end(), [](ConfigSequential l, ConfigSequential r) {return l.getFreeCellsPercentage() < r.getFreeCellsPercentage(); });
 	auto last = std::unique(positions.begin(), positions.end());
 	positions.erase(last, positions.end());
 
 	if (CrossoverPool.size() > configsInPoolAmount)
-		for (int i = 0; i < CrossoverPool.size() - configsInPoolAmount;i++);
+		for (int i = 0; i < CrossoverPool.size() - configsInPoolAmount; i++);
 	CrossoverPool.pop_back();
 	configsPool = CrossoverPool;
 }
@@ -82,11 +85,23 @@ void GASolverSeq::startCycling()
 ConfigSequential GASolverSeq::SinglePointMutation(ConfigSequential conf)
 {
 	ConfigSequential mutatedSack = ConfigSequential(conf);//copy constructor
-	int mutationPosition = configLengthDistribution(rand);//TODO: add order-based things. Maybe -- work with elAm*4. Somehow.
-	conf.swapStateBinaryValue(mutationPosition);
-	conf.updateQPPs();
+	if (this->uniformDistr(rand)<=0.33)
+	{
+		int mutationPosition = configStatesLengthDistr(rand);//TODO: add order-based things. Maybe -- work with elAm*4. Somehow.
+		conf.swapStateBinaryValue(mutationPosition);
+	}
+	else
+	{
+		int first = configsAmountDistr(rand), second = configsAmountDistr(rand);
+		while (first == second)
+		{
+			second = configsAmountDistr(rand);
+		}
+		conf.swapPositionsInOrder(first, second);
+	}
 	//Debug
 	conf.showMatrix();
+	//
 	std::cout << "Mutation on " << this->iteration << " iteration" << std::endl;
 	return conf;
 }
@@ -96,20 +111,20 @@ ConfigSequential GASolverSeq::BitByBitCrossover(ConfigSequential conf1, ConfigSe
 	ConfigSequential newSack;
 	if (isLeft)
 	{
-		for (int i = 0; i < conf1.length(); i++)
+		for (int i = 0; i < conf1.getStatesAmount(); i++)
 		{
 			if (i % 2 == 0)
-				newSack.setStateBinaryValue(i,conf2.valueAt(i));
+				newSack.setStateBinaryValue(i, conf2.valueAt(i));
 			else
-				newSack.setStateBinaryValue(i,conf1.valueAt(i));
+				newSack.setStateBinaryValue(i, conf1.valueAt(i));
 		}
 	}
 	else
 	{
-		for (int i = 0; i < conf1.length(); i++)
+		for (int i = 0; i < conf1.getStatesAmount(); i++)
 		{
 			if (i % 2 == 0)
-				newSack.setStateBinaryValue(i,conf1.valueAt(i));
+				newSack.setStateBinaryValue(i, conf1.valueAt(i));
 			else
 				newSack.setStateBinaryValue(i, conf2.valueAt(i));
 		}

@@ -6,11 +6,11 @@
 
 class ConfigSequential
 {
-	int figuresAmount,elementsAmount;
-	boost::dynamic_bitset<> currentConfiguration;//for states,length= elAm*3?
-	std::vector<int> currentOrder;//permutation, length=elAm
+	int figuresAmount,statesAmount;
+	boost::dynamic_bitset<> currentStatesConfiguration;//for states,getStatesAmount= elAm*3 - 2 bits for rotation, 1 bit for mirror;
+	std::vector<int> currentOrder;//permutation, getStatesAmount=elAm
 	bool QPPsUpdated;
-	//TODO:MAJOR вы€снить/про€снить св€зь currentConfiguration и currentOrder
+	//TODO:MAJOR вы€снить/про€снить св€зь currentStatesConfiguration и currentOrder
 	QPPSeq QPPs;
 public:
 	ConfigSequential();
@@ -25,8 +25,9 @@ public:
 	int getFreeCellsAmount();
 	//returns result from 0 to 1.
 	double getFreeCellsPercentage();
-	void updateQPPs();//Have to do it manually right now; TODO: fix.
-	int length();
+	void updateQPPs();//Have to do it manually right now; TODO:MINOR: check fix.
+	int getStatesAmount();//TODO:REFACTOR check getters in C++
+	int getFiguresAmount();
 	void showMatrix();
 	void printMatrix(std::string resFile);
 	//bool Equals(ConfigSequential lhs, ConfigSequential rhs) if == does not work
