@@ -21,9 +21,9 @@ GASolverSeq::GASolverSeq(std::string figuresFile, std::string restrictionsFile, 
 	this->configsInPoolAmount = confAm;
 	this->configsPool = std::vector<ConfigSequential>(configsInPoolAmount);
 	//DEBUG
-	std::cout << "Naive algorithm starting placement" << std::endl;
+	//std::cout << "Naive algorithm starting placement" << std::endl;
 	configsPool[0] = ConfigSequential(figuresFile, restrictionsFile);
-	configsPool[0].showMatrix();
+	//configsPool[0].showMatrix();
 	rand = std::mt19937(42);//DEBUG
 	configStatesLengthDistr = std::uniform_int_distribution<int>(0, configsPool[0].getStatesAmount() - 1);
 	configOrderLengthDistr = std::uniform_int_distribution<int>(0, configsPool[0].getFiguresAmount() - 1);
@@ -48,7 +48,7 @@ void GASolverSeq::makeIteration()
 	}
 	for (int i = 0; i < configsInPoolAmount; i++)
 	{
-		std::cout << "Mutation of " << i << "th config on " << this->iteration << " iteration" << std::endl;
+		//std::cout << "Mutation of " << i << "th config on " << this->iteration << " iteration" << std::endl;
 		configsPool[i] = SinglePointMutation(configsPool[i]);
 	}
 	std::vector<ConfigSequential> CrossoverPool(configsInPoolAmount * 2 - 2);//not very well, if i want to customize Crossover, but works. LolCommentsFromBachelorDiploma
@@ -66,10 +66,6 @@ void GASolverSeq::makeIteration()
 		for (int i = 0; i < CrossoverPool.size() - configsInPoolAmount; i++)
 			CrossoverPool.pop_back();
 	configsPool = CrossoverPool;
-	//for (auto x : configsPool)
-	//{
-	//	x.showMatrix();
-	//}
 }
 
 void GASolverSeq::startCycling()
@@ -84,7 +80,7 @@ void GASolverSeq::startCycling()
 	}
 	for (int i = 1; i < configsInPoolAmount; i++)
 	{
-		std::cout << "Mutation of "<<i<<"th config on " << this->iteration << " iteration" << std::endl;
+		//std::cout << "Mutation of "<<i<<"th config on " << this->iteration << " iteration" << std::endl;
 		configsPool[i] = SinglePointMutation(configsPool[0]);//or use active mutation.
 	}
 }
@@ -107,7 +103,7 @@ ConfigSequential GASolverSeq::SinglePointMutation(ConfigSequential conf)
 		conf.swapPositionsInOrder(first, second);
 	}
 	//Debug
-	conf.showMatrix();
+	//conf.showMatrix();
 	//
 	return conf;
 }
