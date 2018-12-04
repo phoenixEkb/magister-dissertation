@@ -189,7 +189,9 @@ void QPPSeq::packFigures(std::vector<stateSeq> newStates, std::vector<int> newOr
 		{
 			std::swap(currentFigureWidth, currentFigureHeigth);
 		}
-		//Also possible to use 0.0 as 1st argument if want more clumsy packaging. Or not.
+		std::cout << "Figure sizes are " << currentFigureWidth<<" " << currentFigureHeigth<<", rotation is "<<newStates[i].rot<<std::endl;
+
+		//TODO:Also possible to use 0.0 as 1st argument if want more clumsy packaging. Or not.
 		if (currentPosition.get<0>() == -1)
 		{
 			return;
@@ -237,7 +239,7 @@ void QPPSeq::packFigures(std::vector<stateSeq> newStates, std::vector<int> newOr
 			if (positionAcceptible)
 				foundPlacement = true;
 
-			std::cout << "finished while iteration for figure " << i << std::endl;
+		//	std::cout << "finished while iteration for figure " << i << std::endl;
 		}
 
 		if (!foundPlacement)
@@ -251,7 +253,7 @@ void QPPSeq::packFigures(std::vector<stateSeq> newStates, std::vector<int> newOr
 			currentStateMatrix(currentFigure[j].get<0>(), currentFigure[j].get<1>()) = i;
 		}
 		placedFiguresAmount++;
-		std::cout << "Figure placed" << std::endl;
+		std::cout << "Figure "<< i <<" placed" << std::endl;
 		showMatrix();
 	}
 	this->placedFiguresAmount = figures.size();
@@ -401,11 +403,11 @@ MultiPoint2D QPPSeq::rotateSavingLeftCorner(MultiPoint2D figure, rotation rot, i
 	int xMin = INT_MAX, yMin = INT_MAX;
 	for (int j = 0; j < bg::num_points(figure); j++)
 	{
-		xMin = std::min(figure[j].get<0>(), xMin);
-		yMin = std::min(figure[j].get<1>(), yMin);
+		xMin = std::min(newFigure[j].get<0>(), xMin);
+		yMin = std::min(newFigure[j].get<1>(), yMin);
 	}
 	trans::translate_transformer<double, 2, 2> translate(-xMin, -yMin);
-	bg::transform(figure, newFigure, translate);
+	bg::transform(newFigure, newFigure, translate);
 	/*switch (rot)
 	{
 	case rotation::bottom:
