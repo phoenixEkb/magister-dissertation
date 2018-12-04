@@ -26,8 +26,8 @@ GASolverSeq::GASolverSeq(std::string figuresFile, std::string restrictionsFile, 
 
 	rand = std::mt19937(42);//DEBUG
 	configStatesLengthDistr = std::uniform_int_distribution<int>(0, configsPool[0].getStatesAmount() - 1);
-	configsAmountDistr = std::uniform_int_distribution<int>(0, configsInPoolAmount);
 	configOrderLengthDistr = std::uniform_int_distribution<int>(0, configsPool[0].getFiguresAmount() - 1);
+	configsAmountDistr = std::uniform_int_distribution<int>(0, configsInPoolAmount);
 	uniformDistr = std::uniform_real_distribution<double>(0, 1);
 
 	iteration = 0;
@@ -85,19 +85,20 @@ void GASolverSeq::startCycling()
 ConfigSequential GASolverSeq::SinglePointMutation(ConfigSequential conf)
 {
 	ConfigSequential mutatedSack = ConfigSequential(conf);//copy constructor
-	if (this->uniformDistr(rand)<=0.33)
+	if (this->uniformDistr(rand)<=0.0)
 	{
 		int mutationPosition = configStatesLengthDistr(rand);//TODO: add order-based things. Maybe -- work with elAm*4. Somehow.
 		conf.swapStateBinaryValue(mutationPosition);
 	}
 	else
 	{
-		int first = configsAmountDistr(rand), second = configsAmountDistr(rand);
+		int first = configOrderLengthDistr(rand), second = configOrderLengthDistr(rand);
 		while (first == second)
 		{
-			second = configsAmountDistr(rand);
+			second = configOrderLengthDistr(rand);
 		}
 		conf.swapPositionsInOrder(first, second);
+		std::cout << "Swapped " << first << " and " << second << std::endl;
 	}
 	//Debug
 	conf.showMatrix();
