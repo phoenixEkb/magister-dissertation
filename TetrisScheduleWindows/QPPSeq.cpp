@@ -8,7 +8,7 @@ QPPSeq::QPPSeq()
 {
 }
 
-QPPSeq::QPPSeq(std::string figuresFile,std::string restrictionsFile)
+QPPSeq::QPPSeq(std::string figuresFile, std::string restrictionsFile)
 {
 	std::ifstream restrFile(restrictionsFile, std::ifstream::in);
 	restrFile >> gridWidth >> gridHeight;
@@ -70,11 +70,11 @@ bool QPPSeq::changeFigureByPosition(int number, stateSeq newState)//Presumably w
 	//work with figures[i]
 	if (!Equals(figuresStates[number], newState))
 	{
-		figuresStates[number]=newState;
+		figuresStates[number] = newState;
 		this->packFigures(figuresStates, figuresOrder);
 		return true;
 	}
-		return false;
+	return false;
 }
 
 bool QPPSeq::Equals(stateSeq& lhs, stateSeq& rhs)//comparator
@@ -82,9 +82,10 @@ bool QPPSeq::Equals(stateSeq& lhs, stateSeq& rhs)//comparator
 	return (lhs.mirrored == rhs.mirrored&&
 		lhs.rot == rhs.rot);
 }
+
 bool QPPSeq::changeFigureByNumber(int number, stateSeq newState)//Presumably works
 {
-	int index= distance(figuresOrder.begin(),std::find(figuresOrder.begin(), figuresOrder.end(), number));
+	int index = distance(figuresOrder.begin(), std::find(figuresOrder.begin(), figuresOrder.end(), number));
 	if (!Equals(figuresStates[index], newState))
 	{
 		figuresStates[index] = newState;
@@ -164,55 +165,61 @@ int QPPSeq::returnFigureNumber(Point2D coords)
 
 
 //Packing occurs without spaces, we don't skip figures.
+//TODO:REFACTOR THIS!
 void QPPSeq::packFigures(std::vector<stateSeq> newStates, std::vector<int> newOrder)//TODO: maybe, add starting number
 {
 	if (newStates.size() != this->figures.size() || newOrder.size() != this->figures.size())
 		return;
-	std::cout << "placement started" << std::endl;
+	std::cout << "Placement started" << std::endl;
 	Point2D currentPosition(0, 0), oldPosition;
 	placedFiguresAmount = 0;
 	clearMatrix();
+	oldPosition = Point2D(0, 0);
+
 	for (int i : newOrder)
 	{
 		/*if (!newStates[i].isIncluded)
 			continue;*/
 		MultiPoint2D currentFigure = createFigureByState(i, newStates[i]);
+		trans::translate_transformer<int, 2, 2> move(currentPosition.get<0>(), currentPosition.get<1>());
+		bg::transform(currentFigure, currentFigure, move);//assumed that figure does not leave the grid.
+
 		int currentFigureWidth = figuresWidth[i], currentFigureHeigth = figuresHeight[i];
 		if (newStates[i].rot == top || newStates[i].rot == bottom)
 		{
 			std::swap(currentFigureWidth, currentFigureHeigth);
 		}
-		//Also possible to use 0.0 as 1st argument if want more clumsy packaging.
-		currentPosition = findFreeStartPoint(currentPosition, currentFigureWidth, currentFigureHeigth);
+		//Also possible to use 0.0 as 1st argument if want more clumsy packaging. Or not.
 		if (currentPosition.get<0>() == -1)
 		{
 			return;
 		}
-		oldPosition = Point2D(0, 0);
 		bool foundPlacement = false;
 
 		while (!foundPlacement)
 		{
-			if (currentPosition.get<0>() == -1)//проверить эти брейки
+			if (currentPosition.get<0>() == -1)//TODO:MINOR:Check this if;
 			{
 				break;
 			}
-			std::cout <<"pos is "<< currentPosition.get<0>() << " " << currentPosition.get<1>()<<std::endl;
-			if (gridHeight < currentFigureHeigth + currentPosition.get<1>())//figure does not fit to the top
-			{
-				break;
-			}
-			else if (gridWidth < currentFigureWidth + currentPosition.get<0>())//figure does not fit to the right
-			{
-				oldPosition = currentPosition;
-				currentPosition = findFreeStartPoint(currentPosition, currentFigureWidth, currentFigureHeigth);
-				std::cout << "next pos is " << currentPosition.get<0>() << " " << currentPosition.get<1>() << std::endl;
 
-				if (currentPosition.get<0>() == -1)//проверить эти брейки
-				{
-					break;
-				}
+			std::cout << "Position is " << currentPosition.get<0>() << " " << currentPosition.get<1>() << std::endl;
+
+			if (!checkAvailableHeight(currentPosition, currentFigureHeigth))//figure does not fit to the top
+			{
+				break;
 			}
+			else if (!checkAvailableWidth(currentPosition, currentFigureWidth+1))//figure does not fit to the right
+			{
+				if (checkAvailableHeight(currentPosition, currentFigureHeigth + 1))
+					currentPosition = Point2D(0, currentPosition.get<1>()+1);
+			}
+			else
+			{
+				currentPosition.set<0>(currentPosition.get<0>()+1);
+			}
+			if (currentPosition.get<0>() == oldPosition.get<0>() && currentPosition.get<1>() == oldPosition.get<1>())
+				break;
 			trans::translate_transformer<int, 2, 2> move(currentPosition.get<0>() - oldPosition.get<0>(), currentPosition.get<1>() - oldPosition.get<1>());
 			bg::transform(currentFigure, currentFigure, move);//assumed that figure does not leave the grid.
 			bool positionAcceptible = true;
@@ -221,35 +228,37 @@ void QPPSeq::packFigures(std::vector<stateSeq> newStates, std::vector<int> newOr
 				if (currentStateMatrix(currentFigure[j].get<0>(), currentFigure[j].get<1>()) != -1)
 				{
 					positionAcceptible = false;
-					oldPosition = currentPosition;
-					currentPosition = findFreeStartPoint(currentPosition, currentFigureWidth, currentFigureHeigth);
+					//TODO:MAJOR:Add translation to tright fix for case when old adn new points are equal;
+					//Maybe, we should make a grid-width check, if width check fails, we move up, if top check falis we finish, if both checks pass - move right 1 point.
 					break;
 				}
 			}
+			oldPosition = currentPosition;
 			if (positionAcceptible)
 				foundPlacement = true;
-			
-			std::cout << "finished while iteration for figure "<<i << std::endl;
+
+			std::cout << "finished while iteration for figure " << i << std::endl;
 		}
-		std::cout << "Figure placed" << std::endl;
-		showMatrix();
+
 		if (!foundPlacement)
 		{
 			//this->placedFiguresAmount = i;
 			return;
 		}
+
 		for (int j = 0; j < currentFigure.size(); j++)
 		{
 			currentStateMatrix(currentFigure[j].get<0>(), currentFigure[j].get<1>()) = i;
 		}
 		placedFiguresAmount++;
+		std::cout << "Figure placed" << std::endl;
+		showMatrix();
 	}
 	this->placedFiguresAmount = figures.size();
 }
 
 std::vector<int> QPPSeq::getFiguresOrder()
 {
-
 	return this->figuresOrder;
 }
 
@@ -278,7 +287,7 @@ MultiPoint2D QPPSeq::createFigureByState(int number, stateSeq newState)
 	{
 		trans::scale_transformer<int, 2, 2>xMirror(-1, 1);
 		bg::transform(newFigure, newFigure, xMirror);
-		trans::translate_transformer<int, 2, 2>xMove(figuresWidth[number]-1, 0);
+		trans::translate_transformer<int, 2, 2>xMove(figuresWidth[number] - 1, 0);
 		bg::transform(newFigure, newFigure, xMove);
 	}
 	if (newState.rot != right)
@@ -291,25 +300,45 @@ MultiPoint2D QPPSeq::createFigureByState(int number, stateSeq newState)
 
 Point2D QPPSeq::findFreeStartPoint(Point2D oldStartPoint, int figureWidth, int figureHeight)
 {
-	//find new point,satisfying this condition and pack again
-	for (int l = oldStartPoint.get<0>() + 1; l <= gridWidth - figureWidth; l++)
+	////find new point,satisfying this condition and pack again
+	//for (int l = oldStartPoint.get<0>() + 1; l <= gridWidth - figureWidth; l++)
+	//{
+	//	if (currentStateMatrix(l, oldStartPoint.get<1>()) == -1)
+	//	{
+	//		return Point2D(l, oldStartPoint.get<1>());
+	//	}
+	//}
+	//for (int k = oldStartPoint.get<1>() + 1; k <= gridHeight - figureHeight; k++)
+	//{
+	//	for (int l = 0; l <= gridWidth - figureWidth; l++)
+	//	{
+	//		if (currentStateMatrix(l, k) == -1)
+	//		{
+	//			return Point2D(l, k);
+	//		}
+	//	}
+	//}
+	if (checkAvailableWidth(oldStartPoint, figureWidth))
 	{
-		if (currentStateMatrix(l, oldStartPoint.get<1>()) == -1)
-		{
-			return Point2D(l, oldStartPoint.get<1>());
-		}
+		if (checkAvailableHeight(oldStartPoint, figureHeight))
+			return oldStartPoint;
 	}
-	for (int k = oldStartPoint.get<1>() + 1; k <= gridHeight - figureHeight; k++)
+	else
 	{
-		for (int l = 0; l <= gridWidth - figureWidth; l++)
-		{
-			if (currentStateMatrix(l, k) == -1)
-			{
-				return Point2D(l, k);
-			}
-		}
+		if (checkAvailableHeight(oldStartPoint, figureHeight - 1))
+			return Point2D(0, oldStartPoint.get<1>() + 1);
 	}
 	return Point2D(-1, -1);
+}
+
+bool QPPSeq::checkAvailableWidth(Point2D startPoint, int figureWidth)
+{
+	return (startPoint.get<0>() + figureWidth <= gridWidth);
+}
+
+bool QPPSeq::checkAvailableHeight(Point2D startPoint, int figureHeight)
+{
+	return (startPoint.get<1>() + figureHeight <= gridHeight);
 }
 
 MultiPoint2D QPPSeq::normaliseFigure(MultiPoint2D figure, int number)
@@ -404,22 +433,22 @@ MultiPoint2D QPPSeq::rotateSavingLeftCorner(MultiPoint2D figure, rotation rot, i
 MultiPoint2D QPPSeq::rotateTransform(MultiPoint2D figure, rotation angle)
 {
 	bMatrix rotMatrix = boost::numeric::ublas::matrix<int>(2, 2);
-	bMatrix tmpFigure = boost::numeric::ublas::matrix<int>(figure.size(),2 );
-	for(int i=0;i<figure.size();i++)
+	bMatrix tmpFigure = boost::numeric::ublas::matrix<int>(figure.size(), 2);
+	for (int i = 0; i < figure.size(); i++)
 	{
-		tmpFigure(i,0) = figure[i].get<0>();
-		tmpFigure(i,1) = figure[i].get<1>();
+		tmpFigure(i, 0) = figure[i].get<0>();
+		tmpFigure(i, 1) = figure[i].get<1>();
 	}
 	double rAngle = angle * constants::pi / 180;
 	rotMatrix(0, 0) = cos(rAngle);
 	rotMatrix(1, 0) = sin(rAngle);
 	rotMatrix(0, 1) = -sin(rAngle);
 	rotMatrix(1, 1) = cos(rAngle);
-	bMatrix newFigureMatrix = boost::numeric::ublas::prod(tmpFigure,rotMatrix);
+	bMatrix newFigureMatrix = boost::numeric::ublas::prod(tmpFigure, rotMatrix);
 	MultiPoint2D newFigure;
 	for (int i = 0; i < figure.size(); i++)
 	{
-		newFigure.push_back(Point2D(newFigureMatrix( i,0), newFigureMatrix(i,1))) ;
+		newFigure.push_back(Point2D(newFigureMatrix(i, 0), newFigureMatrix(i, 1)));
 	}
 	return newFigure;
 }
@@ -441,7 +470,7 @@ int QPPSeq::getHeight()
 
 int QPPSeq::getGridArea()
 {
-	return gridWidth*gridHeight;
+	return gridWidth * gridHeight;
 }
 
 int QPPSeq::getRestrictionsArea()

@@ -20,12 +20,10 @@ GASolverSeq::GASolverSeq(std::string figuresFile, std::string restrictionsFile, 
 	restrFile.close();
 	this->configsInPoolAmount = confAm;
 	this->configsPool = std::vector<ConfigSequential>(configsInPoolAmount);
+	//DEBUG
+	std::cout << "Naive algorithm starting placement" << std::endl;
 	configsPool[0] = ConfigSequential(figuresFile, restrictionsFile);
-	//Debug
-	std::cout << "Constructor matrix(from naive algorithm)" << std::endl;
-	configsPool[0].showMatrix();
-
-
+	   
 	rand = std::mt19937(42);
 	configLengthDistribution = std::uniform_int_distribution<int>(0, configsPool[0].length() - 1);
 	configAmountsDistribution = std::uniform_int_distribution<int>(0, configsInPoolAmount);

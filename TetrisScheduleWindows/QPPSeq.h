@@ -81,6 +81,8 @@ public:
 	
 private:
 	Point2D findFreeStartPoint(Point2D oldStartPoint, int figureWidth, int figureHeight);
+	bool checkAvailableWidth(Point2D startPoint, int figureWidth);
+	bool checkAvailableHeight(Point2D startPoint, int figureHeight);
 	MultiPoint2D normaliseFigure(MultiPoint2D figure, int number);
 	MultiPoint2D createFigureByState(int number, stateSeq newState);
 	void clearMatrix();
