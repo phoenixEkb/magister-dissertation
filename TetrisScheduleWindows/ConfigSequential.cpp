@@ -48,6 +48,12 @@ void ConfigSequential::setStateBinaryValue(int position, bool value)
 	}
 }
 
+void ConfigSequential::setOrder(std::vector<int> newOrder)//TODO:MINOR:Add sequrity checks
+{
+	this->currentOrder = newOrder;
+	QPPsUpdated = false;
+}
+
 void ConfigSequential::swapPositionsInOrder(int pos1, int pos2)//TODO:MINOR:maybe rewrite with find?
 {
 	if (pos1 >= 0 && pos2 >= 0 && pos1 < figuresAmount&&pos2 < figuresAmount)
@@ -55,17 +61,6 @@ void ConfigSequential::swapPositionsInOrder(int pos1, int pos2)//TODO:MINOR:mayb
 		int loc1 =std::distance(currentOrder.begin(), std::find(currentOrder.begin(), currentOrder.end(),pos1)),
 			loc2 = std::distance(currentOrder.begin(), std::find(currentOrder.begin(), currentOrder.end(), pos2));
 		std::swap(currentOrder[loc1], currentOrder[loc2]);
-		/*for (int i = 0; i < figuresAmount; ++i)
-		{
-			if (currentOrder[i] == pos1)
-				loc1 = i;
-			if (currentOrder[i] == pos2)
-				loc2 = i;
-			if (loc1 != -1 && loc2 != -1)
-			{
-				std::swap(currentOrder[loc1], currentOrder[loc2]);
-			}
-		}*/
 		QPPsUpdated = false;
 	}
 
@@ -187,6 +182,11 @@ int ConfigSequential::getStatesAmount()//TODO:check where is used, probably can 
 int ConfigSequential::getFiguresAmount()
 {
 	return this->figuresAmount;
+}
+
+std::vector<int> ConfigSequential::getCurrentOrder()
+{
+	return currentOrder;
 }
 
 //For debugging purposes

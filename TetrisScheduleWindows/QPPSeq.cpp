@@ -170,7 +170,6 @@ void QPPSeq::packFigures(std::vector<stateSeq> newStates, std::vector<int> newOr
 {
 	if (newStates.size() != this->figures.size() || newOrder.size() != this->figures.size())
 		return;
-	std::cout << "Placement started" << std::endl;
 	Point2D currentPosition(0, 0), oldPosition;
 	placedFiguresAmount = 0;
 	clearMatrix();
@@ -252,7 +251,7 @@ void QPPSeq::packFigures(std::vector<stateSeq> newStates, std::vector<int> newOr
 			currentStateMatrix(currentFigure[j].get<0>(), currentFigure[j].get<1>()) = i;
 		}
 		placedFiguresAmount++;
-		std::cout << "Figure "<< i <<" placed" << std::endl;
+		//std::cout << "Figure "<< i <<" placed" << std::endl;
 		//showMatrix();
 
 		//clumsy packing trick, can be disabled

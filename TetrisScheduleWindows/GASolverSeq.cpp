@@ -23,7 +23,7 @@ GASolverSeq::GASolverSeq(std::string figuresFile, std::string restrictionsFile, 
 	//DEBUG
 	std::cout << "Naive algorithm starting placement" << std::endl;
 	configsPool[0] = ConfigSequential(figuresFile, restrictionsFile);
-
+	configsPool[0].showMatrix();
 	rand = std::mt19937(42);//DEBUG
 	configStatesLengthDistr = std::uniform_int_distribution<int>(0, configsPool[0].getStatesAmount() - 1);
 	configOrderLengthDistr = std::uniform_int_distribution<int>(0, configsPool[0].getFiguresAmount() - 1);
@@ -48,22 +48,28 @@ void GASolverSeq::makeIteration()
 	}
 	for (int i = 0; i < configsInPoolAmount; i++)
 	{
+		std::cout << "Mutation of " << i << "th config on " << this->iteration << " iteration" << std::endl;
 		configsPool[i] = SinglePointMutation(configsPool[i]);
 	}
-	std::vector<ConfigSequential> CrossoverPool(configsInPoolAmount * 2 - 2);//not very well, if i want to customize Crossover ,but works
+	std::vector<ConfigSequential> CrossoverPool(configsInPoolAmount * 2 - 2);//not very well, if i want to customize Crossover, but works. LolCommentsFromBachelorDiploma
+
 	for (int j = 0; j < configsInPoolAmount - 1; j++)
 	{
 		CrossoverPool[j] = this->BitByBitCrossover(configsPool[j], configsPool[j + 1], true);
 		CrossoverPool[(CrossoverPool.size() - 1) - j] = this->BitByBitCrossover(configsPool[j], configsPool[j + 1], false);
 	}
 	std::sort(CrossoverPool.begin(), CrossoverPool.end(), [](ConfigSequential l, ConfigSequential r) {return l.getFreeCellsPercentage() < r.getFreeCellsPercentage(); });
-	auto last = std::unique(positions.begin(), positions.end());
-	positions.erase(last, positions.end());
-
+	/*auto last = std::unique(positions.begin(), positions.end());
+	positions.erase(last, positions.end());*/
+	
 	if (CrossoverPool.size() > configsInPoolAmount)
-		for (int i = 0; i < CrossoverPool.size() - configsInPoolAmount; i++);
-	CrossoverPool.pop_back();
+		for (int i = 0; i < CrossoverPool.size() - configsInPoolAmount; i++)
+			CrossoverPool.pop_back();
 	configsPool = CrossoverPool;
+	//for (auto x : configsPool)
+	//{
+	//	x.showMatrix();
+	//}
 }
 
 void GASolverSeq::startCycling()
@@ -78,6 +84,7 @@ void GASolverSeq::startCycling()
 	}
 	for (int i = 1; i < configsInPoolAmount; i++)
 	{
+		std::cout << "Mutation of "<<i<<"th config on " << this->iteration << " iteration" << std::endl;
 		configsPool[i] = SinglePointMutation(configsPool[0]);//or use active mutation.
 	}
 }
@@ -85,7 +92,7 @@ void GASolverSeq::startCycling()
 ConfigSequential GASolverSeq::SinglePointMutation(ConfigSequential conf)
 {
 	ConfigSequential mutatedSack = ConfigSequential(conf);//copy constructor
-	if (this->uniformDistr(rand)<=0.0)
+	if (this->uniformDistr(rand)<=0.75)//HYPERPARAMETER
 	{
 		int mutationPosition = configStatesLengthDistr(rand);//TODO: add order-based things. Maybe -- work with elAm*4. Somehow.
 		conf.swapStateBinaryValue(mutationPosition);
@@ -98,18 +105,16 @@ ConfigSequential GASolverSeq::SinglePointMutation(ConfigSequential conf)
 			second = configOrderLengthDistr(rand);
 		}
 		conf.swapPositionsInOrder(first, second);
-		std::cout << "Swapped " << first << " and " << second << std::endl;
 	}
 	//Debug
 	conf.showMatrix();
 	//
-	std::cout << "Mutation on " << this->iteration << " iteration" << std::endl;
 	return conf;
 }
 
 ConfigSequential GASolverSeq::BitByBitCrossover(ConfigSequential conf1, ConfigSequential conf2, bool isLeft)//TODO: add order-based things
 {
-	ConfigSequential newSack;
+	ConfigSequential newSack(conf1);
 	if (isLeft)
 	{
 		for (int i = 0; i < conf1.getStatesAmount(); i++)
@@ -119,6 +124,12 @@ ConfigSequential GASolverSeq::BitByBitCrossover(ConfigSequential conf1, ConfigSe
 			else
 				newSack.setStateBinaryValue(i, conf1.valueAt(i));
 		}
+		std::vector<int> left = conf1.getCurrentOrder(), right = conf2.getCurrentOrder(), result(conf1.getFiguresAmount());
+		for (int i = 0; i < conf1.getFiguresAmount(); i++)
+		{
+			result[i] = right[left[i]];
+		}
+		newSack.setOrder(result);
 	}
 	else
 	{
@@ -129,6 +140,13 @@ ConfigSequential GASolverSeq::BitByBitCrossover(ConfigSequential conf1, ConfigSe
 			else
 				newSack.setStateBinaryValue(i, conf2.valueAt(i));
 		}
+		std::vector<int> left = conf1.getCurrentOrder(), right = conf2.getCurrentOrder(), result(conf1.getFiguresAmount());
+
+		for (int i = 0; i < conf1.getFiguresAmount(); i++)
+		{
+			result[i] = left[right[i]];
+		}
+		newSack.setOrder(result);
 	}
 	return newSack;
 }

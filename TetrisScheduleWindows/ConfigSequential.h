@@ -16,11 +16,11 @@ public:
 	ConfigSequential();
 	ConfigSequential(std::string figuresFile, std::string restrictionsFile);
 	~ConfigSequential();
-
 	void swapStateBinaryValue(int position);//mindless
 	void setStateBinaryValueToActive(int position);
 	void setStateBinaryValueToPassive(int position);
 	void setStateBinaryValue(int position, bool value);
+	void setOrder(std::vector<int> newOrder);
 	void swapPositionsInOrder(int pos1, int pos2);
 	int getFreeCellsAmount();
 	//returns result from 0 to 1.
@@ -28,6 +28,7 @@ public:
 	void updateQPPs();//Have to do it manually right now; TODO:MINOR: check fix.
 	int getStatesAmount();//TODO:REFACTOR check getters in C++
 	int getFiguresAmount();
+	std::vector<int> getCurrentOrder();
 	void showMatrix();
 	void printMatrix(std::string resFile);
 	//bool Equals(ConfigSequential lhs, ConfigSequential rhs) if == does not work
