@@ -238,12 +238,11 @@ void QPPSeq::packFigures(std::vector<stateSeq> newStates, std::vector<int> newOr
 			oldPosition = currentPosition;
 			if (positionAcceptible)
 				foundPlacement = true;
-
-		//	std::cout << "finished while iteration for figure " << i << std::endl;
 		}
 
 		if (!foundPlacement)
 		{
+			
 			//this->placedFiguresAmount = i;
 			return;
 		}
@@ -255,6 +254,11 @@ void QPPSeq::packFigures(std::vector<stateSeq> newStates, std::vector<int> newOr
 		placedFiguresAmount++;
 		std::cout << "Figure "<< i <<" placed" << std::endl;
 		showMatrix();
+
+		//clumsy packing trick, can be disabled
+		currentPosition = Point2D(0, 0);
+		oldPosition = currentPosition;
+		//
 	}
 	this->placedFiguresAmount = figures.size();
 }
