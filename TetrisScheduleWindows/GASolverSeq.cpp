@@ -29,13 +29,13 @@ GASolverSeq::GASolverSeq(std::string figuresFile, std::string restrictionsFile, 
 	rand = std::mt19937(42);
 	configLengthDistribution = std::uniform_int_distribution<int>(0, configsPool[0].length() - 1);
 	configAmountsDistribution = std::uniform_int_distribution<int>(0, configsInPoolAmount);
-	iterations = 0;
+	iteration = 0;
 	startCycling();
 }
 
 void GASolverSeq::makeIteration()
 {
-
+	iteration++;
 	if (configsPool[0].getFreeCellsPercentage() == 0) return;
 	std::vector<int> positions;
 
@@ -83,14 +83,13 @@ void GASolverSeq::startCycling()
 
 ConfigSequential GASolverSeq::SinglePointMutation(ConfigSequential conf)
 {
-
 	ConfigSequential mutatedSack = ConfigSequential(conf);//copy constructor
 	int mutationPosition = configLengthDistribution(rand);//TODO: add order-based things. Maybe -- work with elAm*4. Somehow.
 	conf.swapValue(mutationPosition);
 	conf.updateQPPs();
 	//Debug
 	conf.showMatrix();
-	std::cout << "Mutation on " << this->iterations << "iteration" << std::endl;
+	std::cout << "Mutation on " << this->iteration << " iteration" << std::endl;
 	return conf;
 }
 

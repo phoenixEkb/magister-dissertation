@@ -18,7 +18,7 @@ QPPSeq::QPPSeq(std::string figuresFile,std::string restrictionsFile)
 	if (line != "")
 		bg::read_wkt(line, restrictions);
 	else
-		restrictions = MultiPoint2D();//TODO:Check if works
+		restrictions = MultiPoint2D();//TODO:MINOR:Check if adding empty restriction works
 	restrFile.close();
 	std::ifstream inFile(figuresFile, std::ifstream::in);
 	std::getline(inFile, line);
@@ -119,13 +119,13 @@ void QPPSeq::showMatrix()
 
 			std::cout << std::setw(3) << std::setfill(' ');
 			switch (currentStateMatrix(i, j))
-			{//TODO: write some wraparound for numbers.
+			{//TODO:REFACTOR write some wraparound for numbers.
 			case -1:std::cout << '_'; break;//no figure
 			case -2:std::cout << '#'; break;//restriction
 			case -3:std::cout << '*'; break;//error
 			default:std::cout << currentStateMatrix(i, j);
 			};
-			std::cout << " ";//TODO: calculate perfect range for setw(i.e. 2 for <10 figures, 3 for 10-99 etc.)
+			std::cout << " ";//TODO:MINOR: calculate perfect range for drawing with setw(i.e. 2 for <10 figures, 3 for 10-99 etc.)
 		}
 		std::cout << std::endl;
 	}
@@ -143,13 +143,13 @@ void QPPSeq::printMatrix(std::string resFile)
 
 			restrFile << std::setw(3) << std::setfill(' ');
 			switch (currentStateMatrix(i, j))
-			{//TODO: write some wraparound for numbers.
+			{//TODO:REFACTOR:Stop reusing this code.
 			case -1:restrFile << '_'; break;//no figure
 			case -2:restrFile << '#'; break;//restriction
 			case -3:restrFile << '*'; break;//error
 			default:restrFile << currentStateMatrix(i, j);
 			};
-			restrFile << " ";//TODO: calculate perfect range for setw(i.e. 2 for <10 figures, 3 for 10-99 etc.)
+			restrFile << " ";//TODO: REFACTOR:Stop reusing this code
 		}
 		restrFile << std::endl;
 	}
@@ -164,7 +164,7 @@ int QPPSeq::returnFigureNumber(Point2D coords)
 
 
 //Packing occurs without spaces, we don't skip figures.
-void QPPSeq::packFigures(std::vector<stateSeq> newStates, std::vector<int> newOrder)//TODO: maybe, add starting number;
+void QPPSeq::packFigures(std::vector<stateSeq> newStates, std::vector<int> newOrder)//TODO: maybe, add starting number
 {
 	if (newStates.size() != this->figures.size() || newOrder.size() != this->figures.size())
 		return;
@@ -232,6 +232,7 @@ void QPPSeq::packFigures(std::vector<stateSeq> newStates, std::vector<int> newOr
 			std::cout << "finished while iteration for figure "<<i << std::endl;
 		}
 		std::cout << "Figure placed" << std::endl;
+		showMatrix();
 		if (!foundPlacement)
 		{
 			//this->placedFiguresAmount = i;
@@ -283,6 +284,7 @@ MultiPoint2D QPPSeq::createFigureByState(int number, stateSeq newState)
 	if (newState.rot != right)
 	{
 		newFigure = this->rotateSavingLeftCorner(newFigure, newState.rot, 0, 0, figuresWidth[number], figuresHeight[number]);
+		//TODO:DEBUG: Print newFigure in some way.
 	}
 	return newFigure;
 }

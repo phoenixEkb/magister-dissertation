@@ -15,7 +15,7 @@ class GASolverSeq
 	double mutationPercentage;
 	std::string resultFile;
 
-	int iterations;
+	int iteration;
 public:
 	GASolverSeq();
 	~GASolverSeq();
