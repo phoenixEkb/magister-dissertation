@@ -259,7 +259,7 @@ void QPPSeq::packFigures(std::vector<stateSeq> newStates, std::vector<int> newOr
 		oldPosition = currentPosition;
 		//
 	}
-	showMatrix();
+	//showMatrix();
 	this->placedFiguresAmount = figures.size();
 }
 

@@ -11,6 +11,7 @@
 #include <boost/math/constants/constants.hpp>
 #include <iostream>
 #include <fstream>
+#include <chrono>
 //#include "GASolver.h"
 //#include "QuasiPolyominoPackaging.h"
 #include "ConfigSequential.h"

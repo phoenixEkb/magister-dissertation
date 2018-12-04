@@ -1,5 +1,6 @@
-#include "ConfigSequential.h"
 #include "stdafx.h"
+#include "ConfigSequential.h"
+
 
 
 
