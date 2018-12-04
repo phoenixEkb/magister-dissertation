@@ -52,8 +52,10 @@ void ConfigSequential::swapPositionsInOrder(int pos1, int pos2)//TODO:MINOR:mayb
 {
 	if (pos1 >= 0 && pos2 >= 0 && pos1 < figuresAmount&&pos2 < figuresAmount)
 	{
-		int loc1 = -1, loc2 = -1;
-		for (int i = 0; i < figuresAmount; ++i)
+		int loc1 =std::distance(currentOrder.begin(), std::find(currentOrder.begin(), currentOrder.end(),pos1)),
+			loc2 = std::distance(currentOrder.begin(), std::find(currentOrder.begin(), currentOrder.end(), pos2));
+		std::swap(currentOrder[loc1], currentOrder[loc2]);
+		/*for (int i = 0; i < figuresAmount; ++i)
 		{
 			if (currentOrder[i] == pos1)
 				loc1 = i;
@@ -63,7 +65,7 @@ void ConfigSequential::swapPositionsInOrder(int pos1, int pos2)//TODO:MINOR:mayb
 			{
 				std::swap(currentOrder[loc1], currentOrder[loc2]);
 			}
-		}
+		}*/
 		QPPsUpdated = false;
 	}
 
