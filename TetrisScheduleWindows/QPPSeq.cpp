@@ -20,7 +20,8 @@ QPPSeq::QPPSeq(std::string figuresFile, std::string restrictionsFile)
 	else
 		restrictions = MultiPoint2D();//TODO:MINOR:Check if adding empty restriction works
 	restrFile.close();
-	std::ifstream inFile(figuresFile, std::ifstream::in);
+
+	std::ifstream inFile(figuresFile, std::ifstream::in);//TODO:MAJOR:Add if_exists check
 	std::getline(inFile, line);
 	while (!inFile.eof())
 	{
@@ -29,10 +30,13 @@ QPPSeq::QPPSeq(std::string figuresFile, std::string restrictionsFile)
 		figures.push_back(p);
 		std::getline(inFile, line);
 	}
-	MultiPoint2D p;
-	bg::read_wkt(line, p);
-	figures.push_back(p);
-
+	if (line != "")
+	{
+		MultiPoint2D p;
+		bg::read_wkt(line, p);
+		figures.push_back(p);
+	}
+	
 	figuresWidth = std::vector<int>(figures.size());
 	figuresHeight = std::vector<int>(figures.size());
 	inFile.close();
@@ -217,22 +221,21 @@ void QPPSeq::packFigures(std::vector<stateSeq> newStates, std::vector<int> newOr
 			else if (!checkAvailableWidth(currentPosition, currentFigureWidth+1))//figure does not fit to the right
 			{
 				if (checkAvailableHeight(currentPosition, currentFigureHeigth + 1))
-					currentPosition = Point2D(0, currentPosition.get<1>()+1);
+					currentPosition = Point2D(0, currentPosition.get<1>() + 1);
+				else if (currentPosition.get<0>() == oldPosition.get<0>() && currentPosition.get<1>() == oldPosition.get<1>())
+					break;
 			}
 			else if (currentPosition.get<0>() == oldPosition.get<0>() && currentPosition.get<1>() == oldPosition.get<1>())
 			{
 				currentPosition.set<0>(currentPosition.get<0>()+1);//fix
 			}
-			/*if (currentPosition.get<0>() == oldPosition.get<0>() && currentPosition.get<1>() == oldPosition.get<1>())
-			{
-				std::cout << "lol" << std::endl;
-				break;
-			}*/
+			
 			if (oldPosition.get<0>() != -1)
 			{
 				trans::translate_transformer<int, 2, 2> move(currentPosition.get<0>() - oldPosition.get<0>(), currentPosition.get<1>() - oldPosition.get<1>());
 				bg::transform(currentFigure, currentFigure, move);//assumed that figure does not leave the grid.
 			}
+			
 			bool positionAcceptible = true;
 			for (int j = 0; j < currentFigure.size(); j++)
 			{
@@ -266,7 +269,7 @@ void QPPSeq::packFigures(std::vector<stateSeq> newStates, std::vector<int> newOr
 
 		//clumsy packing trick, can be disabled
 		currentPosition = Point2D(0, 0);
-		oldPosition = currentPosition;
+		oldPosition = Point2D(-1,-1);
 		//
 	}
 	//showMatrix();
