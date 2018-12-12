@@ -1,4 +1,5 @@
 #pragma once
+#define _SILENCE_CXX17_OLD_ALLOCATOR_MEMBERS_DEPRECATION_WARNING 
 #include <boost/numeric/ublas/vector.hpp>
 #include <boost/numeric/ublas/matrix.hpp>
 #include <boost/numeric/ublas/io.hpp>
@@ -17,3 +18,5 @@
 #include "ConfigSequential.h"
 #include "QPPSeq.h"
 #include "GASolverSeq.h"
+
+int main();

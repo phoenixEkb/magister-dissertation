@@ -4,6 +4,9 @@
 #include <vector>
 #include <random>
 #include <algorithm>
+#include <chrono>
+#include <execution>
+
 
 class GASolverSeq
 {
@@ -26,15 +29,17 @@ public:
 	void makeIteration();
 	//void RestartAlgorithm(double flushPercent);
 
-	/*double GetNormalizedMaximalKnapsackCost();
-	double GetNormaizedAveragePoolCost();
-	double GetAbsoluteMaximalKnapsackCost();
-	double GetAbsoluteAverageKnapsackCost();*/
+	double GetNormalizedMaximalConfigCost();
+	double GetNormaizedConfigPoolCost();
+	/*double GetAbsoluteMaximalKnapsackCost();
+	double GetAbsoluteAverageKnapsackCost();
+	*/void saveResults(int poolPosition);
+	void showMatrix(int position);
 private:
 	void startCycling();
 	ConfigSequential SinglePointMutation(ConfigSequential sack);
 	//void emptyBestConfigs(std::vector<ConfigSequential> &targetConfig);
 	ConfigSequential BitByBitCrossover(ConfigSequential sack1, ConfigSequential sack2, bool isLeft);
-	void saveResults(int poolPosition);
+
 };
 

@@ -18,14 +18,14 @@ GASolverSeq::GASolverSeq(std::string figuresFile, std::string restrictionsFile, 
 	this->mutationPercentage = mutationPercentage;
 	std::ifstream restrFile(restrictionsFile, std::ifstream::in);
 	restrFile >> gridWidth >> gridHeight;
-	restrFile.close();
+		restrFile.close();
 	this->configsInPoolAmount = confAm;
 	this->configsPool = std::vector<ConfigSequential>(configsInPoolAmount);
 	//DEBUG
 	//std::cout << "Naive algorithm starting placement" << std::endl;
 	configsPool[0] = ConfigSequential(figuresFile, restrictionsFile);
 	//configsPool[0].showMatrix();
-	rand = std::mt19937(42);//DEBUG
+	rand = std::mt19937(std::chrono::system_clock::now().time_since_epoch().count());//42);//DEBUG
 	configStatesLengthDistr = std::uniform_int_distribution<int>(0, configsPool[0].getStatesAmount() - 1);
 	configOrderLengthDistr = std::uniform_int_distribution<int>(0, configsPool[0].getFiguresAmount() - 1);
 	configsAmountDistr = std::uniform_int_distribution<int>(0, configsInPoolAmount);
@@ -59,7 +59,7 @@ void GASolverSeq::makeIteration()
 		CrossoverPool[j] = this->BitByBitCrossover(configsPool[j], configsPool[j + 1], true);
 		CrossoverPool[(CrossoverPool.size() - 1) - j] = this->BitByBitCrossover(configsPool[j], configsPool[j + 1], false);
 	}
-	std::sort(CrossoverPool.begin(), CrossoverPool.end(), [](ConfigSequential l, ConfigSequential r) {return l.getFreeCellsPercentage() < r.getFreeCellsPercentage(); });
+	std::sort(std::execution::par_unseq,CrossoverPool.begin(), CrossoverPool.end(), [](ConfigSequential l, ConfigSequential r) {return l.getFreeCellsPercentage() < r.getFreeCellsPercentage(); });
 	/*auto last = std::unique(positions.begin(), positions.end());
 	positions.erase(last, positions.end());*/
 	
@@ -67,6 +67,19 @@ void GASolverSeq::makeIteration()
 		for (int i = 0; i < CrossoverPool.size() - configsInPoolAmount; i++)
 			CrossoverPool.pop_back();
 	configsPool = CrossoverPool;
+}
+
+double GASolverSeq::GetNormalizedMaximalConfigCost()
+{
+	return this->configsPool[0].getFreeCellsPercentage();
+}
+
+double GASolverSeq::GetNormaizedConfigPoolCost()
+{
+	double result = 0;
+	for (int i = 0; i < configsInPoolAmount; i++)
+		result += configsPool[i].getFreeCellsPercentage();
+	return result/configsInPoolAmount;
 }
 
 void GASolverSeq::startCycling()
@@ -151,4 +164,10 @@ ConfigSequential GASolverSeq::BitByBitCrossover(ConfigSequential conf1, ConfigSe
 void GASolverSeq::saveResults(int poolPosition)
 {
 	configsPool[poolPosition].printMatrix(this->resultFile);
+}
+
+void GASolverSeq::showMatrix(int position)
+{
+	if (position >= 0 && position < configsInPoolAmount)
+		configsPool[position].showMatrix();
 }
