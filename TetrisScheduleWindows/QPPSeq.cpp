@@ -29,6 +29,10 @@ QPPSeq::QPPSeq(std::string figuresFile, std::string restrictionsFile)
 		figures.push_back(p);
 		std::getline(inFile, line);
 	}
+	MultiPoint2D p;
+	bg::read_wkt(line, p);
+	figures.push_back(p);
+
 	figuresWidth = std::vector<int>(figures.size());
 	figuresHeight = std::vector<int>(figures.size());
 	inFile.close();
