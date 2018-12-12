@@ -173,7 +173,7 @@ void QPPSeq::packFigures(std::vector<stateSeq> newStates, std::vector<int> newOr
 	Point2D currentPosition(0, 0), oldPosition;
 	placedFiguresAmount = 0;
 	clearMatrix();
-	oldPosition = Point2D(0, 0);
+	oldPosition = Point2D(-1, -1);
 
 	for (int i : newOrder)
 	{
@@ -215,14 +215,20 @@ void QPPSeq::packFigures(std::vector<stateSeq> newStates, std::vector<int> newOr
 				if (checkAvailableHeight(currentPosition, currentFigureHeigth + 1))
 					currentPosition = Point2D(0, currentPosition.get<1>()+1);
 			}
-			else
+			else if (currentPosition.get<0>() == oldPosition.get<0>() && currentPosition.get<1>() == oldPosition.get<1>())
 			{
-				currentPosition.set<0>(currentPosition.get<0>()+1);
+				currentPosition.set<0>(currentPosition.get<0>()+1);//fix
 			}
-			if (currentPosition.get<0>() == oldPosition.get<0>() && currentPosition.get<1>() == oldPosition.get<1>())
+			/*if (currentPosition.get<0>() == oldPosition.get<0>() && currentPosition.get<1>() == oldPosition.get<1>())
+			{
+				std::cout << "lol" << std::endl;
 				break;
-			trans::translate_transformer<int, 2, 2> move(currentPosition.get<0>() - oldPosition.get<0>(), currentPosition.get<1>() - oldPosition.get<1>());
-			bg::transform(currentFigure, currentFigure, move);//assumed that figure does not leave the grid.
+			}*/
+			if (oldPosition.get<0>() != -1)
+			{
+				trans::translate_transformer<int, 2, 2> move(currentPosition.get<0>() - oldPosition.get<0>(), currentPosition.get<1>() - oldPosition.get<1>());
+				bg::transform(currentFigure, currentFigure, move);//assumed that figure does not leave the grid.
+			}
 			bool positionAcceptible = true;
 			for (int j = 0; j < currentFigure.size(); j++)
 			{
